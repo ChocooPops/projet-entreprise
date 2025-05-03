@@ -1,0 +1,140 @@
+.container-login-page {
+    height: 100%;
+    width: 100%;
+    position: relative;
+    background: linear-gradient(to right,
+            #141414 0%,
+            #191919 17%,
+            #141414 34%,
+            #191919 51%,
+            #141414 68%,
+            #191919 85%,
+            #141414 100%);
+}
+
+.container-login {
+    height: 600px;
+    width: 450px;
+    padding-top: 30px;
+    background-color: #141414;
+    border-radius: 10px;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    border: solid 1px #101010;
+}
+
+.title {
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.container-form {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    margin: 0;
+    padding: 0;
+    width: 355px;
+    position: relative;
+}
+
+input {
+    color: white;
+    font-size: 16px;
+    padding-left: 15px;
+    width: 100%;
+    height: 45px;
+    border: none;
+    background-color: #282828;
+    font-weight: bold;
+    box-sizing: border-box;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 30px #282828 inset !important;
+    -webkit-text-fill-color: white !important;
+    border: transparent;
+    outline: none;
+}
+
+input::placeholder {
+    color: #585858;
+    opacity: 0.8;
+}
+
+input:focus {
+    outline: none;
+    border: none;
+}
+
+button {
+    margin-top: 40px;
+    height: 45px;
+    width: 100%;
+    font-size: 16px;
+    font-weight: bold;
+    background-color: white;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    box-sizing: border-box;
+    transition: 0.3s background-color;
+}
+
+button:focus {
+    border: none;
+    outline: none;
+}
+
+button:hover {
+    background-color: rgb(212, 212, 212);
+}
+
+.button-register {
+    border: 2px solid #333333;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #808080;
+    font-weight: bold;
+    height: 45px;
+    user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    cursor: pointer;
+    transition: 0.2s color, 0.2s background-color, 0.2s border;
+}
+
+.button-register:hover {
+    background-color: #1d1d1d;
+    color: white;
+    border: 2px solid #1d1d1d;
+}
+
+.container-input-password {
+    height: 45px;
+    width: 100%;
+    position: relative;
+}
+
+.container-input-password img {
+    position: absolute;
+    height: 20px;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+}

@@ -1,0 +1,107 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  DIRECTOR
+  MANAGER
+  EMPLOYEE
+}
+
+enum TaskStatus {
+  TODO
+  IN_PROGRESS
+  DONE
+}
+
+model User {
+  id                 String            @id @default(uuid())
+  email              String            @unique
+  password           String
+  name               String
+  role               Role
+  assignedProjects   Project[]         @relation("AssignedUsers")
+  messages           Message[]
+  conversations      Conversation[]    @relation("ConversationAuthor")
+  uploadedFiles      File[]
+  deepResearchLogs   DeepResearchLog[]
+  invitationAccepted Boolean           @default(false)
+  createdAt          DateTime          @default(now())
+  updatedAt          DateTime          @updatedAt
+}
+
+model Project {
+  id            String         @id @default(uuid())
+  name          String
+  description   String?
+  assignedUsers User[]         @relation("AssignedUsers")
+  files         File[]
+  conversations Conversation[]
+  tasks         Task[]
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+}
+
+model Task {
+  id          String     @id @default(uuid())
+  title       String
+  description String?
+  status      TaskStatus // ex: "TODO", "IN_PROGRESS", "DONE"
+  projectId   String
+  project     Project    @relation(fields: [projectId], references: [id])
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+}
+
+model File {
+  id             String        @id @default(uuid())
+  name           String
+  url            String // vers le bucket
+  type           String // pdf, docx, etc.
+  content        String? // extrait via Mistral
+  uploadedById   String
+  uploadedBy     User          @relation(fields: [uploadedById], references: [id])
+  projectId      String?
+  project        Project?      @relation(fields: [projectId], references: [id])
+  conversationId String?
+  conversation   Conversation? @relation(fields: [conversationId], references: [id])
+  createdAt      DateTime      @default(now())
+}
+
+model Conversation {
+  id        String    @id @default(uuid())
+  title     String
+  projectId String
+  authorId  String
+  project   Project   @relation(fields: [projectId], references: [id])
+  author    User      @relation("ConversationAuthor", fields: [authorId], references: [id])
+  messages  Message[]
+  files     File[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model Message {
+  id             String       @id @default(uuid())
+  content        String
+  role           String // "user" ou "ai"
+  conversationId String
+  authorId       String?
+  conversation   Conversation @relation(fields: [conversationId], references: [id])
+  author         User?        @relation(fields: [authorId], references: [id])
+  createdAt      DateTime     @default(now())
+}
+
+model DeepResearchLog {
+  id          String   @id @default(uuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+  date        DateTime @default(now())
+  triggeredBy String // nom de la feature
+}
