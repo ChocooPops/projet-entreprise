@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Body, Param, Delete, Req } from '@nestjs/common';
 import { ProjectService } from './project.service';
-import { Public } from 'src/auth/public.decorator';
+import { CurrentUser } from 'src/auth/current-user.guard';
 
 @Controller('project')
 export class ProjectController {
@@ -11,10 +11,10 @@ export class ProjectController {
     return this.projectService.createHollowNewProject();
   }
 
-  @Get(':userId')
-  @Public()
-  findOne(@Param('userId') userId: string, @Req() req: Request) {
+  @Get()
+  findOne(@CurrentUser('sub') userId: string, @Req() req: Request) {
     console.log('Headers reçus :', req.headers);
+    console.log('id : ' + userId)
     return this.projectService.getAllProjectByUser(userId);
   }
 

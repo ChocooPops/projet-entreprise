@@ -28,6 +28,6 @@ export class AuthService {
 
     async generateJwt(user: User) {
         const payload = { sub: user.id, email: user.email, role: user.role };
-        return this.jwtService.sign(payload);
+        return this.jwtService.signAsync(payload);
     }
 }

@@ -17,7 +17,7 @@ export class ProjectService {
       Authorization: `Bearer ${localStorage.getItem('access_token')}`
     };
     console.log(headers)
-    return this.http.get<any>(`${this.apiUrlGetProject}/def`, { headers }).pipe(
+    return this.http.get<any>(`${this.apiUrlGetProject}`, { headers }).pipe(
       map((data: any) => {
         console.log(data);
       })

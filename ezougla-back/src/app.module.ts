@@ -8,11 +8,17 @@ import { FileModule } from './file/file.module';
 import { ConversationModule } from './conversation/conversation.module';
 import { MessageModule } from './message/message.module';
 import { AuthModule } from './auth/auth.module';
-import { ConfigModule } from '@nestjs/config';
+import { JwtAuthGuard } from './auth/jwt-auth.guard';
+import { APP_GUARD } from '@nestjs/core';
 
 @Module({
-  imports: [ConfigModule.forRoot({ isGlobal: true }), TaskModule, AuthModule, ProjectModule, UserModule, FileModule, ConversationModule, MessageModule],
+  imports: [TaskModule, AuthModule, ProjectModule, UserModule, FileModule, ConversationModule, MessageModule],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService,
+    {
+      provide: APP_GUARD,
+      useClass: JwtAuthGuard,
+    },
+  ],
 })
 export class AppModule { }
