@@ -14,11 +14,11 @@ export class AuthService {
   constructor(private http: HttpClient) { }
 
   private readonly apiUrlLogin = `${environment.apiUrl}/${environment.apiUrlAuth}/${environment.apiUrlLogin}`;
-  private nameStorageToken: string = 'acces_token'
+  private nameStorageToken: string = `${environment.access_token}`
 
   public fetchLogin(auth: AuthModel) {
     return this.http.post<any>(`${this.apiUrlLogin}`, auth).pipe(
-      map((data: any) => {
+      map((data: TokenModel) => {
         localStorage.setItem(this.nameStorageToken, data.access_token);
       }),
       catchError((error) => {

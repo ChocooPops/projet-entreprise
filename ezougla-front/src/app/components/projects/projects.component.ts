@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { ProjectService } from '../../services/project/project.service';
 
 @Component({
   selector: 'app-projects',
@@ -8,4 +9,11 @@ import { Component } from '@angular/core';
 })
 export class ProjectsComponent {
 
+  constructor(private projectService: ProjectService) { }
+
+  ngOnInit(): void {
+    this.projectService.fetchAllProjectByUser().subscribe((data) => {
+
+    })
+  }
 }

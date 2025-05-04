@@ -1,34 +1,25 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, Req } from '@nestjs/common';
 import { ProjectService } from './project.service';
-import { CreateProjectDto } from './dto/create-project.dto';
-import { UpdateProjectDto } from './dto/update-project.dto';
+import { Public } from 'src/auth/public.decorator';
 
 @Controller('project')
 export class ProjectController {
-  constructor(private readonly projectService: ProjectService) {}
+  constructor(private readonly projectService: ProjectService) { }
 
-  @Post()
-  create(@Body() createProjectDto: CreateProjectDto) {
-    return this.projectService.create(createProjectDto);
+  @Post('create')
+  create() {
+    return this.projectService.createHollowNewProject();
   }
 
-  @Get()
-  findAll() {
-    return this.projectService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.projectService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateProjectDto: UpdateProjectDto) {
-    return this.projectService.update(+id, updateProjectDto);
+  @Get(':userId')
+  @Public()
+  findOne(@Param('userId') userId: string, @Req() req: Request) {
+    console.log('Headers reçus :', req.headers);
+    return this.projectService.getAllProjectByUser(userId);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.projectService.remove(+id);
+    return this.projectService.deleteProjectById(id);
   }
 }
