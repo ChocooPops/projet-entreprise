@@ -1,1 +1,24 @@
-<p>register works!</p>
+<div class="container-login-page">
+
+    <div class="container-login">
+        <div class="container-form">
+            <p class="title">Créer un compte</p>
+            <form [formGroup]="formGroup">
+                <input formControlName="inputFirstName" placeholder="Nom">
+                <input formControlName="inputLastName" placeholder="Prenom">
+                <input formControlName="inputEmail" [placeholder]="placeHolderEmail">
+                <div class="container-input-password">
+                    <input formControlName="inputPassword" [placeholder]="placeHolderPassword" [type]="type">
+                    <img [src]="srcImagePassword" (click)="onClickVisibilityPassword()">
+                </div>
+                <input formControlName="inputValidatePassword" placeholder="Valider le mots de passe" [type]="type">
+                <p class="message"> {{ message }}</p>
+                <button type="submit" (click)="onSubmit()">Créer un compte</button>
+                <div class="button-register" (click)="onClickLogin()">
+                    <p>S'identifier</p>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</div>

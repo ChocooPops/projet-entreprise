@@ -1,5 +1,4 @@
 <div class="container-login-page">
-
     <div class="container-login">
         <div class="container-form">
             <p class="title">S'identifier</p>
@@ -9,6 +8,7 @@
                     <input formControlName="inputPassword" [placeholder]="placeHolderPassword" [type]="type">
                     <img [src]="srcImagePassword" (click)="onClickVisibilityPassword()">
                 </div>
+                <p> {{ message }} </p>
                 <button type="submit" (click)="onSubmit()">S'identifier</button>
                 <div class="button-register" (click)="onClickRegister()">
                     <p>Créer un compte</p>
@@ -16,5 +16,4 @@
             </form>
         </div>
     </div>
-
 </div>

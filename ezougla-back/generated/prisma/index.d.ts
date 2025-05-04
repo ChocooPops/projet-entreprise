@@ -1391,18 +1391,22 @@ export namespace Prisma {
 
   export type UserCountOutputType = {
     assignedProjects: number
+    assignedTasks: number
     messages: number
     conversations: number
     uploadedFiles: number
     deepResearchLogs: number
+    Task: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     assignedProjects?: boolean | UserCountOutputTypeCountAssignedProjectsArgs
+    assignedTasks?: boolean | UserCountOutputTypeCountAssignedTasksArgs
     messages?: boolean | UserCountOutputTypeCountMessagesArgs
     conversations?: boolean | UserCountOutputTypeCountConversationsArgs
     uploadedFiles?: boolean | UserCountOutputTypeCountUploadedFilesArgs
     deepResearchLogs?: boolean | UserCountOutputTypeCountDeepResearchLogsArgs
+    Task?: boolean | UserCountOutputTypeCountTaskArgs
   }
 
   // Custom InputTypes
@@ -1421,6 +1425,13 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountAssignedProjectsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ProjectWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountAssignedTasksArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TaskWhereInput
   }
 
   /**
@@ -1449,6 +1460,13 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountDeepResearchLogsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: DeepResearchLogWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountTaskArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TaskWhereInput
   }
 
 
@@ -1511,6 +1529,37 @@ export namespace Prisma {
 
 
   /**
+   * Count Type TaskCountOutputType
+   */
+
+  export type TaskCountOutputType = {
+    assignedUsers: number
+  }
+
+  export type TaskCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    assignedUsers?: boolean | TaskCountOutputTypeCountAssignedUsersArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * TaskCountOutputType without action
+   */
+  export type TaskCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TaskCountOutputType
+     */
+    select?: TaskCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * TaskCountOutputType without action
+   */
+  export type TaskCountOutputTypeCountAssignedUsersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: UserWhereInput
+  }
+
+
+  /**
    * Count Type ConversationCountOutputType
    */
 
@@ -1568,7 +1617,8 @@ export namespace Prisma {
     id: string | null
     email: string | null
     password: string | null
-    name: string | null
+    lastName: string | null
+    firstName: string | null
     role: $Enums.Role | null
     invitationAccepted: boolean | null
     createdAt: Date | null
@@ -1579,7 +1629,8 @@ export namespace Prisma {
     id: string | null
     email: string | null
     password: string | null
-    name: string | null
+    lastName: string | null
+    firstName: string | null
     role: $Enums.Role | null
     invitationAccepted: boolean | null
     createdAt: Date | null
@@ -1590,7 +1641,8 @@ export namespace Prisma {
     id: number
     email: number
     password: number
-    name: number
+    lastName: number
+    firstName: number
     role: number
     invitationAccepted: number
     createdAt: number
@@ -1603,7 +1655,8 @@ export namespace Prisma {
     id?: true
     email?: true
     password?: true
-    name?: true
+    lastName?: true
+    firstName?: true
     role?: true
     invitationAccepted?: true
     createdAt?: true
@@ -1614,7 +1667,8 @@ export namespace Prisma {
     id?: true
     email?: true
     password?: true
-    name?: true
+    lastName?: true
+    firstName?: true
     role?: true
     invitationAccepted?: true
     createdAt?: true
@@ -1625,7 +1679,8 @@ export namespace Prisma {
     id?: true
     email?: true
     password?: true
-    name?: true
+    lastName?: true
+    firstName?: true
     role?: true
     invitationAccepted?: true
     createdAt?: true
@@ -1709,7 +1764,8 @@ export namespace Prisma {
     id: string
     email: string
     password: string
-    name: string
+    lastName: string
+    firstName: string
     role: $Enums.Role
     invitationAccepted: boolean
     createdAt: Date
@@ -1737,16 +1793,19 @@ export namespace Prisma {
     id?: boolean
     email?: boolean
     password?: boolean
-    name?: boolean
+    lastName?: boolean
+    firstName?: boolean
     role?: boolean
     invitationAccepted?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     assignedProjects?: boolean | User$assignedProjectsArgs<ExtArgs>
+    assignedTasks?: boolean | User$assignedTasksArgs<ExtArgs>
     messages?: boolean | User$messagesArgs<ExtArgs>
     conversations?: boolean | User$conversationsArgs<ExtArgs>
     uploadedFiles?: boolean | User$uploadedFilesArgs<ExtArgs>
     deepResearchLogs?: boolean | User$deepResearchLogsArgs<ExtArgs>
+    Task?: boolean | User$TaskArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -1756,20 +1815,23 @@ export namespace Prisma {
     id?: boolean
     email?: boolean
     password?: boolean
-    name?: boolean
+    lastName?: boolean
+    firstName?: boolean
     role?: boolean
     invitationAccepted?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "email" | "password" | "name" | "role" | "invitationAccepted" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "email" | "password" | "lastName" | "firstName" | "role" | "invitationAccepted" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     assignedProjects?: boolean | User$assignedProjectsArgs<ExtArgs>
+    assignedTasks?: boolean | User$assignedTasksArgs<ExtArgs>
     messages?: boolean | User$messagesArgs<ExtArgs>
     conversations?: boolean | User$conversationsArgs<ExtArgs>
     uploadedFiles?: boolean | User$uploadedFilesArgs<ExtArgs>
     deepResearchLogs?: boolean | User$deepResearchLogsArgs<ExtArgs>
+    Task?: boolean | User$TaskArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
 
@@ -1777,16 +1839,19 @@ export namespace Prisma {
     name: "User"
     objects: {
       assignedProjects: Prisma.$ProjectPayload<ExtArgs>[]
+      assignedTasks: Prisma.$TaskPayload<ExtArgs>[]
       messages: Prisma.$MessagePayload<ExtArgs>[]
       conversations: Prisma.$ConversationPayload<ExtArgs>[]
       uploadedFiles: Prisma.$FilePayload<ExtArgs>[]
       deepResearchLogs: Prisma.$DeepResearchLogPayload<ExtArgs>[]
+      Task: Prisma.$TaskPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
       email: string
       password: string
-      name: string
+      lastName: string
+      firstName: string
       role: $Enums.Role
       invitationAccepted: boolean
       createdAt: Date
@@ -2132,10 +2197,12 @@ export namespace Prisma {
   export interface Prisma__UserClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     assignedProjects<T extends User$assignedProjectsArgs<ExtArgs> = {}>(args?: Subset<T, User$assignedProjectsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    assignedTasks<T extends User$assignedTasksArgs<ExtArgs> = {}>(args?: Subset<T, User$assignedTasksArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TaskPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     messages<T extends User$messagesArgs<ExtArgs> = {}>(args?: Subset<T, User$messagesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MessagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     conversations<T extends User$conversationsArgs<ExtArgs> = {}>(args?: Subset<T, User$conversationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ConversationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     uploadedFiles<T extends User$uploadedFilesArgs<ExtArgs> = {}>(args?: Subset<T, User$uploadedFilesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FilePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     deepResearchLogs<T extends User$deepResearchLogsArgs<ExtArgs> = {}>(args?: Subset<T, User$deepResearchLogsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DeepResearchLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    Task<T extends User$TaskArgs<ExtArgs> = {}>(args?: Subset<T, User$TaskArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TaskPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2168,7 +2235,8 @@ export namespace Prisma {
     readonly id: FieldRef<"User", 'String'>
     readonly email: FieldRef<"User", 'String'>
     readonly password: FieldRef<"User", 'String'>
-    readonly name: FieldRef<"User", 'String'>
+    readonly lastName: FieldRef<"User", 'String'>
+    readonly firstName: FieldRef<"User", 'String'>
     readonly role: FieldRef<"User", 'Role'>
     readonly invitationAccepted: FieldRef<"User", 'Boolean'>
     readonly createdAt: FieldRef<"User", 'DateTime'>
@@ -2540,6 +2608,30 @@ export namespace Prisma {
   }
 
   /**
+   * User.assignedTasks
+   */
+  export type User$assignedTasksArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Task
+     */
+    select?: TaskSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Task
+     */
+    omit?: TaskOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TaskInclude<ExtArgs> | null
+    where?: TaskWhereInput
+    orderBy?: TaskOrderByWithRelationInput | TaskOrderByWithRelationInput[]
+    cursor?: TaskWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: TaskScalarFieldEnum | TaskScalarFieldEnum[]
+  }
+
+  /**
    * User.messages
    */
   export type User$messagesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -2633,6 +2725,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: DeepResearchLogScalarFieldEnum | DeepResearchLogScalarFieldEnum[]
+  }
+
+  /**
+   * User.Task
+   */
+  export type User$TaskArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Task
+     */
+    select?: TaskSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Task
+     */
+    omit?: TaskOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TaskInclude<ExtArgs> | null
+    where?: TaskWhereInput
+    orderBy?: TaskOrderByWithRelationInput | TaskOrderByWithRelationInput[]
+    cursor?: TaskWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: TaskScalarFieldEnum | TaskScalarFieldEnum[]
   }
 
   /**
@@ -3711,6 +3827,7 @@ export namespace Prisma {
     projectId: string | null
     createdAt: Date | null
     updatedAt: Date | null
+    userId: string | null
   }
 
   export type TaskMaxAggregateOutputType = {
@@ -3721,6 +3838,7 @@ export namespace Prisma {
     projectId: string | null
     createdAt: Date | null
     updatedAt: Date | null
+    userId: string | null
   }
 
   export type TaskCountAggregateOutputType = {
@@ -3731,6 +3849,7 @@ export namespace Prisma {
     projectId: number
     createdAt: number
     updatedAt: number
+    userId: number
     _all: number
   }
 
@@ -3743,6 +3862,7 @@ export namespace Prisma {
     projectId?: true
     createdAt?: true
     updatedAt?: true
+    userId?: true
   }
 
   export type TaskMaxAggregateInputType = {
@@ -3753,6 +3873,7 @@ export namespace Prisma {
     projectId?: true
     createdAt?: true
     updatedAt?: true
+    userId?: true
   }
 
   export type TaskCountAggregateInputType = {
@@ -3763,6 +3884,7 @@ export namespace Prisma {
     projectId?: true
     createdAt?: true
     updatedAt?: true
+    userId?: true
     _all?: true
   }
 
@@ -3846,6 +3968,7 @@ export namespace Prisma {
     projectId: string
     createdAt: Date
     updatedAt: Date
+    userId: string | null
     _count: TaskCountAggregateOutputType | null
     _min: TaskMinAggregateOutputType | null
     _max: TaskMaxAggregateOutputType | null
@@ -3873,7 +3996,11 @@ export namespace Prisma {
     projectId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    userId?: boolean
     project?: boolean | ProjectDefaultArgs<ExtArgs>
+    User?: boolean | Task$UserArgs<ExtArgs>
+    assignedUsers?: boolean | Task$assignedUsersArgs<ExtArgs>
+    _count?: boolean | TaskCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["task"]>
 
 
@@ -3886,17 +4013,23 @@ export namespace Prisma {
     projectId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    userId?: boolean
   }
 
-  export type TaskOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "description" | "status" | "projectId" | "createdAt" | "updatedAt", ExtArgs["result"]["task"]>
+  export type TaskOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "description" | "status" | "projectId" | "createdAt" | "updatedAt" | "userId", ExtArgs["result"]["task"]>
   export type TaskInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     project?: boolean | ProjectDefaultArgs<ExtArgs>
+    User?: boolean | Task$UserArgs<ExtArgs>
+    assignedUsers?: boolean | Task$assignedUsersArgs<ExtArgs>
+    _count?: boolean | TaskCountOutputTypeDefaultArgs<ExtArgs>
   }
 
   export type $TaskPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Task"
     objects: {
       project: Prisma.$ProjectPayload<ExtArgs>
+      User: Prisma.$UserPayload<ExtArgs> | null
+      assignedUsers: Prisma.$UserPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -3906,6 +4039,7 @@ export namespace Prisma {
       projectId: string
       createdAt: Date
       updatedAt: Date
+      userId: string | null
     }, ExtArgs["result"]["task"]>
     composites: {}
   }
@@ -4247,6 +4381,8 @@ export namespace Prisma {
   export interface Prisma__TaskClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     project<T extends ProjectDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ProjectDefaultArgs<ExtArgs>>): Prisma__ProjectClient<$Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    User<T extends Task$UserArgs<ExtArgs> = {}>(args?: Subset<T, Task$UserArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    assignedUsers<T extends Task$assignedUsersArgs<ExtArgs> = {}>(args?: Subset<T, Task$assignedUsersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -4283,6 +4419,7 @@ export namespace Prisma {
     readonly projectId: FieldRef<"Task", 'String'>
     readonly createdAt: FieldRef<"Task", 'DateTime'>
     readonly updatedAt: FieldRef<"Task", 'DateTime'>
+    readonly userId: FieldRef<"Task", 'String'>
   }
     
 
@@ -4623,6 +4760,49 @@ export namespace Prisma {
      * Limit how many Tasks to delete.
      */
     limit?: number
+  }
+
+  /**
+   * Task.User
+   */
+  export type Task$UserArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the User
+     */
+    omit?: UserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    where?: UserWhereInput
+  }
+
+  /**
+   * Task.assignedUsers
+   */
+  export type Task$assignedUsersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the User
+     */
+    omit?: UserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    where?: UserWhereInput
+    orderBy?: UserOrderByWithRelationInput | UserOrderByWithRelationInput[]
+    cursor?: UserWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: UserScalarFieldEnum | UserScalarFieldEnum[]
   }
 
   /**
@@ -8564,7 +8744,8 @@ export namespace Prisma {
     id: 'id',
     email: 'email',
     password: 'password',
-    name: 'name',
+    lastName: 'lastName',
+    firstName: 'firstName',
     role: 'role',
     invitationAccepted: 'invitationAccepted',
     createdAt: 'createdAt',
@@ -8592,7 +8773,8 @@ export namespace Prisma {
     status: 'status',
     projectId: 'projectId',
     createdAt: 'createdAt',
-    updatedAt: 'updatedAt'
+    updatedAt: 'updatedAt',
+    userId: 'userId'
   };
 
   export type TaskScalarFieldEnum = (typeof TaskScalarFieldEnum)[keyof typeof TaskScalarFieldEnum]
@@ -8659,7 +8841,8 @@ export namespace Prisma {
     id: 'id',
     email: 'email',
     password: 'password',
-    name: 'name'
+    lastName: 'lastName',
+    firstName: 'firstName'
   };
 
   export type UserOrderByRelevanceFieldEnum = (typeof UserOrderByRelevanceFieldEnum)[keyof typeof UserOrderByRelevanceFieldEnum]
@@ -8686,7 +8869,8 @@ export namespace Prisma {
     id: 'id',
     title: 'title',
     description: 'description',
-    projectId: 'projectId'
+    projectId: 'projectId',
+    userId: 'userId'
   };
 
   export type TaskOrderByRelevanceFieldEnum = (typeof TaskOrderByRelevanceFieldEnum)[keyof typeof TaskOrderByRelevanceFieldEnum]
@@ -8793,32 +8977,38 @@ export namespace Prisma {
     id?: StringFilter<"User"> | string
     email?: StringFilter<"User"> | string
     password?: StringFilter<"User"> | string
-    name?: StringFilter<"User"> | string
+    lastName?: StringFilter<"User"> | string
+    firstName?: StringFilter<"User"> | string
     role?: EnumRoleFilter<"User"> | $Enums.Role
     invitationAccepted?: BoolFilter<"User"> | boolean
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
     assignedProjects?: ProjectListRelationFilter
+    assignedTasks?: TaskListRelationFilter
     messages?: MessageListRelationFilter
     conversations?: ConversationListRelationFilter
     uploadedFiles?: FileListRelationFilter
     deepResearchLogs?: DeepResearchLogListRelationFilter
+    Task?: TaskListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
     id?: SortOrder
     email?: SortOrder
     password?: SortOrder
-    name?: SortOrder
+    lastName?: SortOrder
+    firstName?: SortOrder
     role?: SortOrder
     invitationAccepted?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     assignedProjects?: ProjectOrderByRelationAggregateInput
+    assignedTasks?: TaskOrderByRelationAggregateInput
     messages?: MessageOrderByRelationAggregateInput
     conversations?: ConversationOrderByRelationAggregateInput
     uploadedFiles?: FileOrderByRelationAggregateInput
     deepResearchLogs?: DeepResearchLogOrderByRelationAggregateInput
+    Task?: TaskOrderByRelationAggregateInput
     _relevance?: UserOrderByRelevanceInput
   }
 
@@ -8829,23 +9019,27 @@ export namespace Prisma {
     OR?: UserWhereInput[]
     NOT?: UserWhereInput | UserWhereInput[]
     password?: StringFilter<"User"> | string
-    name?: StringFilter<"User"> | string
+    lastName?: StringFilter<"User"> | string
+    firstName?: StringFilter<"User"> | string
     role?: EnumRoleFilter<"User"> | $Enums.Role
     invitationAccepted?: BoolFilter<"User"> | boolean
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
     assignedProjects?: ProjectListRelationFilter
+    assignedTasks?: TaskListRelationFilter
     messages?: MessageListRelationFilter
     conversations?: ConversationListRelationFilter
     uploadedFiles?: FileListRelationFilter
     deepResearchLogs?: DeepResearchLogListRelationFilter
+    Task?: TaskListRelationFilter
   }, "id" | "email">
 
   export type UserOrderByWithAggregationInput = {
     id?: SortOrder
     email?: SortOrder
     password?: SortOrder
-    name?: SortOrder
+    lastName?: SortOrder
+    firstName?: SortOrder
     role?: SortOrder
     invitationAccepted?: SortOrder
     createdAt?: SortOrder
@@ -8862,7 +9056,8 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter<"User"> | string
     email?: StringWithAggregatesFilter<"User"> | string
     password?: StringWithAggregatesFilter<"User"> | string
-    name?: StringWithAggregatesFilter<"User"> | string
+    lastName?: StringWithAggregatesFilter<"User"> | string
+    firstName?: StringWithAggregatesFilter<"User"> | string
     role?: EnumRoleWithAggregatesFilter<"User"> | $Enums.Role
     invitationAccepted?: BoolWithAggregatesFilter<"User"> | boolean
     createdAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
@@ -8945,7 +9140,10 @@ export namespace Prisma {
     projectId?: StringFilter<"Task"> | string
     createdAt?: DateTimeFilter<"Task"> | Date | string
     updatedAt?: DateTimeFilter<"Task"> | Date | string
+    userId?: StringNullableFilter<"Task"> | string | null
     project?: XOR<ProjectScalarRelationFilter, ProjectWhereInput>
+    User?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+    assignedUsers?: UserListRelationFilter
   }
 
   export type TaskOrderByWithRelationInput = {
@@ -8956,7 +9154,10 @@ export namespace Prisma {
     projectId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    userId?: SortOrderInput | SortOrder
     project?: ProjectOrderByWithRelationInput
+    User?: UserOrderByWithRelationInput
+    assignedUsers?: UserOrderByRelationAggregateInput
     _relevance?: TaskOrderByRelevanceInput
   }
 
@@ -8971,7 +9172,10 @@ export namespace Prisma {
     projectId?: StringFilter<"Task"> | string
     createdAt?: DateTimeFilter<"Task"> | Date | string
     updatedAt?: DateTimeFilter<"Task"> | Date | string
+    userId?: StringNullableFilter<"Task"> | string | null
     project?: XOR<ProjectScalarRelationFilter, ProjectWhereInput>
+    User?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+    assignedUsers?: UserListRelationFilter
   }, "id">
 
   export type TaskOrderByWithAggregationInput = {
@@ -8982,6 +9186,7 @@ export namespace Prisma {
     projectId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    userId?: SortOrderInput | SortOrder
     _count?: TaskCountOrderByAggregateInput
     _max?: TaskMaxOrderByAggregateInput
     _min?: TaskMinOrderByAggregateInput
@@ -8998,6 +9203,7 @@ export namespace Prisma {
     projectId?: StringWithAggregatesFilter<"Task"> | string
     createdAt?: DateTimeWithAggregatesFilter<"Task"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Task"> | Date | string
+    userId?: StringNullableWithAggregatesFilter<"Task"> | string | null
   }
 
   export type FileWhereInput = {
@@ -9271,71 +9477,84 @@ export namespace Prisma {
     id?: string
     email: string
     password: string
-    name: string
+    lastName: string
+    firstName: string
     role: $Enums.Role
     invitationAccepted?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     assignedProjects?: ProjectCreateNestedManyWithoutAssignedUsersInput
+    assignedTasks?: TaskCreateNestedManyWithoutAssignedUsersInput
     messages?: MessageCreateNestedManyWithoutAuthorInput
     conversations?: ConversationCreateNestedManyWithoutAuthorInput
     uploadedFiles?: FileCreateNestedManyWithoutUploadedByInput
     deepResearchLogs?: DeepResearchLogCreateNestedManyWithoutUserInput
+    Task?: TaskCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateInput = {
     id?: string
     email: string
     password: string
-    name: string
+    lastName: string
+    firstName: string
     role: $Enums.Role
     invitationAccepted?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     assignedProjects?: ProjectUncheckedCreateNestedManyWithoutAssignedUsersInput
+    assignedTasks?: TaskUncheckedCreateNestedManyWithoutAssignedUsersInput
     messages?: MessageUncheckedCreateNestedManyWithoutAuthorInput
     conversations?: ConversationUncheckedCreateNestedManyWithoutAuthorInput
     uploadedFiles?: FileUncheckedCreateNestedManyWithoutUploadedByInput
     deepResearchLogs?: DeepResearchLogUncheckedCreateNestedManyWithoutUserInput
+    Task?: TaskUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     invitationAccepted?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     assignedProjects?: ProjectUpdateManyWithoutAssignedUsersNestedInput
+    assignedTasks?: TaskUpdateManyWithoutAssignedUsersNestedInput
     messages?: MessageUpdateManyWithoutAuthorNestedInput
     conversations?: ConversationUpdateManyWithoutAuthorNestedInput
     uploadedFiles?: FileUpdateManyWithoutUploadedByNestedInput
     deepResearchLogs?: DeepResearchLogUpdateManyWithoutUserNestedInput
+    Task?: TaskUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     invitationAccepted?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     assignedProjects?: ProjectUncheckedUpdateManyWithoutAssignedUsersNestedInput
+    assignedTasks?: TaskUncheckedUpdateManyWithoutAssignedUsersNestedInput
     messages?: MessageUncheckedUpdateManyWithoutAuthorNestedInput
     conversations?: ConversationUncheckedUpdateManyWithoutAuthorNestedInput
     uploadedFiles?: FileUncheckedUpdateManyWithoutUploadedByNestedInput
     deepResearchLogs?: DeepResearchLogUncheckedUpdateManyWithoutUserNestedInput
+    Task?: TaskUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateManyInput = {
     id?: string
     email: string
     password: string
-    name: string
+    lastName: string
+    firstName: string
     role: $Enums.Role
     invitationAccepted?: boolean
     createdAt?: Date | string
@@ -9346,7 +9565,8 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     invitationAccepted?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -9357,7 +9577,8 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     invitationAccepted?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -9444,6 +9665,8 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     project: ProjectCreateNestedOneWithoutTasksInput
+    User?: UserCreateNestedOneWithoutTaskInput
+    assignedUsers?: UserCreateNestedManyWithoutAssignedTasksInput
   }
 
   export type TaskUncheckedCreateInput = {
@@ -9454,6 +9677,8 @@ export namespace Prisma {
     projectId: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    userId?: string | null
+    assignedUsers?: UserUncheckedCreateNestedManyWithoutAssignedTasksInput
   }
 
   export type TaskUpdateInput = {
@@ -9464,6 +9689,8 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     project?: ProjectUpdateOneRequiredWithoutTasksNestedInput
+    User?: UserUpdateOneWithoutTaskNestedInput
+    assignedUsers?: UserUpdateManyWithoutAssignedTasksNestedInput
   }
 
   export type TaskUncheckedUpdateInput = {
@@ -9474,6 +9701,8 @@ export namespace Prisma {
     projectId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    userId?: NullableStringFieldUpdateOperationsInput | string | null
+    assignedUsers?: UserUncheckedUpdateManyWithoutAssignedTasksNestedInput
   }
 
   export type TaskCreateManyInput = {
@@ -9484,6 +9713,7 @@ export namespace Prisma {
     projectId: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    userId?: string | null
   }
 
   export type TaskUpdateManyMutationInput = {
@@ -9503,6 +9733,7 @@ export namespace Prisma {
     projectId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    userId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type FileCreateInput = {
@@ -9808,6 +10039,12 @@ export namespace Prisma {
     none?: ProjectWhereInput
   }
 
+  export type TaskListRelationFilter = {
+    every?: TaskWhereInput
+    some?: TaskWhereInput
+    none?: TaskWhereInput
+  }
+
   export type MessageListRelationFilter = {
     every?: MessageWhereInput
     some?: MessageWhereInput
@@ -9833,6 +10070,10 @@ export namespace Prisma {
   }
 
   export type ProjectOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type TaskOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -9862,7 +10103,8 @@ export namespace Prisma {
     id?: SortOrder
     email?: SortOrder
     password?: SortOrder
-    name?: SortOrder
+    lastName?: SortOrder
+    firstName?: SortOrder
     role?: SortOrder
     invitationAccepted?: SortOrder
     createdAt?: SortOrder
@@ -9873,7 +10115,8 @@ export namespace Prisma {
     id?: SortOrder
     email?: SortOrder
     password?: SortOrder
-    name?: SortOrder
+    lastName?: SortOrder
+    firstName?: SortOrder
     role?: SortOrder
     invitationAccepted?: SortOrder
     createdAt?: SortOrder
@@ -9884,7 +10127,8 @@ export namespace Prisma {
     id?: SortOrder
     email?: SortOrder
     password?: SortOrder
-    name?: SortOrder
+    lastName?: SortOrder
+    firstName?: SortOrder
     role?: SortOrder
     invitationAccepted?: SortOrder
     createdAt?: SortOrder
@@ -9962,22 +10206,12 @@ export namespace Prisma {
     none?: UserWhereInput
   }
 
-  export type TaskListRelationFilter = {
-    every?: TaskWhereInput
-    some?: TaskWhereInput
-    none?: TaskWhereInput
-  }
-
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
   }
 
   export type UserOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
-  export type TaskOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -10041,6 +10275,11 @@ export namespace Prisma {
     isNot?: ProjectWhereInput
   }
 
+  export type UserNullableScalarRelationFilter = {
+    is?: UserWhereInput | null
+    isNot?: UserWhereInput | null
+  }
+
   export type TaskOrderByRelevanceInput = {
     fields: TaskOrderByRelevanceFieldEnum | TaskOrderByRelevanceFieldEnum[]
     sort: SortOrder
@@ -10055,6 +10294,7 @@ export namespace Prisma {
     projectId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    userId?: SortOrder
   }
 
   export type TaskMaxOrderByAggregateInput = {
@@ -10065,6 +10305,7 @@ export namespace Prisma {
     projectId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    userId?: SortOrder
   }
 
   export type TaskMinOrderByAggregateInput = {
@@ -10075,6 +10316,7 @@ export namespace Prisma {
     projectId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    userId?: SortOrder
   }
 
   export type EnumTaskStatusWithAggregatesFilter<$PrismaModel = never> = {
@@ -10182,11 +10424,6 @@ export namespace Prisma {
     isNot?: ConversationWhereInput
   }
 
-  export type UserNullableScalarRelationFilter = {
-    is?: UserWhereInput | null
-    isNot?: UserWhereInput | null
-  }
-
   export type MessageOrderByRelevanceInput = {
     fields: MessageOrderByRelevanceFieldEnum | MessageOrderByRelevanceFieldEnum[]
     sort: SortOrder
@@ -10253,6 +10490,12 @@ export namespace Prisma {
     connect?: ProjectWhereUniqueInput | ProjectWhereUniqueInput[]
   }
 
+  export type TaskCreateNestedManyWithoutAssignedUsersInput = {
+    create?: XOR<TaskCreateWithoutAssignedUsersInput, TaskUncheckedCreateWithoutAssignedUsersInput> | TaskCreateWithoutAssignedUsersInput[] | TaskUncheckedCreateWithoutAssignedUsersInput[]
+    connectOrCreate?: TaskCreateOrConnectWithoutAssignedUsersInput | TaskCreateOrConnectWithoutAssignedUsersInput[]
+    connect?: TaskWhereUniqueInput | TaskWhereUniqueInput[]
+  }
+
   export type MessageCreateNestedManyWithoutAuthorInput = {
     create?: XOR<MessageCreateWithoutAuthorInput, MessageUncheckedCreateWithoutAuthorInput> | MessageCreateWithoutAuthorInput[] | MessageUncheckedCreateWithoutAuthorInput[]
     connectOrCreate?: MessageCreateOrConnectWithoutAuthorInput | MessageCreateOrConnectWithoutAuthorInput[]
@@ -10281,10 +10524,23 @@ export namespace Prisma {
     connect?: DeepResearchLogWhereUniqueInput | DeepResearchLogWhereUniqueInput[]
   }
 
+  export type TaskCreateNestedManyWithoutUserInput = {
+    create?: XOR<TaskCreateWithoutUserInput, TaskUncheckedCreateWithoutUserInput> | TaskCreateWithoutUserInput[] | TaskUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: TaskCreateOrConnectWithoutUserInput | TaskCreateOrConnectWithoutUserInput[]
+    createMany?: TaskCreateManyUserInputEnvelope
+    connect?: TaskWhereUniqueInput | TaskWhereUniqueInput[]
+  }
+
   export type ProjectUncheckedCreateNestedManyWithoutAssignedUsersInput = {
     create?: XOR<ProjectCreateWithoutAssignedUsersInput, ProjectUncheckedCreateWithoutAssignedUsersInput> | ProjectCreateWithoutAssignedUsersInput[] | ProjectUncheckedCreateWithoutAssignedUsersInput[]
     connectOrCreate?: ProjectCreateOrConnectWithoutAssignedUsersInput | ProjectCreateOrConnectWithoutAssignedUsersInput[]
     connect?: ProjectWhereUniqueInput | ProjectWhereUniqueInput[]
+  }
+
+  export type TaskUncheckedCreateNestedManyWithoutAssignedUsersInput = {
+    create?: XOR<TaskCreateWithoutAssignedUsersInput, TaskUncheckedCreateWithoutAssignedUsersInput> | TaskCreateWithoutAssignedUsersInput[] | TaskUncheckedCreateWithoutAssignedUsersInput[]
+    connectOrCreate?: TaskCreateOrConnectWithoutAssignedUsersInput | TaskCreateOrConnectWithoutAssignedUsersInput[]
+    connect?: TaskWhereUniqueInput | TaskWhereUniqueInput[]
   }
 
   export type MessageUncheckedCreateNestedManyWithoutAuthorInput = {
@@ -10315,6 +10571,13 @@ export namespace Prisma {
     connect?: DeepResearchLogWhereUniqueInput | DeepResearchLogWhereUniqueInput[]
   }
 
+  export type TaskUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<TaskCreateWithoutUserInput, TaskUncheckedCreateWithoutUserInput> | TaskCreateWithoutUserInput[] | TaskUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: TaskCreateOrConnectWithoutUserInput | TaskCreateOrConnectWithoutUserInput[]
+    createMany?: TaskCreateManyUserInputEnvelope
+    connect?: TaskWhereUniqueInput | TaskWhereUniqueInput[]
+  }
+
   export type StringFieldUpdateOperationsInput = {
     set?: string
   }
@@ -10342,6 +10605,19 @@ export namespace Prisma {
     update?: ProjectUpdateWithWhereUniqueWithoutAssignedUsersInput | ProjectUpdateWithWhereUniqueWithoutAssignedUsersInput[]
     updateMany?: ProjectUpdateManyWithWhereWithoutAssignedUsersInput | ProjectUpdateManyWithWhereWithoutAssignedUsersInput[]
     deleteMany?: ProjectScalarWhereInput | ProjectScalarWhereInput[]
+  }
+
+  export type TaskUpdateManyWithoutAssignedUsersNestedInput = {
+    create?: XOR<TaskCreateWithoutAssignedUsersInput, TaskUncheckedCreateWithoutAssignedUsersInput> | TaskCreateWithoutAssignedUsersInput[] | TaskUncheckedCreateWithoutAssignedUsersInput[]
+    connectOrCreate?: TaskCreateOrConnectWithoutAssignedUsersInput | TaskCreateOrConnectWithoutAssignedUsersInput[]
+    upsert?: TaskUpsertWithWhereUniqueWithoutAssignedUsersInput | TaskUpsertWithWhereUniqueWithoutAssignedUsersInput[]
+    set?: TaskWhereUniqueInput | TaskWhereUniqueInput[]
+    disconnect?: TaskWhereUniqueInput | TaskWhereUniqueInput[]
+    delete?: TaskWhereUniqueInput | TaskWhereUniqueInput[]
+    connect?: TaskWhereUniqueInput | TaskWhereUniqueInput[]
+    update?: TaskUpdateWithWhereUniqueWithoutAssignedUsersInput | TaskUpdateWithWhereUniqueWithoutAssignedUsersInput[]
+    updateMany?: TaskUpdateManyWithWhereWithoutAssignedUsersInput | TaskUpdateManyWithWhereWithoutAssignedUsersInput[]
+    deleteMany?: TaskScalarWhereInput | TaskScalarWhereInput[]
   }
 
   export type MessageUpdateManyWithoutAuthorNestedInput = {
@@ -10400,6 +10676,20 @@ export namespace Prisma {
     deleteMany?: DeepResearchLogScalarWhereInput | DeepResearchLogScalarWhereInput[]
   }
 
+  export type TaskUpdateManyWithoutUserNestedInput = {
+    create?: XOR<TaskCreateWithoutUserInput, TaskUncheckedCreateWithoutUserInput> | TaskCreateWithoutUserInput[] | TaskUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: TaskCreateOrConnectWithoutUserInput | TaskCreateOrConnectWithoutUserInput[]
+    upsert?: TaskUpsertWithWhereUniqueWithoutUserInput | TaskUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: TaskCreateManyUserInputEnvelope
+    set?: TaskWhereUniqueInput | TaskWhereUniqueInput[]
+    disconnect?: TaskWhereUniqueInput | TaskWhereUniqueInput[]
+    delete?: TaskWhereUniqueInput | TaskWhereUniqueInput[]
+    connect?: TaskWhereUniqueInput | TaskWhereUniqueInput[]
+    update?: TaskUpdateWithWhereUniqueWithoutUserInput | TaskUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: TaskUpdateManyWithWhereWithoutUserInput | TaskUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: TaskScalarWhereInput | TaskScalarWhereInput[]
+  }
+
   export type ProjectUncheckedUpdateManyWithoutAssignedUsersNestedInput = {
     create?: XOR<ProjectCreateWithoutAssignedUsersInput, ProjectUncheckedCreateWithoutAssignedUsersInput> | ProjectCreateWithoutAssignedUsersInput[] | ProjectUncheckedCreateWithoutAssignedUsersInput[]
     connectOrCreate?: ProjectCreateOrConnectWithoutAssignedUsersInput | ProjectCreateOrConnectWithoutAssignedUsersInput[]
@@ -10411,6 +10701,19 @@ export namespace Prisma {
     update?: ProjectUpdateWithWhereUniqueWithoutAssignedUsersInput | ProjectUpdateWithWhereUniqueWithoutAssignedUsersInput[]
     updateMany?: ProjectUpdateManyWithWhereWithoutAssignedUsersInput | ProjectUpdateManyWithWhereWithoutAssignedUsersInput[]
     deleteMany?: ProjectScalarWhereInput | ProjectScalarWhereInput[]
+  }
+
+  export type TaskUncheckedUpdateManyWithoutAssignedUsersNestedInput = {
+    create?: XOR<TaskCreateWithoutAssignedUsersInput, TaskUncheckedCreateWithoutAssignedUsersInput> | TaskCreateWithoutAssignedUsersInput[] | TaskUncheckedCreateWithoutAssignedUsersInput[]
+    connectOrCreate?: TaskCreateOrConnectWithoutAssignedUsersInput | TaskCreateOrConnectWithoutAssignedUsersInput[]
+    upsert?: TaskUpsertWithWhereUniqueWithoutAssignedUsersInput | TaskUpsertWithWhereUniqueWithoutAssignedUsersInput[]
+    set?: TaskWhereUniqueInput | TaskWhereUniqueInput[]
+    disconnect?: TaskWhereUniqueInput | TaskWhereUniqueInput[]
+    delete?: TaskWhereUniqueInput | TaskWhereUniqueInput[]
+    connect?: TaskWhereUniqueInput | TaskWhereUniqueInput[]
+    update?: TaskUpdateWithWhereUniqueWithoutAssignedUsersInput | TaskUpdateWithWhereUniqueWithoutAssignedUsersInput[]
+    updateMany?: TaskUpdateManyWithWhereWithoutAssignedUsersInput | TaskUpdateManyWithWhereWithoutAssignedUsersInput[]
+    deleteMany?: TaskScalarWhereInput | TaskScalarWhereInput[]
   }
 
   export type MessageUncheckedUpdateManyWithoutAuthorNestedInput = {
@@ -10467,6 +10770,20 @@ export namespace Prisma {
     update?: DeepResearchLogUpdateWithWhereUniqueWithoutUserInput | DeepResearchLogUpdateWithWhereUniqueWithoutUserInput[]
     updateMany?: DeepResearchLogUpdateManyWithWhereWithoutUserInput | DeepResearchLogUpdateManyWithWhereWithoutUserInput[]
     deleteMany?: DeepResearchLogScalarWhereInput | DeepResearchLogScalarWhereInput[]
+  }
+
+  export type TaskUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<TaskCreateWithoutUserInput, TaskUncheckedCreateWithoutUserInput> | TaskCreateWithoutUserInput[] | TaskUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: TaskCreateOrConnectWithoutUserInput | TaskCreateOrConnectWithoutUserInput[]
+    upsert?: TaskUpsertWithWhereUniqueWithoutUserInput | TaskUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: TaskCreateManyUserInputEnvelope
+    set?: TaskWhereUniqueInput | TaskWhereUniqueInput[]
+    disconnect?: TaskWhereUniqueInput | TaskWhereUniqueInput[]
+    delete?: TaskWhereUniqueInput | TaskWhereUniqueInput[]
+    connect?: TaskWhereUniqueInput | TaskWhereUniqueInput[]
+    update?: TaskUpdateWithWhereUniqueWithoutUserInput | TaskUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: TaskUpdateManyWithWhereWithoutUserInput | TaskUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: TaskScalarWhereInput | TaskScalarWhereInput[]
   }
 
   export type UserCreateNestedManyWithoutAssignedProjectsInput = {
@@ -10643,6 +10960,24 @@ export namespace Prisma {
     connect?: ProjectWhereUniqueInput
   }
 
+  export type UserCreateNestedOneWithoutTaskInput = {
+    create?: XOR<UserCreateWithoutTaskInput, UserUncheckedCreateWithoutTaskInput>
+    connectOrCreate?: UserCreateOrConnectWithoutTaskInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type UserCreateNestedManyWithoutAssignedTasksInput = {
+    create?: XOR<UserCreateWithoutAssignedTasksInput, UserUncheckedCreateWithoutAssignedTasksInput> | UserCreateWithoutAssignedTasksInput[] | UserUncheckedCreateWithoutAssignedTasksInput[]
+    connectOrCreate?: UserCreateOrConnectWithoutAssignedTasksInput | UserCreateOrConnectWithoutAssignedTasksInput[]
+    connect?: UserWhereUniqueInput | UserWhereUniqueInput[]
+  }
+
+  export type UserUncheckedCreateNestedManyWithoutAssignedTasksInput = {
+    create?: XOR<UserCreateWithoutAssignedTasksInput, UserUncheckedCreateWithoutAssignedTasksInput> | UserCreateWithoutAssignedTasksInput[] | UserUncheckedCreateWithoutAssignedTasksInput[]
+    connectOrCreate?: UserCreateOrConnectWithoutAssignedTasksInput | UserCreateOrConnectWithoutAssignedTasksInput[]
+    connect?: UserWhereUniqueInput | UserWhereUniqueInput[]
+  }
+
   export type EnumTaskStatusFieldUpdateOperationsInput = {
     set?: $Enums.TaskStatus
   }
@@ -10653,6 +10988,42 @@ export namespace Prisma {
     upsert?: ProjectUpsertWithoutTasksInput
     connect?: ProjectWhereUniqueInput
     update?: XOR<XOR<ProjectUpdateToOneWithWhereWithoutTasksInput, ProjectUpdateWithoutTasksInput>, ProjectUncheckedUpdateWithoutTasksInput>
+  }
+
+  export type UserUpdateOneWithoutTaskNestedInput = {
+    create?: XOR<UserCreateWithoutTaskInput, UserUncheckedCreateWithoutTaskInput>
+    connectOrCreate?: UserCreateOrConnectWithoutTaskInput
+    upsert?: UserUpsertWithoutTaskInput
+    disconnect?: UserWhereInput | boolean
+    delete?: UserWhereInput | boolean
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutTaskInput, UserUpdateWithoutTaskInput>, UserUncheckedUpdateWithoutTaskInput>
+  }
+
+  export type UserUpdateManyWithoutAssignedTasksNestedInput = {
+    create?: XOR<UserCreateWithoutAssignedTasksInput, UserUncheckedCreateWithoutAssignedTasksInput> | UserCreateWithoutAssignedTasksInput[] | UserUncheckedCreateWithoutAssignedTasksInput[]
+    connectOrCreate?: UserCreateOrConnectWithoutAssignedTasksInput | UserCreateOrConnectWithoutAssignedTasksInput[]
+    upsert?: UserUpsertWithWhereUniqueWithoutAssignedTasksInput | UserUpsertWithWhereUniqueWithoutAssignedTasksInput[]
+    set?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    disconnect?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    delete?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    connect?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    update?: UserUpdateWithWhereUniqueWithoutAssignedTasksInput | UserUpdateWithWhereUniqueWithoutAssignedTasksInput[]
+    updateMany?: UserUpdateManyWithWhereWithoutAssignedTasksInput | UserUpdateManyWithWhereWithoutAssignedTasksInput[]
+    deleteMany?: UserScalarWhereInput | UserScalarWhereInput[]
+  }
+
+  export type UserUncheckedUpdateManyWithoutAssignedTasksNestedInput = {
+    create?: XOR<UserCreateWithoutAssignedTasksInput, UserUncheckedCreateWithoutAssignedTasksInput> | UserCreateWithoutAssignedTasksInput[] | UserUncheckedCreateWithoutAssignedTasksInput[]
+    connectOrCreate?: UserCreateOrConnectWithoutAssignedTasksInput | UserCreateOrConnectWithoutAssignedTasksInput[]
+    upsert?: UserUpsertWithWhereUniqueWithoutAssignedTasksInput | UserUpsertWithWhereUniqueWithoutAssignedTasksInput[]
+    set?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    disconnect?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    delete?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    connect?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    update?: UserUpdateWithWhereUniqueWithoutAssignedTasksInput | UserUpdateWithWhereUniqueWithoutAssignedTasksInput[]
+    updateMany?: UserUpdateManyWithWhereWithoutAssignedTasksInput | UserUpdateManyWithWhereWithoutAssignedTasksInput[]
+    deleteMany?: UserScalarWhereInput | UserScalarWhereInput[]
   }
 
   export type UserCreateNestedOneWithoutUploadedFilesInput = {
@@ -11044,6 +11415,33 @@ export namespace Prisma {
     create: XOR<ProjectCreateWithoutAssignedUsersInput, ProjectUncheckedCreateWithoutAssignedUsersInput>
   }
 
+  export type TaskCreateWithoutAssignedUsersInput = {
+    id?: string
+    title: string
+    description?: string | null
+    status: $Enums.TaskStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    project: ProjectCreateNestedOneWithoutTasksInput
+    User?: UserCreateNestedOneWithoutTaskInput
+  }
+
+  export type TaskUncheckedCreateWithoutAssignedUsersInput = {
+    id?: string
+    title: string
+    description?: string | null
+    status: $Enums.TaskStatus
+    projectId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    userId?: string | null
+  }
+
+  export type TaskCreateOrConnectWithoutAssignedUsersInput = {
+    where: TaskWhereUniqueInput
+    create: XOR<TaskCreateWithoutAssignedUsersInput, TaskUncheckedCreateWithoutAssignedUsersInput>
+  }
+
   export type MessageCreateWithoutAuthorInput = {
     id?: string
     content: string
@@ -11154,6 +11552,38 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type TaskCreateWithoutUserInput = {
+    id?: string
+    title: string
+    description?: string | null
+    status: $Enums.TaskStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    project: ProjectCreateNestedOneWithoutTasksInput
+    assignedUsers?: UserCreateNestedManyWithoutAssignedTasksInput
+  }
+
+  export type TaskUncheckedCreateWithoutUserInput = {
+    id?: string
+    title: string
+    description?: string | null
+    status: $Enums.TaskStatus
+    projectId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    assignedUsers?: UserUncheckedCreateNestedManyWithoutAssignedTasksInput
+  }
+
+  export type TaskCreateOrConnectWithoutUserInput = {
+    where: TaskWhereUniqueInput
+    create: XOR<TaskCreateWithoutUserInput, TaskUncheckedCreateWithoutUserInput>
+  }
+
+  export type TaskCreateManyUserInputEnvelope = {
+    data: TaskCreateManyUserInput | TaskCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
   export type ProjectUpsertWithWhereUniqueWithoutAssignedUsersInput = {
     where: ProjectWhereUniqueInput
     update: XOR<ProjectUpdateWithoutAssignedUsersInput, ProjectUncheckedUpdateWithoutAssignedUsersInput>
@@ -11179,6 +11609,36 @@ export namespace Prisma {
     description?: StringNullableFilter<"Project"> | string | null
     createdAt?: DateTimeFilter<"Project"> | Date | string
     updatedAt?: DateTimeFilter<"Project"> | Date | string
+  }
+
+  export type TaskUpsertWithWhereUniqueWithoutAssignedUsersInput = {
+    where: TaskWhereUniqueInput
+    update: XOR<TaskUpdateWithoutAssignedUsersInput, TaskUncheckedUpdateWithoutAssignedUsersInput>
+    create: XOR<TaskCreateWithoutAssignedUsersInput, TaskUncheckedCreateWithoutAssignedUsersInput>
+  }
+
+  export type TaskUpdateWithWhereUniqueWithoutAssignedUsersInput = {
+    where: TaskWhereUniqueInput
+    data: XOR<TaskUpdateWithoutAssignedUsersInput, TaskUncheckedUpdateWithoutAssignedUsersInput>
+  }
+
+  export type TaskUpdateManyWithWhereWithoutAssignedUsersInput = {
+    where: TaskScalarWhereInput
+    data: XOR<TaskUpdateManyMutationInput, TaskUncheckedUpdateManyWithoutAssignedUsersInput>
+  }
+
+  export type TaskScalarWhereInput = {
+    AND?: TaskScalarWhereInput | TaskScalarWhereInput[]
+    OR?: TaskScalarWhereInput[]
+    NOT?: TaskScalarWhereInput | TaskScalarWhereInput[]
+    id?: StringFilter<"Task"> | string
+    title?: StringFilter<"Task"> | string
+    description?: StringNullableFilter<"Task"> | string | null
+    status?: EnumTaskStatusFilter<"Task"> | $Enums.TaskStatus
+    projectId?: StringFilter<"Task"> | string
+    createdAt?: DateTimeFilter<"Task"> | Date | string
+    updatedAt?: DateTimeFilter<"Task"> | Date | string
+    userId?: StringNullableFilter<"Task"> | string | null
   }
 
   export type MessageUpsertWithWhereUniqueWithoutAuthorInput = {
@@ -11294,34 +11754,56 @@ export namespace Prisma {
     triggeredBy?: StringFilter<"DeepResearchLog"> | string
   }
 
+  export type TaskUpsertWithWhereUniqueWithoutUserInput = {
+    where: TaskWhereUniqueInput
+    update: XOR<TaskUpdateWithoutUserInput, TaskUncheckedUpdateWithoutUserInput>
+    create: XOR<TaskCreateWithoutUserInput, TaskUncheckedCreateWithoutUserInput>
+  }
+
+  export type TaskUpdateWithWhereUniqueWithoutUserInput = {
+    where: TaskWhereUniqueInput
+    data: XOR<TaskUpdateWithoutUserInput, TaskUncheckedUpdateWithoutUserInput>
+  }
+
+  export type TaskUpdateManyWithWhereWithoutUserInput = {
+    where: TaskScalarWhereInput
+    data: XOR<TaskUpdateManyMutationInput, TaskUncheckedUpdateManyWithoutUserInput>
+  }
+
   export type UserCreateWithoutAssignedProjectsInput = {
     id?: string
     email: string
     password: string
-    name: string
+    lastName: string
+    firstName: string
     role: $Enums.Role
     invitationAccepted?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    assignedTasks?: TaskCreateNestedManyWithoutAssignedUsersInput
     messages?: MessageCreateNestedManyWithoutAuthorInput
     conversations?: ConversationCreateNestedManyWithoutAuthorInput
     uploadedFiles?: FileCreateNestedManyWithoutUploadedByInput
     deepResearchLogs?: DeepResearchLogCreateNestedManyWithoutUserInput
+    Task?: TaskCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutAssignedProjectsInput = {
     id?: string
     email: string
     password: string
-    name: string
+    lastName: string
+    firstName: string
     role: $Enums.Role
     invitationAccepted?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    assignedTasks?: TaskUncheckedCreateNestedManyWithoutAssignedUsersInput
     messages?: MessageUncheckedCreateNestedManyWithoutAuthorInput
     conversations?: ConversationUncheckedCreateNestedManyWithoutAuthorInput
     uploadedFiles?: FileUncheckedCreateNestedManyWithoutUploadedByInput
     deepResearchLogs?: DeepResearchLogUncheckedCreateNestedManyWithoutUserInput
+    Task?: TaskUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutAssignedProjectsInput = {
@@ -11398,6 +11880,8 @@ export namespace Prisma {
     status: $Enums.TaskStatus
     createdAt?: Date | string
     updatedAt?: Date | string
+    User?: UserCreateNestedOneWithoutTaskInput
+    assignedUsers?: UserCreateNestedManyWithoutAssignedTasksInput
   }
 
   export type TaskUncheckedCreateWithoutProjectInput = {
@@ -11407,6 +11891,8 @@ export namespace Prisma {
     status: $Enums.TaskStatus
     createdAt?: Date | string
     updatedAt?: Date | string
+    userId?: string | null
+    assignedUsers?: UserUncheckedCreateNestedManyWithoutAssignedTasksInput
   }
 
   export type TaskCreateOrConnectWithoutProjectInput = {
@@ -11442,7 +11928,8 @@ export namespace Prisma {
     id?: StringFilter<"User"> | string
     email?: StringFilter<"User"> | string
     password?: StringFilter<"User"> | string
-    name?: StringFilter<"User"> | string
+    lastName?: StringFilter<"User"> | string
+    firstName?: StringFilter<"User"> | string
     role?: EnumRoleFilter<"User"> | $Enums.Role
     invitationAccepted?: BoolFilter<"User"> | boolean
     createdAt?: DateTimeFilter<"User"> | Date | string
@@ -11497,19 +11984,6 @@ export namespace Prisma {
     data: XOR<TaskUpdateManyMutationInput, TaskUncheckedUpdateManyWithoutProjectInput>
   }
 
-  export type TaskScalarWhereInput = {
-    AND?: TaskScalarWhereInput | TaskScalarWhereInput[]
-    OR?: TaskScalarWhereInput[]
-    NOT?: TaskScalarWhereInput | TaskScalarWhereInput[]
-    id?: StringFilter<"Task"> | string
-    title?: StringFilter<"Task"> | string
-    description?: StringNullableFilter<"Task"> | string | null
-    status?: EnumTaskStatusFilter<"Task"> | $Enums.TaskStatus
-    projectId?: StringFilter<"Task"> | string
-    createdAt?: DateTimeFilter<"Task"> | Date | string
-    updatedAt?: DateTimeFilter<"Task"> | Date | string
-  }
-
   export type ProjectCreateWithoutTasksInput = {
     id?: string
     name: string
@@ -11535,6 +12009,88 @@ export namespace Prisma {
   export type ProjectCreateOrConnectWithoutTasksInput = {
     where: ProjectWhereUniqueInput
     create: XOR<ProjectCreateWithoutTasksInput, ProjectUncheckedCreateWithoutTasksInput>
+  }
+
+  export type UserCreateWithoutTaskInput = {
+    id?: string
+    email: string
+    password: string
+    lastName: string
+    firstName: string
+    role: $Enums.Role
+    invitationAccepted?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    assignedProjects?: ProjectCreateNestedManyWithoutAssignedUsersInput
+    assignedTasks?: TaskCreateNestedManyWithoutAssignedUsersInput
+    messages?: MessageCreateNestedManyWithoutAuthorInput
+    conversations?: ConversationCreateNestedManyWithoutAuthorInput
+    uploadedFiles?: FileCreateNestedManyWithoutUploadedByInput
+    deepResearchLogs?: DeepResearchLogCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutTaskInput = {
+    id?: string
+    email: string
+    password: string
+    lastName: string
+    firstName: string
+    role: $Enums.Role
+    invitationAccepted?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    assignedProjects?: ProjectUncheckedCreateNestedManyWithoutAssignedUsersInput
+    assignedTasks?: TaskUncheckedCreateNestedManyWithoutAssignedUsersInput
+    messages?: MessageUncheckedCreateNestedManyWithoutAuthorInput
+    conversations?: ConversationUncheckedCreateNestedManyWithoutAuthorInput
+    uploadedFiles?: FileUncheckedCreateNestedManyWithoutUploadedByInput
+    deepResearchLogs?: DeepResearchLogUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutTaskInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutTaskInput, UserUncheckedCreateWithoutTaskInput>
+  }
+
+  export type UserCreateWithoutAssignedTasksInput = {
+    id?: string
+    email: string
+    password: string
+    lastName: string
+    firstName: string
+    role: $Enums.Role
+    invitationAccepted?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    assignedProjects?: ProjectCreateNestedManyWithoutAssignedUsersInput
+    messages?: MessageCreateNestedManyWithoutAuthorInput
+    conversations?: ConversationCreateNestedManyWithoutAuthorInput
+    uploadedFiles?: FileCreateNestedManyWithoutUploadedByInput
+    deepResearchLogs?: DeepResearchLogCreateNestedManyWithoutUserInput
+    Task?: TaskCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutAssignedTasksInput = {
+    id?: string
+    email: string
+    password: string
+    lastName: string
+    firstName: string
+    role: $Enums.Role
+    invitationAccepted?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    assignedProjects?: ProjectUncheckedCreateNestedManyWithoutAssignedUsersInput
+    messages?: MessageUncheckedCreateNestedManyWithoutAuthorInput
+    conversations?: ConversationUncheckedCreateNestedManyWithoutAuthorInput
+    uploadedFiles?: FileUncheckedCreateNestedManyWithoutUploadedByInput
+    deepResearchLogs?: DeepResearchLogUncheckedCreateNestedManyWithoutUserInput
+    Task?: TaskUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutAssignedTasksInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutAssignedTasksInput, UserUncheckedCreateWithoutAssignedTasksInput>
   }
 
   export type ProjectUpsertWithoutTasksInput = {
@@ -11570,34 +12126,103 @@ export namespace Prisma {
     conversations?: ConversationUncheckedUpdateManyWithoutProjectNestedInput
   }
 
+  export type UserUpsertWithoutTaskInput = {
+    update: XOR<UserUpdateWithoutTaskInput, UserUncheckedUpdateWithoutTaskInput>
+    create: XOR<UserCreateWithoutTaskInput, UserUncheckedCreateWithoutTaskInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutTaskInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutTaskInput, UserUncheckedUpdateWithoutTaskInput>
+  }
+
+  export type UserUpdateWithoutTaskInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    invitationAccepted?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    assignedProjects?: ProjectUpdateManyWithoutAssignedUsersNestedInput
+    assignedTasks?: TaskUpdateManyWithoutAssignedUsersNestedInput
+    messages?: MessageUpdateManyWithoutAuthorNestedInput
+    conversations?: ConversationUpdateManyWithoutAuthorNestedInput
+    uploadedFiles?: FileUpdateManyWithoutUploadedByNestedInput
+    deepResearchLogs?: DeepResearchLogUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutTaskInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    invitationAccepted?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    assignedProjects?: ProjectUncheckedUpdateManyWithoutAssignedUsersNestedInput
+    assignedTasks?: TaskUncheckedUpdateManyWithoutAssignedUsersNestedInput
+    messages?: MessageUncheckedUpdateManyWithoutAuthorNestedInput
+    conversations?: ConversationUncheckedUpdateManyWithoutAuthorNestedInput
+    uploadedFiles?: FileUncheckedUpdateManyWithoutUploadedByNestedInput
+    deepResearchLogs?: DeepResearchLogUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUpsertWithWhereUniqueWithoutAssignedTasksInput = {
+    where: UserWhereUniqueInput
+    update: XOR<UserUpdateWithoutAssignedTasksInput, UserUncheckedUpdateWithoutAssignedTasksInput>
+    create: XOR<UserCreateWithoutAssignedTasksInput, UserUncheckedCreateWithoutAssignedTasksInput>
+  }
+
+  export type UserUpdateWithWhereUniqueWithoutAssignedTasksInput = {
+    where: UserWhereUniqueInput
+    data: XOR<UserUpdateWithoutAssignedTasksInput, UserUncheckedUpdateWithoutAssignedTasksInput>
+  }
+
+  export type UserUpdateManyWithWhereWithoutAssignedTasksInput = {
+    where: UserScalarWhereInput
+    data: XOR<UserUpdateManyMutationInput, UserUncheckedUpdateManyWithoutAssignedTasksInput>
+  }
+
   export type UserCreateWithoutUploadedFilesInput = {
     id?: string
     email: string
     password: string
-    name: string
+    lastName: string
+    firstName: string
     role: $Enums.Role
     invitationAccepted?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     assignedProjects?: ProjectCreateNestedManyWithoutAssignedUsersInput
+    assignedTasks?: TaskCreateNestedManyWithoutAssignedUsersInput
     messages?: MessageCreateNestedManyWithoutAuthorInput
     conversations?: ConversationCreateNestedManyWithoutAuthorInput
     deepResearchLogs?: DeepResearchLogCreateNestedManyWithoutUserInput
+    Task?: TaskCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutUploadedFilesInput = {
     id?: string
     email: string
     password: string
-    name: string
+    lastName: string
+    firstName: string
     role: $Enums.Role
     invitationAccepted?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     assignedProjects?: ProjectUncheckedCreateNestedManyWithoutAssignedUsersInput
+    assignedTasks?: TaskUncheckedCreateNestedManyWithoutAssignedUsersInput
     messages?: MessageUncheckedCreateNestedManyWithoutAuthorInput
     conversations?: ConversationUncheckedCreateNestedManyWithoutAuthorInput
     deepResearchLogs?: DeepResearchLogUncheckedCreateNestedManyWithoutUserInput
+    Task?: TaskUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutUploadedFilesInput = {
@@ -11672,30 +12297,36 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     invitationAccepted?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     assignedProjects?: ProjectUpdateManyWithoutAssignedUsersNestedInput
+    assignedTasks?: TaskUpdateManyWithoutAssignedUsersNestedInput
     messages?: MessageUpdateManyWithoutAuthorNestedInput
     conversations?: ConversationUpdateManyWithoutAuthorNestedInput
     deepResearchLogs?: DeepResearchLogUpdateManyWithoutUserNestedInput
+    Task?: TaskUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutUploadedFilesInput = {
     id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     invitationAccepted?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     assignedProjects?: ProjectUncheckedUpdateManyWithoutAssignedUsersNestedInput
+    assignedTasks?: TaskUncheckedUpdateManyWithoutAssignedUsersNestedInput
     messages?: MessageUncheckedUpdateManyWithoutAuthorNestedInput
     conversations?: ConversationUncheckedUpdateManyWithoutAuthorNestedInput
     deepResearchLogs?: DeepResearchLogUncheckedUpdateManyWithoutUserNestedInput
+    Task?: TaskUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type ProjectUpsertWithoutFilesInput = {
@@ -11793,30 +12424,36 @@ export namespace Prisma {
     id?: string
     email: string
     password: string
-    name: string
+    lastName: string
+    firstName: string
     role: $Enums.Role
     invitationAccepted?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     assignedProjects?: ProjectCreateNestedManyWithoutAssignedUsersInput
+    assignedTasks?: TaskCreateNestedManyWithoutAssignedUsersInput
     messages?: MessageCreateNestedManyWithoutAuthorInput
     uploadedFiles?: FileCreateNestedManyWithoutUploadedByInput
     deepResearchLogs?: DeepResearchLogCreateNestedManyWithoutUserInput
+    Task?: TaskCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutConversationsInput = {
     id?: string
     email: string
     password: string
-    name: string
+    lastName: string
+    firstName: string
     role: $Enums.Role
     invitationAccepted?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     assignedProjects?: ProjectUncheckedCreateNestedManyWithoutAssignedUsersInput
+    assignedTasks?: TaskUncheckedCreateNestedManyWithoutAssignedUsersInput
     messages?: MessageUncheckedCreateNestedManyWithoutAuthorInput
     uploadedFiles?: FileUncheckedCreateNestedManyWithoutUploadedByInput
     deepResearchLogs?: DeepResearchLogUncheckedCreateNestedManyWithoutUserInput
+    Task?: TaskUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutConversationsInput = {
@@ -11930,30 +12567,36 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     invitationAccepted?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     assignedProjects?: ProjectUpdateManyWithoutAssignedUsersNestedInput
+    assignedTasks?: TaskUpdateManyWithoutAssignedUsersNestedInput
     messages?: MessageUpdateManyWithoutAuthorNestedInput
     uploadedFiles?: FileUpdateManyWithoutUploadedByNestedInput
     deepResearchLogs?: DeepResearchLogUpdateManyWithoutUserNestedInput
+    Task?: TaskUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutConversationsInput = {
     id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     invitationAccepted?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     assignedProjects?: ProjectUncheckedUpdateManyWithoutAssignedUsersNestedInput
+    assignedTasks?: TaskUncheckedUpdateManyWithoutAssignedUsersNestedInput
     messages?: MessageUncheckedUpdateManyWithoutAuthorNestedInput
     uploadedFiles?: FileUncheckedUpdateManyWithoutUploadedByNestedInput
     deepResearchLogs?: DeepResearchLogUncheckedUpdateManyWithoutUserNestedInput
+    Task?: TaskUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type MessageUpsertWithWhereUniqueWithoutConversationInput = {
@@ -12017,30 +12660,36 @@ export namespace Prisma {
     id?: string
     email: string
     password: string
-    name: string
+    lastName: string
+    firstName: string
     role: $Enums.Role
     invitationAccepted?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     assignedProjects?: ProjectCreateNestedManyWithoutAssignedUsersInput
+    assignedTasks?: TaskCreateNestedManyWithoutAssignedUsersInput
     conversations?: ConversationCreateNestedManyWithoutAuthorInput
     uploadedFiles?: FileCreateNestedManyWithoutUploadedByInput
     deepResearchLogs?: DeepResearchLogCreateNestedManyWithoutUserInput
+    Task?: TaskCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutMessagesInput = {
     id?: string
     email: string
     password: string
-    name: string
+    lastName: string
+    firstName: string
     role: $Enums.Role
     invitationAccepted?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     assignedProjects?: ProjectUncheckedCreateNestedManyWithoutAssignedUsersInput
+    assignedTasks?: TaskUncheckedCreateNestedManyWithoutAssignedUsersInput
     conversations?: ConversationUncheckedCreateNestedManyWithoutAuthorInput
     uploadedFiles?: FileUncheckedCreateNestedManyWithoutUploadedByInput
     deepResearchLogs?: DeepResearchLogUncheckedCreateNestedManyWithoutUserInput
+    Task?: TaskUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutMessagesInput = {
@@ -12094,60 +12743,72 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     invitationAccepted?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     assignedProjects?: ProjectUpdateManyWithoutAssignedUsersNestedInput
+    assignedTasks?: TaskUpdateManyWithoutAssignedUsersNestedInput
     conversations?: ConversationUpdateManyWithoutAuthorNestedInput
     uploadedFiles?: FileUpdateManyWithoutUploadedByNestedInput
     deepResearchLogs?: DeepResearchLogUpdateManyWithoutUserNestedInput
+    Task?: TaskUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutMessagesInput = {
     id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     invitationAccepted?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     assignedProjects?: ProjectUncheckedUpdateManyWithoutAssignedUsersNestedInput
+    assignedTasks?: TaskUncheckedUpdateManyWithoutAssignedUsersNestedInput
     conversations?: ConversationUncheckedUpdateManyWithoutAuthorNestedInput
     uploadedFiles?: FileUncheckedUpdateManyWithoutUploadedByNestedInput
     deepResearchLogs?: DeepResearchLogUncheckedUpdateManyWithoutUserNestedInput
+    Task?: TaskUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutDeepResearchLogsInput = {
     id?: string
     email: string
     password: string
-    name: string
+    lastName: string
+    firstName: string
     role: $Enums.Role
     invitationAccepted?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     assignedProjects?: ProjectCreateNestedManyWithoutAssignedUsersInput
+    assignedTasks?: TaskCreateNestedManyWithoutAssignedUsersInput
     messages?: MessageCreateNestedManyWithoutAuthorInput
     conversations?: ConversationCreateNestedManyWithoutAuthorInput
     uploadedFiles?: FileCreateNestedManyWithoutUploadedByInput
+    Task?: TaskCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutDeepResearchLogsInput = {
     id?: string
     email: string
     password: string
-    name: string
+    lastName: string
+    firstName: string
     role: $Enums.Role
     invitationAccepted?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     assignedProjects?: ProjectUncheckedCreateNestedManyWithoutAssignedUsersInput
+    assignedTasks?: TaskUncheckedCreateNestedManyWithoutAssignedUsersInput
     messages?: MessageUncheckedCreateNestedManyWithoutAuthorInput
     conversations?: ConversationUncheckedCreateNestedManyWithoutAuthorInput
     uploadedFiles?: FileUncheckedCreateNestedManyWithoutUploadedByInput
+    Task?: TaskUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutDeepResearchLogsInput = {
@@ -12170,30 +12831,36 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     invitationAccepted?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     assignedProjects?: ProjectUpdateManyWithoutAssignedUsersNestedInput
+    assignedTasks?: TaskUpdateManyWithoutAssignedUsersNestedInput
     messages?: MessageUpdateManyWithoutAuthorNestedInput
     conversations?: ConversationUpdateManyWithoutAuthorNestedInput
     uploadedFiles?: FileUpdateManyWithoutUploadedByNestedInput
+    Task?: TaskUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutDeepResearchLogsInput = {
     id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     invitationAccepted?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     assignedProjects?: ProjectUncheckedUpdateManyWithoutAssignedUsersNestedInput
+    assignedTasks?: TaskUncheckedUpdateManyWithoutAssignedUsersNestedInput
     messages?: MessageUncheckedUpdateManyWithoutAuthorNestedInput
     conversations?: ConversationUncheckedUpdateManyWithoutAuthorNestedInput
     uploadedFiles?: FileUncheckedUpdateManyWithoutUploadedByNestedInput
+    Task?: TaskUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type MessageCreateManyAuthorInput = {
@@ -12229,6 +12896,16 @@ export namespace Prisma {
     triggeredBy: string
   }
 
+  export type TaskCreateManyUserInput = {
+    id?: string
+    title: string
+    description?: string | null
+    status: $Enums.TaskStatus
+    projectId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
   export type ProjectUpdateWithoutAssignedUsersInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
@@ -12257,6 +12934,39 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TaskUpdateWithoutAssignedUsersInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    project?: ProjectUpdateOneRequiredWithoutTasksNestedInput
+    User?: UserUpdateOneWithoutTaskNestedInput
+  }
+
+  export type TaskUncheckedUpdateWithoutAssignedUsersInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
+    projectId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    userId?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type TaskUncheckedUpdateManyWithoutAssignedUsersInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
+    projectId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    userId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type MessageUpdateWithoutAuthorInput = {
@@ -12362,6 +13072,38 @@ export namespace Prisma {
     triggeredBy?: StringFieldUpdateOperationsInput | string
   }
 
+  export type TaskUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    project?: ProjectUpdateOneRequiredWithoutTasksNestedInput
+    assignedUsers?: UserUpdateManyWithoutAssignedTasksNestedInput
+  }
+
+  export type TaskUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
+    projectId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    assignedUsers?: UserUncheckedUpdateManyWithoutAssignedTasksNestedInput
+  }
+
+  export type TaskUncheckedUpdateManyWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
+    projectId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type FileCreateManyProjectInput = {
     id?: string
     name: string
@@ -12388,43 +13130,51 @@ export namespace Prisma {
     status: $Enums.TaskStatus
     createdAt?: Date | string
     updatedAt?: Date | string
+    userId?: string | null
   }
 
   export type UserUpdateWithoutAssignedProjectsInput = {
     id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     invitationAccepted?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    assignedTasks?: TaskUpdateManyWithoutAssignedUsersNestedInput
     messages?: MessageUpdateManyWithoutAuthorNestedInput
     conversations?: ConversationUpdateManyWithoutAuthorNestedInput
     uploadedFiles?: FileUpdateManyWithoutUploadedByNestedInput
     deepResearchLogs?: DeepResearchLogUpdateManyWithoutUserNestedInput
+    Task?: TaskUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutAssignedProjectsInput = {
     id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     invitationAccepted?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    assignedTasks?: TaskUncheckedUpdateManyWithoutAssignedUsersNestedInput
     messages?: MessageUncheckedUpdateManyWithoutAuthorNestedInput
     conversations?: ConversationUncheckedUpdateManyWithoutAuthorNestedInput
     uploadedFiles?: FileUncheckedUpdateManyWithoutUploadedByNestedInput
     deepResearchLogs?: DeepResearchLogUncheckedUpdateManyWithoutUserNestedInput
+    Task?: TaskUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateManyWithoutAssignedProjectsInput = {
     id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     invitationAccepted?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -12499,6 +13249,8 @@ export namespace Prisma {
     status?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    User?: UserUpdateOneWithoutTaskNestedInput
+    assignedUsers?: UserUpdateManyWithoutAssignedTasksNestedInput
   }
 
   export type TaskUncheckedUpdateWithoutProjectInput = {
@@ -12508,6 +13260,8 @@ export namespace Prisma {
     status?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    userId?: NullableStringFieldUpdateOperationsInput | string | null
+    assignedUsers?: UserUncheckedUpdateManyWithoutAssignedTasksNestedInput
   }
 
   export type TaskUncheckedUpdateManyWithoutProjectInput = {
@@ -12515,6 +13269,55 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    userId?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type UserUpdateWithoutAssignedTasksInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    invitationAccepted?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    assignedProjects?: ProjectUpdateManyWithoutAssignedUsersNestedInput
+    messages?: MessageUpdateManyWithoutAuthorNestedInput
+    conversations?: ConversationUpdateManyWithoutAuthorNestedInput
+    uploadedFiles?: FileUpdateManyWithoutUploadedByNestedInput
+    deepResearchLogs?: DeepResearchLogUpdateManyWithoutUserNestedInput
+    Task?: TaskUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutAssignedTasksInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    invitationAccepted?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    assignedProjects?: ProjectUncheckedUpdateManyWithoutAssignedUsersNestedInput
+    messages?: MessageUncheckedUpdateManyWithoutAuthorNestedInput
+    conversations?: ConversationUncheckedUpdateManyWithoutAuthorNestedInput
+    uploadedFiles?: FileUncheckedUpdateManyWithoutUploadedByNestedInput
+    deepResearchLogs?: DeepResearchLogUncheckedUpdateManyWithoutUserNestedInput
+    Task?: TaskUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateManyWithoutAssignedTasksInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    invitationAccepted?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }

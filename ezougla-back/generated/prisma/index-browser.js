@@ -124,7 +124,8 @@ exports.Prisma.UserScalarFieldEnum = {
   id: 'id',
   email: 'email',
   password: 'password',
-  name: 'name',
+  lastName: 'lastName',
+  firstName: 'firstName',
   role: 'role',
   invitationAccepted: 'invitationAccepted',
   createdAt: 'createdAt',
@@ -146,7 +147,8 @@ exports.Prisma.TaskScalarFieldEnum = {
   status: 'status',
   projectId: 'projectId',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  userId: 'userId'
 };
 
 exports.Prisma.FileScalarFieldEnum = {
@@ -195,7 +197,8 @@ exports.Prisma.UserOrderByRelevanceFieldEnum = {
   id: 'id',
   email: 'email',
   password: 'password',
-  name: 'name'
+  lastName: 'lastName',
+  firstName: 'firstName'
 };
 
 exports.Prisma.NullsOrder = {
@@ -213,7 +216,8 @@ exports.Prisma.TaskOrderByRelevanceFieldEnum = {
   id: 'id',
   title: 'title',
   description: 'description',
-  projectId: 'projectId'
+  projectId: 'projectId',
+  userId: 'userId'
 };
 
 exports.Prisma.FileOrderByRelevanceFieldEnum = {

@@ -1,9 +1,9 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
-import { User } from 'generated/prisma';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { TokenModel } from './dto/token.interface';
+import { User } from '@prisma/client';
 
 @Injectable()
 export class AuthService {
@@ -17,7 +17,7 @@ export class AuthService {
                 email: email
             }
         });
-        if (user && await bcrypt.compare(password, user.password)) {
+        if (user && user.role !== 'NOT_VALIDATE' && await bcrypt.compare(password, user.password)) {
             return {
                 access_token: await this.generateJwt(user)
             };

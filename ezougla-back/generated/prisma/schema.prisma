@@ -24,9 +24,11 @@ model User {
   id                 String            @id @default(uuid())
   email              String            @unique
   password           String
-  name               String
+  lastName           String
+  firstName          String
   role               Role
   assignedProjects   Project[]         @relation("AssignedUsers")
+  assignedTasks      Task[]            @relation("UserTasks")
   messages           Message[]
   conversations      Conversation[]    @relation("ConversationAuthor")
   uploadedFiles      File[]
@@ -34,6 +36,7 @@ model User {
   invitationAccepted Boolean           @default(false)
   createdAt          DateTime          @default(now())
   updatedAt          DateTime          @updatedAt
+  Task               Task[]
 }
 
 model Project {
@@ -49,14 +52,17 @@ model Project {
 }
 
 model Task {
-  id          String     @id @default(uuid())
-  title       String
-  description String?
-  status      TaskStatus // ex: "TODO", "IN_PROGRESS", "DONE"
-  projectId   String
-  project     Project    @relation(fields: [projectId], references: [id])
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
+  id            String     @id @default(uuid())
+  title         String
+  description   String?
+  status        TaskStatus
+  projectId     String
+  project       Project    @relation(fields: [projectId], references: [id])
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+  User          User?      @relation(fields: [userId], references: [id])
+  userId        String?
+  assignedUsers User[]     @relation("UserTasks")
 }
 
 model File {

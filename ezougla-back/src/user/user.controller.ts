@@ -1,15 +1,18 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
 import { UserService } from './user.service';
-import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { RegisterUser } from './dto/create-user.interface';
+import { Public } from 'src/auth/public.decorator';
+import { MessageModel } from 'src/common/model/message.interface';
 
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) { }
 
-  @Post()
-  create(@Body() createUserDto: CreateUserDto) {
-    return this.userService.create(createUserDto);
+  @Post('register')
+  @Public()
+  create(@Body() createUserDto: RegisterUser): Promise<MessageModel> {
+    return this.userService.registerUser(createUserDto);
   }
 
   @Get()

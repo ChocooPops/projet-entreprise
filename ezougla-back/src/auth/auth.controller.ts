@@ -11,6 +11,6 @@ export class AuthController {
     @Post('login')
     @Public()
     async login(@Body() body: AuthModel): Promise<TokenModel> {
-        return this.authService.signIn(body.email, body.password);
+        return await this.authService.signIn(body.email, body.password);
     }
 }

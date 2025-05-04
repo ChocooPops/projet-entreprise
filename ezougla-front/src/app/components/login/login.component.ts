@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { AuthService } from '../../services/auth/auth.service';
 import { AuthModel } from '../../model/auth.interface';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -11,7 +11,7 @@ import { Router, ActivatedRoute } from '@angular/router';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent {
   formGroup!: FormGroup;
   placeHolderEmail: string = 'email';
   placeHolderPassword: string = 'mot de passe';
@@ -19,13 +19,11 @@ export class LoginComponent implements OnInit {
   srcImageNotVisible: string = './not-visible.svg';
   srcImagePassword: string = this.srcImageNotVisible;
   type: string = 'password';
-  returnUrl: string = '/';
-  returnUrlRegister: string = '/';
+  message: string = '';
 
   constructor(private fb: FormBuilder,
     private authService: AuthService,
-    private router: Router,
-    private route: ActivatedRoute
+    private router: Router
   ) { }
 
   ngOnInit(): void {
@@ -33,8 +31,6 @@ export class LoginComponent implements OnInit {
       inputEmail: ['', [Validators.required, Validators.email]],
       inputPassword: ['', [Validators.required, Validators.minLength(6)]]
     });
-    this.returnUrl = this.route.snapshot.queryParams['home'] || '/';
-    this.returnUrlRegister = this.route.snapshot.queryParams['register'] || '/';
   }
 
   onSubmit(): void {
@@ -45,14 +41,17 @@ export class LoginComponent implements OnInit {
         email: email,
         password: password
       }
+      this.message = '';
       this.authService.fetchLogin(auth).subscribe({
         next: () => {
-          this.router.navigateByUrl(this.returnUrl);
+          this.router.navigate(['home']);
         },
         error: err => {
-          console.error('Erreur de connexion', err);
+          this.message = 'Identifiant ou mots de passe invalide';
         }
       })
+    } else {
+      this.message = 'Formulaire invalide';
     }
   }
 
@@ -67,6 +66,6 @@ export class LoginComponent implements OnInit {
   }
 
   onClickRegister() {
-    this.router.navigateByUrl(this.returnUrlRegister);
+    this.router.navigate(['register']);
   }
 }

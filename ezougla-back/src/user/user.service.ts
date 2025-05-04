@@ -1,8 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { User } from 'generated/prisma';
+import { RegisterUser } from './dto/create-user.interface';
+import { MessageModel } from 'src/common/model/message.interface';
+import { User } from '@prisma/client';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UserService {
@@ -15,8 +17,33 @@ export class UserService {
     });
   }
 
-  create(createUserDto: CreateUserDto) {
-    return 'This action adds a new user';
+  async registerUser(userRegister: RegisterUser): Promise<MessageModel> {
+    let message: MessageModel = { message: '' };
+    const user: User = await this.prisma.user.findUnique({
+      where: {
+        email: userRegister.email
+      }
+    })
+    if (user) {
+      if (user.role === 'NOT_VALIDATE') {
+        message.message = 'Votre demande de connection est en attente de validation'
+      } else {
+        message.message = "Cette identifiant existe deja";
+      }
+    } else {
+      const hashedPassword = await bcrypt.hash(userRegister.password, 10);
+      const newUser: User = await this.prisma.user.create({
+        data: {
+          firstName: userRegister.firstName,
+          lastName: userRegister.lastName,
+          email: userRegister.email,
+          password: hashedPassword,
+          role: 'NOT_VALIDATE'
+        }
+      });
+      message.message = "Votre de demande d'inscription a été envoyé, vous recevrez prochainement un email de validation"
+    }
+    return message;
   }
 
   findAll() {

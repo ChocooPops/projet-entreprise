@@ -14,23 +14,11 @@ export class AuthService {
   constructor(private http: HttpClient) { }
 
   private readonly apiUrlLogin = `${environment.apiUrl}/${environment.apiUrlAuth}/${environment.apiUrlLogin}`;
-  private readonly apiUrlRegister = `${environment.apiUrl}/${environment.apiUrlAuth}/${environment.apiUrlRegister}`;
   private nameStorageToken: string = 'acces_token'
 
   public fetchLogin(auth: AuthModel) {
-    return this.http.get<any>('http://localhost:3000').pipe(
+    return this.http.post<any>(`${this.apiUrlLogin}`, auth).pipe(
       map((data: any) => {
-        console.log(data)
-      }),
-      catchError((error) => {
-        throw error;
-      })
-    )
-  }
-
-  public fetchRegister(auth: AuthModel) {
-    return this.http.put<any>(`${this.apiUrlRegister}`, auth).pipe(
-      map((data: TokenModel) => {
         localStorage.setItem(this.nameStorageToken, data.access_token);
       }),
       catchError((error) => {
