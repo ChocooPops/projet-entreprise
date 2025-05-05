@@ -27,6 +27,7 @@ model User {
   lastName           String
   firstName          String
   role               Role
+  profilePhoto       String            @default("uploads/user/neutre.jpg")
   assignedProjects   Project[]         @relation("AssignedUsers")
   assignedTasks      Task[]            @relation("UserTasks")
   messages           Message[]
@@ -42,7 +43,8 @@ model User {
 model Project {
   id            String         @id @default(uuid())
   name          String
-  description   String?
+  description   String?        @default("Le projet consiste en ...") @db.VarChar(1000)
+  srcBackground String         @default("uploads/projects/neutre.jpg")
   assignedUsers User[]         @relation("AssignedUsers")
   files         File[]
   conversations Conversation[]

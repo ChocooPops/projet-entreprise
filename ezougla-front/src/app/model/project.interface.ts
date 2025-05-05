@@ -1,7 +1,7 @@
 export interface ProjectModel {
-    id : string,
-    name : string,
-    desciption : string,
-    srcBackground ?: string,
-    srcFiles ?: string[]
+    id: string,
+    name: string,
+    description: string,
+    srcBackground: string,
+    srcFiles?: string[]
 }

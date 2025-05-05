@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Param, Delete, Body, Put } from '@nestjs/common';
 import { ProjectService } from './project.service';
 import { CurrentUser } from 'src/auth/current-user.guard';
 import { Role } from '@prisma/client';
@@ -15,6 +15,16 @@ export class ProjectController {
   @Post('create')
   async create(@CurrentUser('role') role: Role) {
     return await this.projectService.createHollowNewProject(role);
+  }
+
+  @Put('update-name/:id')
+  async updateName(@CurrentUser('role') role: Role, @Param('id') id: string, @Body('name') name: string) {
+    return await this.projectService.updateNameProjectById(id, name, role);
+  }
+
+  @Put('update-description/:id')
+  async updateDescription(@CurrentUser('role') role: Role, @Param('id') id: string, @Body('description') description: string) {
+    return await this.projectService.updateDescriptionProjectById(id, description, role);
   }
 
   @Delete(':id')

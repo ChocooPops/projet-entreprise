@@ -8,12 +8,12 @@ export class ProjectService {
 
   constructor(private prismaService: PrismaService) { }
 
-  async createHollowNewProject(role : Role): Promise<Project> {
-    if(role === 'DIRECTOR' || role === 'MANAGER') {
+  async createHollowNewProject(role: Role): Promise<Project> {
+    if (role === 'DIRECTOR' || role === 'MANAGER') {
       return await this.prismaService.project.create({
         data: {
           name: 'Projet sans nom',
-          description : 'Description ...'
+          description: 'Description ...'
         }
       })
     } else {
@@ -45,11 +45,44 @@ export class ProjectService {
     } else {
       return [];
     }
-
   }
 
-  async deleteProjectById(id: string, role : Role): Promise<void> {
-    if(role === 'DIRECTOR' || role === 'MANAGER') {
+  async updateNameProjectById(idProject: string, newName: string, role: Role): Promise<Project> {
+    if (role === 'DIRECTOR' || role === 'MANAGER') {
+      if (!newName || newName === '') {
+        newName = "Sans nom";
+      }
+      return await this.prismaService.project.update({
+        where: { id: idProject },
+        data: { name: newName },
+      });
+    } else {
+      new UnauthorizedException();
+    }
+  }
+
+  async updateDescriptionProjectById(idProject: string, newDescribe: string, role: Role): Promise<Project> {
+    if (role === 'DIRECTOR' || role === 'MANAGER') {
+      return await this.prismaService.project.update({
+        where: { id: idProject },
+        data: { description: newDescribe },
+      });
+    } else {
+      new UnauthorizedException();
+    }
+  }
+
+  async deleteProjectById(id: string, role: Role): Promise<void> {
+    if (role === 'DIRECTOR' || role === 'MANAGER') {
+      await this.prismaService.task.deleteMany({
+        where: { projectId: id },
+      });
+      await this.prismaService.conversation.deleteMany({
+        where: { projectId: id },
+      });
+      await this.prismaService.file.deleteMany({
+        where: { projectId: id },
+      });
       await this.prismaService.project.delete({
         where: { id: id }
       })

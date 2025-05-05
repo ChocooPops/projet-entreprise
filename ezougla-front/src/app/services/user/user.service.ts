@@ -14,9 +14,9 @@ export class UserService {
   constructor(private http: HttpClient) { }
 
   private readonly apiUrlRegister: string = `${environment.apiUrl}/${environment.apiUrlUser}/${environment.apiUrlRegister}`;
-  private readonly apiUrlGetUser : string = `${environment.apiUrl}/${environment.apiUrlUser}/${environment.apiUrlFindUser}`;
-  
-  private user : UserModel | undefined;
+  private readonly apiUrlGetUser: string = `${environment.apiUrl}/${environment.apiUrlUser}/${environment.apiUrlFindUser}`;
+
+  private user: UserModel | undefined;
 
   public fetchRegister(register: RegisterModel): Observable<MessageModel> {
     return this.http.post<any>(`${this.apiUrlRegister}`, register).pipe(
@@ -31,19 +31,20 @@ export class UserService {
     )
   }
 
-  public fetchGetUserConnected() : Observable<UserModel> {
-    if(!this.user) {
+  public fetchGetUserConnected(): Observable<UserModel> {
+    if (!this.user) {
       return this.http.get<any>(this.apiUrlGetUser).pipe(
-        map((data : any) => {
-            this.user = {
-              id : data.id, 
-              firstName : data.firstName,
-              lastName : data.lastName,
-              email : data.email,
-              role : data.role,
-              creationDate : data.createdAt
-            }
-            return this.user;
+        map((data: any) => {
+          this.user = {
+            id: data.id,
+            firstName: data.firstName,
+            lastName: data.lastName,
+            email: data.email,
+            role: data.role,
+            creationDate: data.createdAt,
+            profilePhoto: `${environment.apiUrl}/${data.profilePhoto}`
+          }
+          return this.user;
         })
       )
     } else {

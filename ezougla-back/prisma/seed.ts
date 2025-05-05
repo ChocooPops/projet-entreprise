@@ -1,12 +1,13 @@
 import * as bcrypt from 'bcrypt';
-import { PrismaClient } from '@prisma/client';
-import { User } from '@prisma/client';
+import { PrismaClient, Role } from '@prisma/client';
 
 const prisma = new PrismaClient();
+
 async function main() {
     const hashedPassword = await bcrypt.hash('password1234', 10);
 
-    const user: User = await prisma.user.create({
+    // Create DIRECTOR
+    const director = await prisma.user.create({
         data: {
             email: 'rahmaninahil@gmail.com',
             lastName: 'Nahil',
@@ -15,6 +16,39 @@ async function main() {
             role: 'DIRECTOR',
         },
     });
+
+    // Create MANAGERS and EMPLOYEES
+    const additionalUsers = await Promise.all([
+        prisma.user.create({
+            data: {
+                email: 'alice.manager@gmail.com',
+                firstName: 'Alice',
+                lastName: 'Dupont',
+                password: hashedPassword,
+                role: 'MANAGER',
+            },
+        }),
+        prisma.user.create({
+            data: {
+                email: 'bob.employee@gmail.com',
+                firstName: 'Bob',
+                lastName: 'Martin',
+                password: hashedPassword,
+                role: 'EMPLOYEE',
+            },
+        }),
+        prisma.user.create({
+            data: {
+                email: 'carla.employee@gmail.com',
+                firstName: 'Carla',
+                lastName: 'Lopez',
+                password: hashedPassword,
+                role: 'EMPLOYEE',
+            },
+        }),
+    ]);
+
+    const allUsers = [director, ...additionalUsers];
 
     const projectsData = [
         {
@@ -70,17 +104,35 @@ async function main() {
     ];
 
     for (const project of projectsData) {
+        const randomUser = allUsers[Math.floor(Math.random() * allUsers.length)];
+
         const createdProject = await prisma.project.create({
             data: {
                 name: project.name,
                 description: project.description,
-                assignedUsers: { connect: { id: user.id } },
+                assignedUsers: { connect: { id: randomUser.id } },
                 tasks: {
                     create: project.tasks.map(title => ({
                         title,
                         status: 'TODO',
-                        userId: user.id,
+                        userId: randomUser.id,
                     })),
+                },
+                files: {
+                    create: [
+                        {
+                            name: `Spécification - ${project.name}.pdf`,
+                            url: `https://example.com/specs/${encodeURIComponent(project.name)}.pdf`,
+                            type: 'pdf',
+                            uploadedById: director.id
+                        },
+                        {
+                            name: `Planning - ${project.name}.xlsx`,
+                            url: `https://example.com/planning/${encodeURIComponent(project.name)}.xlsx`,
+                            type: 'xlsx',
+                            uploadedById: director.id
+                        },
+                    ],
                 },
             },
         });

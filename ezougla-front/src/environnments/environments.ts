@@ -7,9 +7,17 @@ export const environment = {
 
     apiUrlUser: 'user',
     apiUrlRegister: 'register',
-    apiUrlFindUser : 'find-user',
+    apiUrlFindUser: 'find-user',
 
     apiUrlProject: 'project',
     apiUrlCreateProject: 'create',
-    apiUrlFindManyProjects: 'find-many-projects'
+    apiUrlFindManyProjects: 'find-many-projects',
+    apiUrlUpdateProjectName: 'update-name',
+    apiUrlUpdateProjectDescription: 'update-description',
+
+    apiUrlTask: 'task',
+    apiUrlGetTaskByProject: 'tasks-by-project',
+
+    apiUrlFile: 'file',
+    apiUrlGetFileByProject: 'files-by-project'
 }
