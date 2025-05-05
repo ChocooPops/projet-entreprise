@@ -8,4 +8,7 @@ import { Component } from '@angular/core';
 })
 export class MessageComponent {
 
+  srcDeconnexion : string = './se-deconnecter.png';
+
+
 }

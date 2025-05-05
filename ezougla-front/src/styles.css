@@ -1,3 +1,8 @@
+@font-face {
+    font-family: 'Inter';
+    src: url('../public/police/Inter-SemiBold.ttf');
+}
+
 html,
 body {
     height: 100vh;
@@ -8,5 +13,29 @@ body {
     overflow-y: auto;
     overflow-x: hidden;
     color: white;
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: 'Inter';
+}
+
+::-webkit-scrollbar {
+    width: 6px;
+    height: 12px;
+    z-index: 50;
+}
+
+::-webkit-scrollbar-track {
+    background: #222;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #555;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #999;
+}
+
+::-webkit-scrollbar-corner {
+    background: #222;
 }

@@ -44,7 +44,7 @@ export class LoginComponent {
       this.message = '';
       this.authService.fetchLogin(auth).subscribe({
         next: () => {
-          this.router.navigate(['home']);
+          this.router.navigate(['main']);
         },
         error: err => {
           this.message = 'Identifiant ou mots de passe invalide';

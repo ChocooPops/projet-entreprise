@@ -46,19 +46,7 @@ export class UserService {
     return message;
   }
 
-  findAll() {
-    return `This action returns all user`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
-  }
-
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  async findUserById(id : string) : Promise<User> {
+    return this.prisma.user.findFirst({ where : { id : id}})
   }
 }

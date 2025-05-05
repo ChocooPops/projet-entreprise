@@ -8,12 +8,5 @@ import { ProjectService } from '../../services/project/project.service';
   styleUrl: './projects.component.css'
 })
 export class ProjectsComponent {
-
-  constructor(private projectService: ProjectService) { }
-
-  ngOnInit(): void {
-    this.projectService.fetchAllProjectByUser().subscribe((data) => {
-
-    })
-  }
+  
 }

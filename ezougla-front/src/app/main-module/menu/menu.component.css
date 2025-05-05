@@ -1,0 +1,145 @@
+.container-menu {
+    height: 100%;
+    width: 100%;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    box-sizing: border-box;
+    gap: 40px;
+}
+
+.container-buttons {
+    height: 50px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: left;
+}
+
+.container-button {
+    height: 40px;
+    width: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 5px;
+    gap: 10px;
+    cursor: pointer;
+
+    img {
+        height: 50%;
+        width: 50%;
+        transition: transform 0.2s;
+    }
+
+    &:hover {
+        background-color: #212121;
+    }
+}
+
+.container-welcome {
+    font-size: 25px;
+    font-weight: bold;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    p {
+        margin: 0;
+    }
+}
+
+.grey-text {
+    color: rgb(95, 95, 95);
+    font-size: 14px;
+    font-weight: normal;
+}
+
+.container-info-user {
+    margin-left: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.container-project-list {
+    display: flex;
+    flex-direction: column;
+    font-size: 12px;
+    gap: 5px;
+}
+
+.container-projects {
+    display: flex;
+    flex-direction: column;
+    font-size: 14px;
+    animation: 0.5s enter;
+}
+
+.project {
+    height: 35px;
+    display: flex;
+    justify-content: left;
+    align-items: center;
+    min-width: 200px;
+    cursor: pointer;
+    transition: 0.2s background-color;
+    border-radius: 3px;
+    width: 80%;
+    &:hover {
+        background-color: #212121;
+    }
+
+    p {
+        margin-left: 17px;
+    }
+}
+
+p {
+    margin: 0;
+}
+
+.grey-background {
+    background-color: #212121;
+}
+
+.container-title-project {
+    width: 90%;
+    min-width: 200px;
+    height: 35px;
+    border-radius: 5px;
+    transition: 0.2s background-color;
+    display: flex;
+    justify-content: left;
+    align-items: center;
+    cursor: pointer;
+    &:hover {
+        background-color: #212121;
+    }
+
+    p {
+        margin-left: 10px;
+    }
+}
+
+.hidden {
+    display: none;
+}
+
+.visible {
+    display: flex;
+}
+
+@keyframes enter {
+    0% {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

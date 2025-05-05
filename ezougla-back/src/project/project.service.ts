@@ -1,18 +1,24 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { Project, User } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { Role } from '@prisma/client';
 
 @Injectable()
 export class ProjectService {
 
   constructor(private prismaService: PrismaService) { }
 
-  async createHollowNewProject(): Promise<Project> {
-    return await this.prismaService.project.create({
-      data: {
-        name: 'Projet sans nom'
-      }
-    })
+  async createHollowNewProject(role : Role): Promise<Project> {
+    if(role === 'DIRECTOR' || role === 'MANAGER') {
+      return await this.prismaService.project.create({
+        data: {
+          name: 'Projet sans nom',
+          description : 'Description ...'
+        }
+      })
+    } else {
+      new UnauthorizedException();
+    }
   }
 
   async getAllProjectByUser(userId: string): Promise<Project[]> {
@@ -39,10 +45,12 @@ export class ProjectService {
 
   }
 
-  async deleteProjectById(id: string): Promise<void> {
-    await this.prismaService.project.delete({
-      where: { id: id }
-    })
+  async deleteProjectById(id: string, role : Role): Promise<void> {
+    if(role === 'DIRECTOR' || role === 'MANAGER') {
+      await this.prismaService.project.delete({
+        where: { id: id }
+      })
+    }
   }
 
 

@@ -1,0 +1,35 @@
+<div class="container-menu">
+
+    <div class="container-buttons">
+        <div class="container-button" (click)="onClickLogout()">
+            <img [src]="srcDeconnexion">
+        </div>
+        <div class="container-button" (click)="addNeWproject()">
+            <img [src]="srcAdd">
+        </div>
+    </div>
+
+    <div class="container-welcome">
+        @if(user) {
+            <p> {{ user.firstName }} {{ user.lastName }}</p>
+            <div class="container-info-user">
+                <p class="grey-text"> • {{ user.email}}</p>
+                <p class="grey-text"> • {{ user.role}}</p>
+            </div>
+        }
+    </div>
+
+    <div class="container-project-list">
+        <div class="container-title-project" (click)="onActivateProject()" [ngClass]="{'grey-background' : activateProjects}">
+            <p> Liste de vos projets</p>
+        </div>
+        <div class="container-projects" [ngClass]="{'hidden' : !activateProjects, 'visible' : activateProjects}">
+            @for (project of projects; track project.id) {
+                <div class="project" (click)="onClickedProject(project.id)" [ngClass]="{'grey-background' : projetIsClicked(project.id)}">
+                    <p> {{ project.name }}</p>
+                </div>
+            }
+        </div>
+    </div>
+
+</div>

@@ -1,9 +1,9 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
 import { UserService } from './user.service';
-import { UpdateUserDto } from './dto/update-user.dto';
 import { RegisterUser } from './dto/create-user.interface';
 import { Public } from 'src/auth/public.decorator';
 import { MessageModel } from 'src/common/model/message.interface';
+import { CurrentUser } from 'src/auth/current-user.guard';
 
 @Controller('user')
 export class UserController {
@@ -15,23 +15,9 @@ export class UserController {
     return this.userService.registerUser(createUserDto);
   }
 
-  @Get()
-  findAll() {
-    return this.userService.findAll();
+  @Get('find-user')
+  findAll(@CurrentUser('sub') userId: string) {
+    return this.userService.findUserById(userId);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.userService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.userService.update(+id, updateUserDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.userService.remove(+id);
-  }
 }

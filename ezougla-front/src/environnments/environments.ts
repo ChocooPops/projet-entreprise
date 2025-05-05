@@ -7,7 +7,9 @@ export const environment = {
 
     apiUrlUser: 'user',
     apiUrlRegister: 'register',
+    apiUrlFindUser : 'find-user',
 
     apiUrlProject: 'project',
-    apiUrlCreateProject: 'create'
+    apiUrlCreateProject: 'create',
+    apiUrlFindManyProjects: 'find-many-projects'
 }
