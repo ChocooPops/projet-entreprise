@@ -30,7 +30,10 @@ export class AuthService {
   private jwtHelper = new JwtHelperService();
 
   getToken(): string | null {
-    return localStorage.getItem(this.nameStorageToken);
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem(environment.access_token);
+    }
+    return null;
   }
 
   isAuthenticated(): boolean {

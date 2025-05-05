@@ -1,0 +1,19 @@
+.container-all-project {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.container-background-project {
+    min-height: 150px;
+    height: 30%;
+    background-color: wheat;
+}
+
+
+.container-porject {
+    flex: 1;
+    padding: 20px;
+    box-sizing: border-box;
+}

@@ -3,6 +3,6 @@ import { MainRoutingModule } from "./main-route.module";
 
 @NgModule({
     declarations : [],
-    imports : [MainRoutingModule]
+    imports : [MainRoutingModule],
 })
 export class MainModule {}

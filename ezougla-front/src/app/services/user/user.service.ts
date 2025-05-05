@@ -18,7 +18,6 @@ export class UserService {
   
   private user : UserModel | undefined;
 
-
   public fetchRegister(register: RegisterModel): Observable<MessageModel> {
     return this.http.post<any>(`${this.apiUrlRegister}`, register).pipe(
       map((data: MessageModel) => {
@@ -34,10 +33,7 @@ export class UserService {
 
   public fetchGetUserConnected() : Observable<UserModel> {
     if(!this.user) {
-      const headers = {
-        Authorization: `Bearer ${localStorage.getItem(environment.access_token)}`
-      };
-      return this.http.get<any>(this.apiUrlGetUser, { headers}).pipe(
+      return this.http.get<any>(this.apiUrlGetUser).pipe(
         map((data : any) => {
             this.user = {
               id : data.id, 

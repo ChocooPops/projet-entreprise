@@ -1,12 +1,14 @@
 <div class="container-menu">
 
     <div class="container-buttons">
-        <div class="container-button" (click)="onClickLogout()">
+        <div class="container-button" (click)="onClickLogout()" title="déconnexion">
             <img [src]="srcDeconnexion">
         </div>
-        <div class="container-button" (click)="addNeWproject()">
-            <img [src]="srcAdd">
-        </div>
+        @if(user && (user.role === 'DIRECTOR' || user.role === 'MANAGER')) {
+            <div class="container-button" (click)="addNeWproject()" title="ajouter un nouveau projet">
+                <img [src]="srcAdd">
+            </div>
+        }
     </div>
 
     <div class="container-welcome">
@@ -21,11 +23,11 @@
 
     <div class="container-project-list">
         <div class="container-title-project" (click)="onActivateProject()" [ngClass]="{'grey-background' : activateProjects}">
-            <p> Liste de vos projets</p>
+            <p> • Liste de vos projets</p>
         </div>
         <div class="container-projects" [ngClass]="{'hidden' : !activateProjects, 'visible' : activateProjects}">
             @for (project of projects; track project.id) {
-                <div class="project" (click)="onClickedProject(project.id)" [ngClass]="{'grey-background' : projetIsClicked(project.id)}">
+                <div class="project" title="voir les détails du projet" (click)="onClickedProject(project.id)" [ngClass]="{'grey-background' : projetIsClicked(project.id)}">
                     <p> {{ project.name }}</p>
                 </div>
             }

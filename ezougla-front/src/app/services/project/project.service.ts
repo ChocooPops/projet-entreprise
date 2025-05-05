@@ -18,16 +18,12 @@ export class ProjectService {
 
   constructor(private http: HttpClient) { 
     this.fetchAllProjectByUser().subscribe(() => {
-
     })
   }
 
   fetchAllProjectByUser(): Observable<void> {
     if(this.projectsSubject.value.length < 1) {
-      const headers = {
-        Authorization: `Bearer ${localStorage.getItem(environment.access_token)}`
-      };
-      return this.http.get<any[]>(`${this.apiUrlGetProject}`, { headers }).pipe(
+      return this.http.get<any[]>(`${this.apiUrlGetProject}`).pipe(
         map((data: any[]) => {
           const projects : ProjectModel[] = [];
           data.forEach((project : any) => {
@@ -47,14 +43,8 @@ export class ProjectService {
   }
 
   fetchCreateProject(): Observable<void> {
-    const headers = {
-      Authorization: `Bearer ${localStorage.getItem(environment.access_token)}`
-    };
-  
     return this.http.post<any>(
-      this.apiUrlCreateHollowProject,
-      {}, // <- corps vide (pas de body à envoyer ici)
-      { headers } // <- headers dans un objet options ici
+      this.apiUrlCreateHollowProject, {}
     ).pipe(
       map((data: any) => {
         console.log(data);
@@ -72,6 +62,5 @@ export class ProjectService {
   getAllProjectsByUser() : Observable<ProjectModel[]> {
     return this.project$;
   }
-
 
 }

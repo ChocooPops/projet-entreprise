@@ -7,6 +7,7 @@ import { Subscription } from 'rxjs';
 import { NgClass } from '@angular/common';
 import { AuthService } from '../../services/auth/auth.service';
 import { Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-menu',
@@ -19,7 +20,8 @@ export class MenuComponent {
   constructor(private projectService : ProjectService, 
     private userService : UserService,
     private authService : AuthService,
-    private router: Router
+    private router: Router,
+    private route : ActivatedRoute
   ) {}
 
   srcDeconnexion : string = './se-deconnecter.png';
@@ -57,6 +59,7 @@ export class MenuComponent {
 
   onClickedProject(id : string) : void {
     this.idProjectClicked = id;
+    this.router.navigate(['/main/projects', id]);
   }
 
   onClickLogout() : void {
