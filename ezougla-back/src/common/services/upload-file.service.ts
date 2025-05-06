@@ -1,4 +1,4 @@
-import { flatten, Injectable } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import * as path from 'path';
 import * as fs from 'fs-extra';
 

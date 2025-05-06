@@ -10,10 +10,11 @@ import { MessageModule } from './message/message.module';
 import { AuthModule } from './auth/auth.module';
 import { JwtAuthGuard } from './auth/jwt-auth.guard';
 import { APP_GUARD } from '@nestjs/core';
+import { UploadController } from './upload/upload.controller';
 
 @Module({
   imports: [TaskModule, AuthModule, ProjectModule, UserModule, FileModule, ConversationModule, MessageModule],
-  controllers: [AppController],
+  controllers: [AppController, UploadController],
   providers: [AppService,
     {
       provide: APP_GUARD,
