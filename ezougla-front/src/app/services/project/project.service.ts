@@ -18,9 +18,20 @@ export class ProjectService {
   private projectsSubject: BehaviorSubject<ProjectModel[]> = new BehaviorSubject<ProjectModel[]>([]);
   private project$: Observable<ProjectModel[]> = this.projectsSubject.asObservable();
 
+  private projectClickedSubject : BehaviorSubject<string> = new BehaviorSubject<string>('');
+  private projectClicked$ : Observable<string> = this.projectClickedSubject.asObservable();
+
   constructor(private http: HttpClient) {
     this.fetchAllProjectByUser().subscribe(() => {
     })
+  }
+
+  getPorjectClicked() : Observable<string> {
+    return this.projectClicked$;
+  }
+
+  setProjectClicked(id : string) : void {
+    this.projectClickedSubject.next(id);
   }
 
   fetchAllProjectByUser(): Observable<void> {

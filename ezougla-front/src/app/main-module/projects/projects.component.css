@@ -104,3 +104,48 @@ textarea:focus {
         font-size: 18px;
     }
 }
+
+.container-files {
+    display: flex;
+    flex-direction: column;
+    gap: 0px;
+    width: 100%;
+    transition: background-colo 0.2s;
+    box-sizing: border-box;
+}
+
+.is-dragging {
+    border: white dashed 3px;
+    background-color: hsla(0, 0%, 100%, 0.1);
+    border-radius: 5px;
+}
+
+.container-file {
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    gap: 15px;
+    width: 100%;
+    overflow-x: scroll;
+    height: auto;
+}
+
+.div-flex {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+
+    img {
+        height: 15px;
+        width: 15px;
+        padding: 10px;
+        cursor: pointer;
+        transition: 0.2s background-color;
+        border-radius: 5px;
+        &:hover {
+            background-color: #141414;
+        }
+    }
+
+    
+}

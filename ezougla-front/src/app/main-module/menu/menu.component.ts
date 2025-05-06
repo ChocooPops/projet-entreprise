@@ -44,6 +44,11 @@ export class MenuComponent {
         this.user = data;
       })
     )
+    this.subscription.add(
+      this.projectService.getPorjectClicked().subscribe((data : string) => {
+        this.idProjectClicked = data;
+      })
+    )
   }
 
   ngOnDestroy(): void {
@@ -59,7 +64,7 @@ export class MenuComponent {
   }
 
   onClickedProject(id: string): void {
-    this.idProjectClicked = id;
+    this.projectService.setProjectClicked(id);
     this.router.navigate(['/main/projects', id]);
   }
 

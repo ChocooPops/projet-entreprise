@@ -19,5 +19,6 @@ export const environment = {
     apiUrlGetTaskByProject: 'tasks-by-project',
 
     apiUrlFile: 'file',
-    apiUrlGetFileByProject: 'files-by-project'
+    apiUrlGetFileByProject: 'files-by-project',
+    apiUrlCreateFileInProject : 'create-file-in-project'
 }

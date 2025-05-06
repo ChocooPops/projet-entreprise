@@ -1,15 +1,15 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete } from '@nestjs/common';
 import { FileService } from './file.service';
-import { CreateFileDto } from './dto/create-file.dto';
-import { UpdateFileDto } from './dto/update-file.dto';
+import { CreateFileModel } from './dto/create-file.interface';
+import { CurrentUser } from 'src/auth/current-user.guard';
 
 @Controller('file')
 export class FileController {
   constructor(private readonly fileService: FileService) { }
 
-  @Post()
-  create(@Body() createFileDto: CreateFileDto) {
-    return this.fileService.create(createFileDto);
+  @Post('create-file-in-project')
+  create(@Body() createFileDto: CreateFileModel, @CurrentUser('sub') idUser: string) {
+    return this.fileService.createFileInProject(createFileDto, idUser);
   }
 
   @Get('files-by-project/:id')
@@ -19,6 +19,7 @@ export class FileController {
 
   @Delete(':id')
   remove(@Param('id') id: string) {
+    return this.fileService.deleteFile(id);
   }
 
 }

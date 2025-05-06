@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild, ElementRef } from '@angular/core';
 import { ProjectService } from '../../services/project/project.service';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
@@ -13,10 +13,12 @@ import { TaskModel } from '../../model/task.interface';
 import { FileModel } from '../../model/file.interface';
 import { FileComponent } from '../file/file.component';
 import { TaskComponent } from '../task/task.component';
+import { CreateFileModel } from '../../model/create-file.interface';
+import { NgClass } from '@angular/common';
 
 @Component({
   selector: 'app-projects',
-  imports: [ReactiveFormsModule, FileComponent, TaskComponent],
+  imports: [ReactiveFormsModule, FileComponent, TaskComponent, NgClass],
   templateUrl: './projects.component.html',
   styleUrl: './projects.component.css'
 })
@@ -49,6 +51,9 @@ export class ProjectsComponent {
 
     this.route.paramMap.subscribe(params => {
       const id = params.get('id');
+      if(id) {
+        this.projectService.setProjectClicked(id);
+      }
       this.subscription.add(this.projectService.getAllProjectsByUser().subscribe((projects: ProjectModel[]) => {
         this.project = projects.find((pro) => pro.id === id);
         this.loadFormName();
@@ -136,4 +141,66 @@ export class ProjectsComponent {
       this.projectService.fetDeleteById(this.project?.id).pipe(take(1)).subscribe(() => { });
     }
   }
+
+  onFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      this.handleFile(input.files[0]);
+    }
+  }
+
+  private handleFile(file: File): void {
+    const reader = new FileReader();
+  
+    reader.onload = () => {
+      const base64 = reader.result as string;
+      if (this.project) {
+        const createFile: CreateFileModel = {
+          idProjects: this.project.id,
+          file: base64,
+          name: file.name
+        };
+        this.fileService.fetchCreateFileInProject(createFile).pipe(take(1)).subscribe((file) => {
+          this.files.push(file);
+        });
+      }
+    };
+  
+    reader.onerror = (error) => {
+      console.error('Erreur de lecture du fichier :', error);
+    };
+  
+    reader.readAsDataURL(file);
+  }
+
+  @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
+  
+  triggerFileInput(): void {
+    this.fileInput.nativeElement.click();
+  }
+
+  deleteFileWhenEmit(file : FileModel) : void {
+    this.files = this.files.filter((item) => item.id !== file.id);
+  }
+
+  isDragging : boolean = false;
+
+  onFileDropped(event: DragEvent): void {
+    event.preventDefault();
+    if (event.dataTransfer && event.dataTransfer.files.length > 0) {
+      this.handleFile(event.dataTransfer.files[0]);
+    }
+    this.isDragging = false; 
+  }
+
+  onDragOver(event: DragEvent): void {
+    event.preventDefault();
+    this.isDragging = true;
+  }
+
+  onDragLeave(event: DragEvent): void {
+    this.isDragging = false;
+  }
+
+
 }
