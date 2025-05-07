@@ -52,4 +52,9 @@ export class UserController {
     return await this.userService.disableUser(role, id);
   }
 
+  @Delete('/:id')
+  async deleteUser(@CurrentUser('role') role: Role, @Param('id') id: string) {
+    return await this.userService.deleteUserById(role, id);
+  }
+
 }

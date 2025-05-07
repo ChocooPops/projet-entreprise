@@ -12,45 +12,68 @@ import { NgClass } from '@angular/common';
 })
 export class ManageUserComponent {
 
-  users : UserModel[] = [];
-  subscription : Subscription = new Subscription();
-  userRoleClicked : string = '';
+  users: UserModel[] = [];
+  currentUser: UserModel | undefined;
+  subscription: Subscription = new Subscription();
+  userRoleClicked: string = '';
 
-  roles : string[] = [
+  roles: string[] = [
     'DIRECTOR',
     'MANAGER',
     'EMPLOYEE'
   ]
 
-  constructor(private userService : UserService) {}
+  constructor(private userService: UserService) {
+  }
 
-  ngOnInit() : void {
-    this.userService.fetchAllUsers().subscribe((users : UserModel[]) => {
+  ngOnInit(): void {
+    this.userService.getUserSubject().subscribe((user) => {
+      this.currentUser = user;
+    })
+
+    this.userService.getUserTab().subscribe((users: UserModel[]) => {
       this.users = users;
     });
   }
 
-  ngOnDestroy() : void {
+  ngOnDestroy(): void {
     this.subscription.unsubscribe();
   }
 
-  isUserClicked(id : string) : boolean{
-    if(id === this.userRoleClicked) {
+  isUserClicked(id: string): boolean {
+    if (id === this.userRoleClicked) {
       return true;
     } else {
       return false;
     }
   }
 
-  onClickPage() : void {
-    //this.userRoleClicked = '';
+  onClickPage(): void {
+    this.userRoleClicked = '';
   }
 
-  onClickContainerRole(event : MouseEvent) : void {
+  onClickContainerRole(event: MouseEvent): void {
     event.stopPropagation();
   }
 
-  onClickRole(id : string, event : MouseEvent) : void {
+  onClickRole(id: string, event: MouseEvent): void {
     this.userRoleClicked = id;
+    event.stopPropagation();
   }
+
+  onClickModifyRole(id: string, role: string): void {
+    this.userService.fetchModifyRoleUser(id, role).subscribe(() => {
+      this.userRoleClicked = '';
+    })
+  }
+  onClickDelete(id: string): void {
+    this.userService.fetchDeleteUser(id).subscribe(() => { });
+  }
+  onClickEnable(id: string): void {
+    this.userService.fetchEnableUser(id).subscribe(() => { })
+  }
+  onClickDisable(id: string): void {
+    this.userService.fetchDisableUser(id).subscribe(() => { })
+  }
+
 }

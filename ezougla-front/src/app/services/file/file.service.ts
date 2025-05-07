@@ -4,6 +4,7 @@ import { environment } from '../../../environnments/environments';
 import { map, Observable } from 'rxjs';
 import { FileModel } from '../../model/file.interface';
 import { CreateFileModel } from '../../model/create-file.interface';
+import { UploadService } from '../upload/upload.service';
 
 @Injectable({
   providedIn: 'root'
@@ -12,9 +13,11 @@ export class FileService {
 
   private readonly apiUrlGetFile: string = `${environment.apiUrl}/${environment.apiUrlFile}/${environment.apiUrlGetFileByProject}`;
   private readonly apiUrlCreateFileInProject: string = `${environment.apiUrl}/${environment.apiUrlFile}/${environment.apiUrlCreateFileInProject}`;
-  private readonly apiUrlDeleteFile : string = `${environment.apiUrl}/${environment.apiUrlFile}`;
+  private readonly apiUrlDeleteFile: string = `${environment.apiUrl}/${environment.apiUrlFile}`;
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient,
+    private uploadService: UploadService
+  ) { }
 
   fetchGetFileByProject(idProject: string): Observable<FileModel[]> {
     return this.http.get<any[]>(`${this.apiUrlGetFile}/${idProject}`).pipe(
@@ -24,27 +27,37 @@ export class FileService {
     )
   }
 
-  fetchCreateFileInProject(createFile : CreateFileModel) : Observable<FileModel> {
+  fetchCreateFileInProject(createFile: CreateFileModel): Observable<FileModel> {
     return this.http.post<any>(this.apiUrlCreateFileInProject, createFile).pipe(
-      map((data : FileModel) => {
+      map((data: FileModel) => {
         return data;
       })
     )
   }
 
-  fetchDeleteFile(idFile : string) : Observable<FileModel> {
+  fetchDeleteFile(idFile: string): Observable<FileModel> {
     return this.http.delete<any>(`${this.apiUrlDeleteFile}/${idFile}`).pipe(
-      map((data : FileModel) => {
+      map((data: FileModel) => {
         return data;
       })
     )
   }
 
-  fetchApercu() : void {
-
+  fetchApercu(path: string): void {
+    this.uploadService.getUploadFile(path).subscribe((blob: Blob) => {
+      const fileURL = URL.createObjectURL(blob);
+      window.open(fileURL, '_blank');
+    });
   }
 
-  fetchDownloadFile() : void {
-
+  fetchDownloadFile(path: string, name: string): void {
+    this.uploadService.getUploadFile(path).subscribe((blob: Blob) => {
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = name;
+      a.click();
+      URL.revokeObjectURL(url);
+    });
   }
 }

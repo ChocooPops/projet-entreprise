@@ -27,6 +27,7 @@ export class FileComponent {
   constructor(private fileService: FileService) { }
 
   ngOnInit(): void {
+    console.log(this.file)
     if (this.file) {
       this.type = this.detectFileType(this.file.type);
       if (this.type === 'document') {
@@ -72,11 +73,11 @@ export class FileComponent {
   }
 
   onClickApercu(): void {
-    this.fileService.fetchApercu();
+    this.fileService.fetchApercu(this.file.url);
   }
 
   onClickDownload(): void {
-    this.fileService.fetchDownloadFile();
+    this.fileService.fetchDownloadFile(this.file.url, this.file.name);
   }
 
 }

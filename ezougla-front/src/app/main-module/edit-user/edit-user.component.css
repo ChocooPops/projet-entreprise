@@ -5,6 +5,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    animation: 0.5s enterPage;
 }
 
 .container-edit-user {
@@ -23,6 +24,7 @@
     overflow-x: hidden;
     transition: 0.2s background-color;
     box-sizing: border-box;
+    animation: 0.5s enterPhoto;
 }
 
 .is-dragging {
@@ -104,4 +106,26 @@ p {
     font-size: 10px;
     font-weight: normal;
     text-align: center;
+}
+
+@keyframes enterPhoto {
+    0% {
+        opacity: 0;
+        transform: translateY(20%);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes enterPage {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
 }

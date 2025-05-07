@@ -19,7 +19,7 @@ export class UserService {
   ) {
   }
 
-  public setUser() : void {
+  public setUser(): void {
     this.fetchGetUserConnected().subscribe((user: UserModel) => {
       this.uploadService.getUploadFile(user.profilePhoto).subscribe((blob: Blob) => {
         this.setUserProfilPhoto(blob);
@@ -32,7 +32,11 @@ export class UserService {
   private urlProfilPhoto: string = `uploads/user`;
   private urlProfiChangePhoto: string = `${environment.apiUrl}/${environment.apiUrlUser}/${environment.apiUrlUserChangePhoto}`;
   private urlProfiChangePhotoPerso: string = `${environment.apiUrl}/${environment.apiUrlUser}/${environment.apiUrlUserChangePhotoPerso}`;
-  private urlGetAllUsers : string = `${environment.apiUrl}/${environment.apiUrlUser}/${environment.apiUrlGetAllUsers}`;
+  private urlGetAllUsers: string = `${environment.apiUrl}/${environment.apiUrlUser}/${environment.apiUrlGetAllUsers}`;
+  private urlDeleteUser: string = `${environment.apiUrl}/${environment.apiUrlUser}`;
+  private urlEnableUser: string = `${environment.apiUrl}/${environment.apiUrlUser}/${environment.apiUrlUserEnable}`;
+  private urlDisableUser: string = `${environment.apiUrl}/${environment.apiUrlUser}/${environment.apiUrlUserDisable}`;
+  private urlModifyRoleUser: string = `${environment.apiUrl}/${environment.apiUrlUser}/${environment.apiUrlUserModifyRole}`;
 
   private userSubject: BehaviorSubject<UserModel | undefined> = new BehaviorSubject<UserModel | undefined>(undefined);
   private user$: Observable<UserModel | undefined> = this.userSubject.asObservable();
@@ -92,11 +96,18 @@ export class UserService {
     if (user) {
       user.profilePhoto = URL.createObjectURL(pp);
       this.userSubject.next(user);
+
+      const userTab: UserModel[] = this.userTabSubject.value;
+      const index: number = userTab.findIndex((item) => item.id === user.id);
+      if (index) {
+        userTab[index].profilePhoto = URL.createObjectURL(pp);
+        this.userTabSubject.next(userTab);
+      }
     }
   }
 
   public fillProfilPhotoBold(): void {
-    if(this.profilePhotos.length < 1) {
+    if (this.profilePhotos.length < 1) {
       for (const photo of this.photos) {
         const url: string = `${this.urlProfilPhoto}/${photo}`;
         this.uploadService.getUploadFile(url).pipe(take(1)).subscribe((blob: Blob) => {
@@ -142,39 +153,73 @@ export class UserService {
     return this.displayEditUser$;
   }
 
-  public resetUser() : void {
+  public resetUser(): void {
     this.userSubject.next(undefined);
   }
 
 
-  userTab : UserModel[] = [];
+  private userTabSubject: BehaviorSubject<UserModel[]> = new BehaviorSubject<UserModel[]>([]);
+  public userTab$: Observable<UserModel[]> = this.userTabSubject.asObservable();
 
-  getUserTab() : UserModel[] {
-    return this.userTab;
+  getUserTab(): Observable<UserModel[]> {
+    return this.userTab$;
   }
 
   fetchAllUsers(): Observable<UserModel[]> {
     return this.http.get<UserModel[]>(this.urlGetAllUsers).pipe(
       switchMap((users: UserModel[]) => {
-        const usersWithBlobs$ = users.map(user => {
-          return this.uploadService.getUploadFile(user.profilePhoto).pipe(
+        const usersWithBlobs$ = users.map(user =>
+          this.uploadService.getUploadFile(user.profilePhoto).pipe(
             map((blob: Blob) => {
               const blobUrl = URL.createObjectURL(blob);
-              return {
-                ...user,
-                profilePhoto: blobUrl
-              } as UserModel;
+              return { ...user, profilePhoto: blobUrl } as UserModel;
             })
-          );
-        });
-  
+          )
+        );
         return forkJoin(usersWithBlobs$);
       }),
-      tap(users => this.userTab = users)
+      tap(users => this.userTabSubject.next(users))
     );
   }
-  
 
-
+  fetchDeleteUser(id: string): Observable<any> {
+    return this.http.delete<any>(`${this.urlDeleteUser}/${id}`).pipe(
+      map((data: UserModel) => {
+        let users: UserModel[] = this.userTabSubject.value;
+        users = users.filter((item) => item.id !== data.id);
+        this.userTabSubject.next(users);
+      })
+    )
+  }
+  fetchModifyRoleUser(id: string, role: string): Observable<any> {
+    return this.http.put<any>(`${this.urlModifyRoleUser}/${id}`, { role }).pipe(
+      map((data: UserModel) => {
+        const users: UserModel[] = this.userTabSubject.value;
+        const index: number = users.findIndex((item) => item.id === data.id);
+        users[index].role = data.role;
+        this.userTabSubject.next(users);
+      })
+    )
+  }
+  fetchDisableUser(id: string): Observable<any> {
+    return this.http.put<any>(`${this.urlDisableUser}/${id}`, {}).pipe(
+      map((data: UserModel) => {
+        const users: UserModel[] = this.userTabSubject.value;
+        const index: number = users.findIndex((item) => item.id === data.id);
+        users[index].role = data.role;
+        this.userTabSubject.next(users);
+      })
+    )
+  }
+  fetchEnableUser(id: string): Observable<any> {
+    return this.http.put<any>(`${this.urlEnableUser}/${id}`, {}).pipe(
+      map((data: UserModel) => {
+        const users: UserModel[] = this.userTabSubject.value;
+        const index: number = users.findIndex((item) => item.id === data.id);
+        users[index].role = data.role;
+        this.userTabSubject.next(users);
+      })
+    )
+  }
 
 }

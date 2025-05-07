@@ -6,11 +6,12 @@
     align-items: center;
     justify-content: center;
     position: relative;
+    animation: 0.5s enterPage;
 }
 
 .container-edit {
     height: 500px;
-    width: 700px;
+    width: 800px;
     background-color: #141414;
     position: relative;
     border-radius: 10px;
@@ -24,6 +25,7 @@
     overflow-x: hidden;
     transition: 0.2s background-color;
     box-sizing: border-box;
+    animation: 0.5s enterPhoto;
 }
 
 p {
@@ -69,4 +71,26 @@ p {
     opacity: 0;
     background-color: hsla(0, 0%, 8%, 0.4);
     transition: 0.3s opacity;
+}
+
+@keyframes enterPhoto {
+    0% {
+        opacity: 0;
+        transform: translateY(20%);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes enterPage {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
 }

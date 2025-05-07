@@ -15,4 +15,9 @@ export class UploadService {
     return this.http.get<Blob>(url, { responseType: 'blob' as 'json' });
   }
 
+  getOpenFile(file: string): Observable<Blob> {
+    const url = `${environment.apiUrl}/${file}`;
+    return this.http.get(url, { responseType: 'blob' });
+  }
+
 }

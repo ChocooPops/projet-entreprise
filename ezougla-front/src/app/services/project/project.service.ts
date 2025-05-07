@@ -67,14 +67,19 @@ export class ProjectService {
   }
 
   fetchCreateProject(): Observable<void> {
-    return this.http.post<any>(
-      this.apiUrlCreateHollowProject, {}
-    ).pipe(
-      map((data: ProjectModel) => {
-        const projects: ProjectModel[] = this.projectsSubject.value;
-        projects.push(data);
-        this.projectsSubject.next(projects);
-      })
+    return this.http.post<ProjectModel>(this.apiUrlCreateHollowProject, {}).pipe(
+      switchMap((project: ProjectModel) =>
+        this.uploadService.getUploadFile(project.srcBackground).pipe(
+          map((blob: Blob) => {
+            const blobUrl = URL.createObjectURL(blob);
+            project.srcBackground = blobUrl;
+
+            const projects: ProjectModel[] = this.projectsSubject.value;
+            projects.push(project);
+            this.projectsSubject.next(projects);
+          })
+        )
+      )
     );
   }
 
@@ -84,7 +89,7 @@ export class ProjectService {
         const projects: ProjectModel[] = this.projectsSubject.value;
         const index: number = projects.findIndex(item => item.id === id);
         projects[index].name = data.name;
-        this.projectsSubject.next(projects); 
+        this.projectsSubject.next(projects);
       })
     )
   }
@@ -124,13 +129,18 @@ export class ProjectService {
     'back-5.jpg',
     'back-6.jpg',
     'back-7.jpg',
-    'back-8.jpg'
+    'back-8.jpg',
+    'back-9.jpg',
+    'back-10.jpg',
+    'back-11.jpg',
+    'back-12.jpg',
+    'back-13.jpg',
   ]
 
   private backgroundPhoto: ProfilePhotoModel[] = [];
 
   public fillBackgroundPhotoProject(): void {
-    if(this.backgroundPhoto.length < 1) {
+    if (this.backgroundPhoto.length < 1) {
       for (const photo of this.photos) {
         const url: string = `${this.urlProjectPhotoBack}/${photo}`;
         this.uploadService.getUploadFile(url).pipe(take(1)).subscribe((blob: Blob) => {
@@ -185,7 +195,7 @@ export class ProjectService {
     return this.displayEditProject$;
   }
 
-  public resetProjects() : void {
+  public resetProjects(): void {
     this.projectsSubject.next([])
   }
 

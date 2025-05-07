@@ -15,7 +15,7 @@
     }
 
     .container-user:nth-child(even) {
-        background-color: #3d3d3d; 
+        background-color: #3d3d3d;
     }
 }
 
@@ -34,8 +34,8 @@
     height: 40px;
     width: 40px;
     border-radius: 5px;
-    box-shadow: 10px 10px 15px rgba(0, 0, 0, 0.7);
     overflow: hidden;
+
     img {
         height: 100%;
         width: 100%;
@@ -54,6 +54,7 @@
     p {
         font-size: 13px;
         cursor: pointer;
+
         &:hover {
             text-decoration: underline;
         }
@@ -91,6 +92,7 @@
     animation: 0.2s enter;
     background-color: #252525;
     z-index: 9999;
+
     p {
         width: auto;
         font-weight: normal;
@@ -155,5 +157,26 @@ span {
     100% {
         opacity: 1;
         transform: translate(-50%, 0px);
-    } 
+    }
+}
+
+.container-error {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    p {
+        font-family: 'Inter Bold';
+        font-size: 60px;
+        text-align: center;
+    }
+
+    span {
+        font-size: 60px;
+        word-break: keep-all;
+        white-space: nowrap;
+        color: #E5252A
+    }
 }

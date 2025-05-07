@@ -21,7 +21,7 @@ import { NgClass } from '@angular/common';
 export class ProjectsComponent {
 
   subscription: Subscription = new Subscription();
-  
+
   subscriptionUpload !: Subscription;
   project !: ProjectModel | undefined;
   formGroupName!: FormGroup;
@@ -31,7 +31,7 @@ export class ProjectsComponent {
   srcEdit: string = './add.png';
   srcTask: string = './tache.png';
   srcMessage: string = './message.png';
-  
+
   displayEditProject: boolean = true;
 
   constructor(private projectService: ProjectService,
@@ -45,13 +45,11 @@ export class ProjectsComponent {
 
   ngOnInit(): void {
     this.loadFormName();
-
     this.route.paramMap.subscribe(params => {
       const id = params.get('id');
       if (id) {
         this.projectService.setProjectClicked(id);
       }
-      this.project = undefined;
       this.subscription.add(this.projectService.getAllProjectsByUser().subscribe((projects: ProjectModel[]) => {
         this.project = projects.find((pro) => pro.id === id);
         this.loadFormName();
@@ -105,43 +103,43 @@ export class ProjectsComponent {
   isDragging: boolean = false;
 
   private handleFile(file: File): void {
-      const reader = new FileReader();
-  
-      reader.onload = () => {
-        const base64 = reader.result as string;
-  
-      if(this.project) {
-          const createFile: CreateFileModel = {
-            idProjects: this.project.id,
-            file: base64,
-            name: file.name
-          }
-          this.projectService.fetchUpdateBackProjectPersonalized(createFile).pipe(take(1)).subscribe(() => { });
-        };
-      }
-  
-      reader.onerror = (error) => {
-        console.error('Erreur de lecture du fichier :', error);
+    const reader = new FileReader();
+
+    reader.onload = () => {
+      const base64 = reader.result as string;
+
+      if (this.project) {
+        const createFile: CreateFileModel = {
+          idProjects: this.project.id,
+          file: base64,
+          name: file.name
+        }
+        this.projectService.fetchUpdateBackProjectPersonalized(createFile).pipe(take(1)).subscribe(() => { });
       };
-  
-      reader.readAsDataURL(file);
     }
 
-    onFileDropped(event: DragEvent): void {
-      event.preventDefault();
-      if (event.dataTransfer && event.dataTransfer.files.length > 0) {
-        this.handleFile(event.dataTransfer.files[0]);
-      }
-      this.isDragging = false;
+    reader.onerror = (error) => {
+      console.error('Erreur de lecture du fichier :', error);
+    };
+
+    reader.readAsDataURL(file);
+  }
+
+  onFileDropped(event: DragEvent): void {
+    event.preventDefault();
+    if (event.dataTransfer && event.dataTransfer.files.length > 0) {
+      this.handleFile(event.dataTransfer.files[0]);
     }
-  
-    onDragOver(event: DragEvent): void {
-      event.preventDefault();
-      this.isDragging = true;
-    }
-  
-    onDragLeave(event: DragEvent): void {
-      this.isDragging = false;
-    }
+    this.isDragging = false;
+  }
+
+  onDragOver(event: DragEvent): void {
+    event.preventDefault();
+    this.isDragging = true;
+  }
+
+  onDragLeave(event: DragEvent): void {
+    this.isDragging = false;
+  }
 
 }

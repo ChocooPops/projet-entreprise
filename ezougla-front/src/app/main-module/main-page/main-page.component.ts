@@ -25,8 +25,9 @@ export class MainPageComponent {
   ngOnInit(): void {
     this.userService.setUser();
     this.userService.fillProfilPhotoBold();
+    this.userService.fetchAllUsers().subscribe(() => { });
 
-    this.projectService.fetchAllProjectByUser().subscribe(() => {})
+    this.projectService.fetchAllProjectByUser().subscribe(() => { })
     this.projectService.fillBackgroundPhotoProject();
 
     this.userService.getDisplayEditUser().subscribe((state) => {
@@ -38,7 +39,7 @@ export class MainPageComponent {
     })
   }
 
-  ngOnDestroy() : void {
+  ngOnDestroy(): void {
     this.userService.resetUser();
     this.projectService.resetProjects();
   }

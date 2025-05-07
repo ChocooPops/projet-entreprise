@@ -73,41 +73,52 @@ export class UserService {
     }
   }
 
-  async getAllUsers() : Promise<User[]> {
+  async getAllUsers(): Promise<User[]> {
     return await this.prisma.user.findMany({});
   }
 
-  async modifyRoleUser(roleAdmin : Role, idUser : string, newRole : Role) : Promise<User> {
-    if(roleAdmin === 'DIRECTOR') {
-      return this.prisma.user.update({
-        where : {id : idUser}, 
-        data : { role : newRole}
+  async modifyRoleUser(roleAdmin: Role, idUser: string, newRole: Role): Promise<User> {
+    if (roleAdmin === 'DIRECTOR') {
+      return await this.prisma.user.update({
+        where: { id: idUser },
+        data: { role: newRole }
       })
     } else {
       throw new UnauthorizedException();
     }
   }
 
-  async enableUser(roleAdmin : Role, idUser : string) : Promise<User> {
-    if(roleAdmin === 'DIRECTOR') {
-      return this.prisma.user.update({
-        where : {id : idUser}, 
-        data : { role : 'EMPLOYEE'}
+  async enableUser(roleAdmin: Role, idUser: string): Promise<User> {
+    if (roleAdmin === 'DIRECTOR') {
+      return await this.prisma.user.update({
+        where: { id: idUser },
+        data: { role: 'EMPLOYEE' }
       })
     } else {
       throw new UnauthorizedException();
     }
   }
 
-  async disableUser(roleAdmin : Role, idUser : string) : Promise<User> {
-    if(roleAdmin === 'DIRECTOR') {
-      return this.prisma.user.update({
-        where : {id : idUser}, 
-        data : { role : 'NOT_ACTIVATE'}
+  async disableUser(roleAdmin: Role, idUser: string): Promise<User> {
+    if (roleAdmin === 'DIRECTOR') {
+      return await this.prisma.user.update({
+        where: { id: idUser },
+        data: { role: 'NOT_ACTIVATE' }
       })
     } else {
       throw new UnauthorizedException();
     }
   }
+
+  async deleteUserById(roleAdmin: Role, idUser: string): Promise<User> {
+    if (roleAdmin === 'DIRECTOR') {
+      return await this.prisma.user.delete({
+        where: { id: idUser }
+      })
+    } else {
+      throw new UnauthorizedException();
+    }
+  }
+
 
 }

@@ -1,9 +1,9 @@
 <div class="container-all-project">
 
-    <div class="container-background-project" (drop)="onFileDropped($event)"
-    (dragover)="onDragOver($event)" (dragleave)="onDragLeave($event)" [ngClass]="{'is-dragging' : isDragging}">
-        @if(project) {
-            <img [src]="project.srcBackground" class="projet-background">
+    <div class="container-background-project" (drop)="onFileDropped($event)" (dragover)="onDragOver($event)"
+        (dragleave)="onDragLeave($event)" [ngClass]="{'is-dragging' : isDragging}">
+        @if(project != undefined) {
+        <img [src]="project.srcBackground" class="projet-background">
         }
 
         <div class="container-buttons">
@@ -21,7 +21,7 @@
             <div class="container-button">
                 <img [src]="srcMessage">
             </div>
-            
+
         </div>
 
         <form [formGroup]="formGroupName" class="container-form-name">
@@ -31,5 +31,5 @@
 
     <app-detail-project></app-detail-project>
 
-    
+
 </div>
