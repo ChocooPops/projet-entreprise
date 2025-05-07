@@ -23,6 +23,12 @@ export class MainPageComponent {
   ) { }
 
   ngOnInit(): void {
+    this.userService.setUser();
+    this.userService.fillProfilPhotoBold();
+
+    this.projectService.fetchAllProjectByUser().subscribe(() => {})
+    this.projectService.fillBackgroundPhotoProject();
+
     this.userService.getDisplayEditUser().subscribe((state) => {
       this.displayEditUser = state;
     })
@@ -30,6 +36,11 @@ export class MainPageComponent {
     this.projectService.getDisplayEditProject().subscribe((state) => {
       this.displayEditProject = state;
     })
+  }
+
+  ngOnDestroy() : void {
+    this.userService.resetUser();
+    this.projectService.resetProjects();
   }
 
   onMouseDown(event: MouseEvent) {

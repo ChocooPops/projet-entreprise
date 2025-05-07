@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { RegisterModel } from '../../model/register.interface';
 import { UserService } from '../../services/user/user.service';
 import { MessageModel } from '../../model/message.interface';
+import { ProjectService } from '../../services/project/project.service';
 
 @Component({
   selector: 'app-register',
@@ -23,10 +24,13 @@ export class RegisterComponent {
 
   constructor(private fb: FormBuilder,
     private router: Router,
-    private userService: UserService
+    private userService: UserService,
+    private projectService : ProjectService
   ) { }
 
   ngOnInit(): void {
+    this.userService.resetUser();
+    this.projectService.resetProjects();
     this.formGroup = this.fb.group({
       inputFirstName: ['', [Validators.required]],
       inputLastName: ['', [Validators.required]],

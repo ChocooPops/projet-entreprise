@@ -1,0 +1,26 @@
+<div class="container-project">
+    <form [formGroup]="formGroupDescription" class="container-form-describe">
+        <label class="label">Description : </label>
+        <textarea maxlength="1000" formControlName="inputDescription" (blur)="onInputBlurDescription()"> </textarea>
+    </form>
+
+    <div class="container-files" (drop)="onFileDropped($event)" (dragover)="onDragOver($event)"
+        (dragleave)="onDragLeave($event)" [ngClass]="{'is-dragging' : isDragging}">
+        <div class="div-flex">
+            <p> Vos fichiers : </p>
+            <img src="./add.png" (click)="triggerFileInput()">
+            <input type="file" #fileInput (change)="onFileSelected($event)" style="display: none;" />
+        </div>
+        <div class="container-file">
+            @for (file of files; track file.id) {
+            <app-file [file]="file" (emitRemoveFile)="deleteFileWhenEmit($event)"></app-file>
+            }
+            <app-file (click)="triggerFileInput()"></app-file>
+        </div>
+    </div>
+    <div class="container-task">
+        @for(task of tasks; track task.id) {
+        <app-task [task]="task"></app-task>
+        }
+    </div>
+</div>

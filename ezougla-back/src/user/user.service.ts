@@ -1,5 +1,4 @@
-import { Injectable } from '@nestjs/common';
-import { UpdateUserDto } from './dto/update-user.dto';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { RegisterUser } from './dto/create-user.interface';
 import { MessageModel } from 'src/common/model/message.interface';
@@ -7,6 +6,7 @@ import { User } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
 import { CreateFileModel } from 'src/file/dto/create-file.interface';
 import { UploadFileService } from 'src/common/services/upload-file.service';
+import { Role } from 'generated/prisma';
 
 @Injectable()
 export class UserService {
@@ -70,6 +70,20 @@ export class UserService {
           data: { profilePhoto: url },
         });
       }
+    }
+  }
+
+  async getAllUsers(idUser : string, role : Role) : Promise<User[]> {
+    if(role === 'DIRECTOR') {
+      return await this.prisma.user.findMany({
+        where : {
+          id : {
+            not : idUser
+          }
+        }
+      })
+    } else {
+      throw new UnauthorizedException();
     }
   }
 

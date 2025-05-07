@@ -44,7 +44,6 @@ export class UploadFileService {
     }
 
     private async saveFile(base64: string, directory: string, filename: string): Promise<any> {
-        console.log(filename)
         if (!base64 || !filename) {
             throw new Error('base64 ou filename manquant');
         }

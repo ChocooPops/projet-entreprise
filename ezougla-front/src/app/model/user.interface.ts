@@ -5,5 +5,5 @@ export interface UserModel {
     email: string,
     role: 'DIRECTOR' | 'MANAGER' | 'EMPLOYEE',
     profilePhoto: string,
-    creationDate: Date,
+    createdAt: Date,
 }

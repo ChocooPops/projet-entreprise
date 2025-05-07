@@ -32,9 +32,6 @@ export class ProjectService {
   constructor(private http: HttpClient,
     private uploadService: UploadService
   ) {
-    this.fetchAllProjectByUser().subscribe(() => {
-    })
-    this.fillBackgroundPhotoProject();
   }
 
   getPorjectClicked(): Observable<string> {
@@ -90,7 +87,7 @@ export class ProjectService {
         const projects: ProjectModel[] = this.projectsSubject.value;
         const index: number = projects.findIndex(item => item.id === id);
         projects[index].name = data.name;
-        this.projectsSubject.next(projects)
+        this.projectsSubject.next(projects); 
       })
     )
   }
@@ -101,7 +98,7 @@ export class ProjectService {
         const projects: ProjectModel[] = this.projectsSubject.value;
         const index: number = projects.findIndex(item => item.id === id);
         projects[index].description = data.description;
-        this.projectsSubject.next(projects)
+        this.projectsSubject.next(projects);
       })
     )
   }
@@ -136,31 +133,38 @@ export class ProjectService {
   private backgroundPhoto: ProfilePhotoModel[] = [];
 
   public fillBackgroundPhotoProject(): void {
-    for (const photo of this.photos) {
-      const url: string = `${this.urlProjectPhotoBack}/${photo}`;
-      this.uploadService.getUploadFile(url).pipe(take(1)).subscribe((blob: Blob) => {
-        this.backgroundPhoto.push({ photo: url, blob: URL.createObjectURL(blob) });
-      })
+    if(this.backgroundPhoto.length < 1) {
+      for (const photo of this.photos) {
+        const url: string = `${this.urlProjectPhotoBack}/${photo}`;
+        this.uploadService.getUploadFile(url).pipe(take(1)).subscribe((blob: Blob) => {
+          this.backgroundPhoto.push({ photo: url, blob: URL.createObjectURL(blob) });
+        })
+      }
     }
   }
 
-  public fetchUpdateBackProject(photo: ProfilePhotoModel): Observable<string> {
+  public fetchUpdateBackProject(photo: ProfilePhotoModel): Observable<any> {
     const url: string = photo.photo;
     return this.http.put<any>(`${this.apiUrlUpdateBack}/${this.projectClickedSubject.value}`, { url }).pipe(
-      map((data: any) => {
-        return this.projectClickedSubject.value;
+      map((data: ProjectModel) => {
+          const projects: ProjectModel[] = this.projectsSubject.value;
+          const index: number = projects.findIndex(item => item.id === data.id);
+          projects[index].srcBackground = data.srcBackground;
+          this.projectsSubject.next(projects);
       })
     )
   }
 
   public fetchUpdateBackProjectPersonalized(file: CreateFileModel): Observable<any> {
     return this.http.put<any>(`${this.apiUrlUpdateBackPersonalized}`, file).pipe(
-      map((data: any) => {
-        return data;
+      map((data: ProjectModel) => {
+        const projects: ProjectModel[] = this.projectsSubject.value;
+        const index: number = projects.findIndex(item => item.id === data.id);
+        projects[index].srcBackground = data.srcBackground;
+        this.projectsSubject.next(projects);
       })
     )
   }
-
 
   getBackgroundPhotoProject(): ProfilePhotoModel[] {
     return this.backgroundPhoto;
@@ -174,6 +178,8 @@ export class ProjectService {
     return this.displayEditProject$;
   }
 
-
+  public resetProjects() : void {
+    this.projectsSubject.next([])
+  }
 
 }

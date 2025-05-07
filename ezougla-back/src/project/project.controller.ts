@@ -2,6 +2,7 @@ import { Controller, Get, Post, Param, Delete, Body, Put } from '@nestjs/common'
 import { ProjectService } from './project.service';
 import { CurrentUser } from 'src/auth/current-user.guard';
 import { Role } from '@prisma/client';
+import { CreateFileModel } from 'src/file/dto/create-file.interface';
 
 @Controller('project')
 export class ProjectController {
@@ -33,13 +34,12 @@ export class ProjectController {
   }
 
   @Put('change-back-perso')
-  async updateBackPersonalized(@CurrentUser('role') role: Role, @Param('id') id: string, @Body('url') url: string) {
-    return await this.projectService.updateBackgroundImage(id, role, url);
+  async updateBackPersonalized(@CurrentUser('role') role: Role, @Body() file : CreateFileModel) {
+    return await this.projectService.updateBackgroundImagePersonalize(role, file);
   }
 
-
   @Delete(':id')
-  remove(@Param('id') id: string, @CurrentUser('role') role: Role) {
-    return this.projectService.deleteProjectById(id, role);
+  async remove(@Param('id') id: string, @CurrentUser('role') role: Role) {
+    return await this.projectService.deleteProjectById(id, role);
   }
 }

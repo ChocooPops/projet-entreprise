@@ -3,6 +3,8 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
 import { AuthService } from '../../services/auth/auth.service';
 import { AuthModel } from '../../model/auth.interface';
 import { Router } from '@angular/router';
+import { UserService } from '../../services/user/user.service';
+import { ProjectService } from '../../services/project/project.service';
 
 @Component({
   selector: 'app-login',
@@ -23,10 +25,14 @@ export class LoginComponent {
 
   constructor(private fb: FormBuilder,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private userService : UserService,
+    private projectService : ProjectService
   ) { }
 
   ngOnInit(): void {
+    this.userService.resetUser();
+    this.projectService.resetProjects();
     this.formGroup = this.fb.group({
       inputEmail: ['', [Validators.required, Validators.email]],
       inputPassword: ['', [Validators.required, Validators.minLength(6)]]

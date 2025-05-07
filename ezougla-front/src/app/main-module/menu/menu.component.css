@@ -5,6 +5,7 @@
     display: flex;
     flex-direction: column;
     padding: 20px;
+    padding-bottom: 0;
     overflow-x: hidden;
     overflow-y: auto;
     box-sizing: border-box;
@@ -17,7 +18,6 @@
     display: flex;
     align-items: center;
     justify-content: left;
-    gap: 15px;
 }
 
 .container-button {
@@ -109,11 +109,14 @@
 }
 
 .container-project-list {
+    flex: 1;
     display: flex;
     flex-direction: column;
     font-size: 12px;
     gap: 5px;
     margin-bottom: 20px;
+    overflow-x: hidden;
+    overflow-y: auto;
 }
 
 .container-projects {
@@ -139,7 +142,7 @@
     }
 
     p {
-        margin-left: 17px;
+        margin-left: 25px;
     }
 }
 
@@ -161,6 +164,7 @@ p {
     justify-content: left;
     align-items: center;
     cursor: pointer;
+    margin-bottom: -30px;
 
     &:hover {
         background-color: #212121;
@@ -168,6 +172,7 @@ p {
 
     p {
         margin-left: 10px;
+        font-size: 14px;
     }
 }
 

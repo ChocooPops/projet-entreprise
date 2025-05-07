@@ -2,11 +2,15 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { Project, User } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { Role } from '@prisma/client';
+import { UploadFileService } from 'src/common/services/upload-file.service';
+import { CreateFileModel } from 'src/file/dto/create-file.interface';
 
 @Injectable()
 export class ProjectService {
 
-  constructor(private prismaService: PrismaService) { }
+  constructor(private prismaService: PrismaService, 
+    private uploadFileService : UploadFileService
+  ) { }
 
   async createHollowNewProject(role: Role): Promise<Project> {
     if (role === 'DIRECTOR' || role === 'MANAGER') {
@@ -17,7 +21,7 @@ export class ProjectService {
         }
       })
     } else {
-      new UnauthorizedException();
+      throw new UnauthorizedException();
     }
   }
 
@@ -57,7 +61,7 @@ export class ProjectService {
         data: { name: newName },
       });
     } else {
-      new UnauthorizedException();
+      throw new UnauthorizedException();
     }
   }
 
@@ -68,7 +72,7 @@ export class ProjectService {
         data: { description: newDescribe },
       });
     } else {
-      new UnauthorizedException();
+      throw new UnauthorizedException();
     }
   }
 
@@ -83,23 +87,35 @@ export class ProjectService {
       await this.prismaService.file.deleteMany({
         where: { projectId: id },
       });
-      await this.prismaService.project.delete({
+      return await this.prismaService.project.delete({
         where: { id: id }
       })
     } else {
-      return new UnauthorizedException();
+      throw new UnauthorizedException();
     }
   }
 
 
   async updateBackgroundImage(id: string, role: Role, url: string): Promise<any> {
     if (role === 'DIRECTOR' || role === 'MANAGER') {
-      return this.prismaService.project.update({
+      return await this.prismaService.project.update({
         where: { id: id },
         data: { srcBackground: url }
       })
     } else {
-      return new UnauthorizedException();
+      throw new UnauthorizedException();
+    }
+  }
+
+  async updateBackgroundImagePersonalize(role : Role, file : CreateFileModel) : Promise<any> {
+    if (role === 'DIRECTOR' || role === 'MANAGER') {
+      const url = await this.uploadFileService.saveFileToProjects(file.file, file.name);
+      return await this.prismaService.project.update({
+        where: { id: file.idProjects },
+        data: { srcBackground: url }
+      })
+    } else {
+      throw new UnauthorizedException();
     }
   }
 

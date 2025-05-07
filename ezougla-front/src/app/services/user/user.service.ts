@@ -17,7 +17,9 @@ export class UserService {
   constructor(private http: HttpClient,
     private uploadService: UploadService
   ) {
-    this.fillProfilPhotoBold();
+  }
+
+  public setUser() : void {
     this.fetchGetUserConnected().subscribe((user: UserModel) => {
       this.uploadService.getUploadFile(user.profilePhoto).subscribe((blob: Blob) => {
         this.setUserProfilPhoto(blob);
@@ -30,7 +32,7 @@ export class UserService {
   private urlProfilPhoto: string = `uploads/user`;
   private urlProfiChangePhoto: string = `${environment.apiUrl}/${environment.apiUrlUser}/${environment.apiUrlUserChangePhoto}`;
   private urlProfiChangePhotoPerso: string = `${environment.apiUrl}/${environment.apiUrlUser}/${environment.apiUrlUserChangePhotoPerso}`;
-
+  private urlGetAllUsers : string = `${environment.apiUrl}/${environment.apiUrlUser}/${environment.apiUrlGetAllUsers}`;
 
   private userSubject: BehaviorSubject<UserModel | undefined> = new BehaviorSubject<UserModel | undefined>(undefined);
   private user$: Observable<UserModel | undefined> = this.userSubject.asObservable();
@@ -72,7 +74,7 @@ export class UserService {
           lastName: data.lastName,
           email: data.email,
           role: data.role,
-          creationDate: data.createdAt,
+          createdAt: data.createdAt,
           profilePhoto: data.profilePhoto,
         };
         this.userSubject.next(user);
@@ -94,11 +96,13 @@ export class UserService {
   }
 
   public fillProfilPhotoBold(): void {
-    for (const photo of this.photos) {
-      const url: string = `${this.urlProfilPhoto}/${photo}`;
-      this.uploadService.getUploadFile(url).pipe(take(1)).subscribe((blob: Blob) => {
-        this.profilePhotos.push({ photo: url, blob: URL.createObjectURL(blob) });
-      })
+    if(this.profilePhotos.length < 1) {
+      for (const photo of this.photos) {
+        const url: string = `${this.urlProfilPhoto}/${photo}`;
+        this.uploadService.getUploadFile(url).pipe(take(1)).subscribe((blob: Blob) => {
+          this.profilePhotos.push({ photo: url, blob: URL.createObjectURL(blob) });
+        })
+      }
     }
   }
 
@@ -137,5 +141,27 @@ export class UserService {
   public getDisplayEditUser(): Observable<boolean> {
     return this.displayEditUser$;
   }
+
+  public resetUser() : void {
+    this.userSubject.next(undefined);
+  }
+
+
+  userTab : UserModel[] = [];
+
+  getUserTab() : UserModel[] {
+    return this.userTab;
+  }
+
+  fetchAllUsers() : Observable<UserModel[]> {
+    return this.http.get<any>(this.urlGetAllUsers).pipe(
+      map((data : UserModel[]) => {
+        this.userTab = data;
+        return this.userTab;
+      })
+    )
+  }
+
+
 
 }

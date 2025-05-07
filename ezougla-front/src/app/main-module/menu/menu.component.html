@@ -11,11 +11,14 @@
         <div class="container-button" (click)="addNeWproject()" title="ajouter un nouveau projet">
             <img [src]="srcAdd">
         </div>
-
-        <div class="container-button" title="Gérer les utilisateurs">
-            <img [src]="srcUsers">
-        </div>
         }
+
+        @if(user && user.role === 'DIRECTOR') {
+            <div class="container-button" title="Gérer les utilisateurs" (click)="onClickManageUser()">
+                <img [src]="srcUsers">
+            </div>
+        }
+    
     </div>
 
     <div class="container-welcome">
@@ -34,11 +37,11 @@
         }
     </div>
 
-    <div class="container-project-list">
-        <div class="container-title-project" (click)="onActivateProject()"
+    <div class="container-title-project" (click)="onActivateProject()"
             [ngClass]="{'grey-background' : activateProjects}">
             <p> • Liste de vos projets</p>
-        </div>
+    </div>
+    <div class="container-project-list">
         <div class="container-projects" [ngClass]="{'hidden' : !activateProjects, 'visible' : activateProjects}">
             @for (project of projects; track project.id) {
             <div class="project" title="voir les détails du projet" (click)="onClickedProject(project.id)"

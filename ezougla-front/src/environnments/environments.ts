@@ -10,6 +10,7 @@ export const environment = {
     apiUrlFindUser: 'find-user',
     apiUrlUserChangePhoto: 'change-pp',
     apiUrlUserChangePhotoPerso: 'change-pp-by-perso-picture',
+    apiUrlGetAllUsers : 'get-all-users',
 
     apiUrlProject: 'project',
     apiUrlCreateProject: 'create',

@@ -5,6 +5,7 @@ import { Public } from 'src/auth/public.decorator';
 import { MessageModel } from 'src/common/model/message.interface';
 import { CurrentUser } from 'src/auth/current-user.guard';
 import { CreateFileModel } from 'src/file/dto/create-file.interface';
+import { Role } from 'generated/prisma';
 
 @Controller('user')
 export class UserController {
@@ -19,6 +20,11 @@ export class UserController {
   @Get('find-user')
   findAll(@CurrentUser('sub') userId: string) {
     return this.userService.findUserById(userId);
+  }
+
+  @Get('get-all-users')
+  findAllUsers(@CurrentUser('sub') userId: string, @CurrentUser('role') role : Role) {
+    return this.userService.getAllUsers(userId, role);
   }
 
   @Put('change-pp')

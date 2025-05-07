@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { ProjectService } from '../../services/project/project.service';
 import { ProfilePhotoModel } from '../../model/profil-photo.interface';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-edit-project-back',
@@ -13,9 +12,7 @@ export class EditProjectBackComponent {
 
   photos: ProfilePhotoModel[] = [];
 
-  constructor(private projectService: ProjectService,
-    private router: Router
-  ) {
+  constructor(private projectService: ProjectService) {
     this.photos = this.projectService.getBackgroundPhotoProject();
   }
 
@@ -29,7 +26,7 @@ export class EditProjectBackComponent {
 
   onClickPhoto(photo: ProfilePhotoModel): void {
     this.projectService.fetchUpdateBackProject(photo).subscribe((id) => {
-      this.router.navigate(['/main/projects', id]);
+
     })
   }
 

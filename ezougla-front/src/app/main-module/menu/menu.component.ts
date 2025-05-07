@@ -73,6 +73,10 @@ export class MenuComponent {
     this.router.navigate(['/login']);
   }
 
+  onClickManageUser() : void {
+    this.router.navigate(['/main/manage-user']);
+  }
+
   onActivateProject(): void {
     this.activateProjects = !this.activateProjects;
   }

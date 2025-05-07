@@ -10,6 +10,13 @@
     height: 30%;
     background-color: rgb(56, 56, 56);
     position: relative;
+    transition: 0.3s opacity;
+    box-sizing: border-box;
+}
+
+.is-dragging {
+    opacity: 0.5;
+    border: 3px dashed white;
 }
 
 .container-buttons {
@@ -17,7 +24,6 @@
     top: 20px;
     right: 20px;
     display: flex;
-    flex-direction: column;
 }
 
 .container-button {
@@ -46,12 +52,6 @@
     position: absolute;
     object-fit: cover;
     animation: 0.3s enterBack;
-}
-
-.container-project {
-    flex: 1;
-    padding: 30px;
-    box-sizing: border-box;
 }
 
 .container-form-name {
@@ -107,63 +107,6 @@ textarea:focus {
     display: flex;
     flex-direction: column;
     gap: 10px;
-}
-
-.container-form-describe {
-    textarea {
-        color: white;
-        font-size: 15px;
-        padding-left: 0;
-    }
-
-    .label {
-        font-size: 18px;
-    }
-}
-
-.container-files {
-    display: flex;
-    flex-direction: column;
-    gap: 0px;
-    width: 100%;
-    transition: background-colo 0.2s;
-    box-sizing: border-box;
-}
-
-.is-dragging {
-    border: white dashed 3px;
-    background-color: hsla(0, 0%, 100%, 0.1);
-    border-radius: 5px;
-}
-
-.container-file {
-    display: flex;
-    align-items: center;
-    justify-content: left;
-    gap: 15px;
-    width: 100%;
-    overflow-x: scroll;
-    height: auto;
-    padding-bottom: 20px;
-}
-
-.div-flex {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-
-    img {
-        height: 15px;
-        width: 15px;
-        padding: 10px;
-        cursor: pointer;
-        transition: 0.2s background-color;
-        border-radius: 5px;
-
-        &:hover {
-            background-color: #141414;
-        }
-    }
 }
 
 @keyframes enterBack {
