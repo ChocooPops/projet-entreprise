@@ -8,6 +8,11 @@
     src: url('../public/police/Inter-Bold.ttf');
 }
 
+@font-face {
+    font-family: 'Inter Normal';
+    src: url('../public/police/Inter-Medium.ttf');
+}
+
 html,
 body {
     height: 100vh;

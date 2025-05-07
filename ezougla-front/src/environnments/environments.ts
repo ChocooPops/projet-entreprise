@@ -11,6 +11,9 @@ export const environment = {
     apiUrlUserChangePhoto: 'change-pp',
     apiUrlUserChangePhotoPerso: 'change-pp-by-perso-picture',
     apiUrlGetAllUsers : 'get-all-users',
+    apiUrlUserModifyRole : 'modify-role',
+    apiUrlUserEnable: 'enable-user',
+    apiUrlUserDisable: 'disable-user',
 
     apiUrlProject: 'project',
     apiUrlCreateProject: 'create',

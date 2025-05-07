@@ -6,7 +6,7 @@ import { User } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
 import { CreateFileModel } from 'src/file/dto/create-file.interface';
 import { UploadFileService } from 'src/common/services/upload-file.service';
-import { Role } from 'generated/prisma';
+import { Role } from '@prisma/client';
 
 @Injectable()
 export class UserService {
@@ -29,7 +29,7 @@ export class UserService {
       }
     })
     if (user) {
-      if (user.role === 'NOT_VALIDATE') {
+      if (user.role === 'NOT_ACTIVATE') {
         message.message = 'Votre demande de connection est en attente de validation'
       } else {
         message.message = "Cette identifiant existe deja";
@@ -42,7 +42,7 @@ export class UserService {
           lastName: userRegister.lastName,
           email: userRegister.email,
           password: hashedPassword,
-          role: 'NOT_VALIDATE'
+          role: 'NOT_ACTIVATE'
         }
       });
       message.message = "Votre de demande d'inscription a été envoyé, vous recevrez prochainement un email de validation"
@@ -73,19 +73,41 @@ export class UserService {
     }
   }
 
-  async getAllUsers(idUser : string, role : Role) : Promise<User[]> {
-    if(role === 'DIRECTOR') {
-      return await this.prisma.user.findMany({
-        where : {
-          id : {
-            not : idUser
-          }
-        }
+  async getAllUsers() : Promise<User[]> {
+    return await this.prisma.user.findMany({});
+  }
+
+  async modifyRoleUser(roleAdmin : Role, idUser : string, newRole : Role) : Promise<User> {
+    if(roleAdmin === 'DIRECTOR') {
+      return this.prisma.user.update({
+        where : {id : idUser}, 
+        data : { role : newRole}
       })
     } else {
       throw new UnauthorizedException();
     }
   }
 
+  async enableUser(roleAdmin : Role, idUser : string) : Promise<User> {
+    if(roleAdmin === 'DIRECTOR') {
+      return this.prisma.user.update({
+        where : {id : idUser}, 
+        data : { role : 'EMPLOYEE'}
+      })
+    } else {
+      throw new UnauthorizedException();
+    }
+  }
+
+  async disableUser(roleAdmin : Role, idUser : string) : Promise<User> {
+    if(roleAdmin === 'DIRECTOR') {
+      return this.prisma.user.update({
+        where : {id : idUser}, 
+        data : { role : 'NOT_ACTIVATE'}
+      })
+    } else {
+      throw new UnauthorizedException();
+    }
+  }
 
 }

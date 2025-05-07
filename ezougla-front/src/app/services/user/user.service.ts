@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environnments/environments';
 import { RegisterModel } from '../../model/register.interface';
-import { BehaviorSubject, catchError, map, Observable, of, take } from 'rxjs';
+import { BehaviorSubject, catchError, map, Observable, of, take, switchMap, forkJoin, tap } from 'rxjs';
 import { MessageModel } from '../../model/message.interface';
 import { UserModel } from '../../model/user.interface';
 import { UploadService } from '../upload/upload.service';
@@ -153,14 +153,27 @@ export class UserService {
     return this.userTab;
   }
 
-  fetchAllUsers() : Observable<UserModel[]> {
-    return this.http.get<any>(this.urlGetAllUsers).pipe(
-      map((data : UserModel[]) => {
-        this.userTab = data;
-        return this.userTab;
-      })
-    )
+  fetchAllUsers(): Observable<UserModel[]> {
+    return this.http.get<UserModel[]>(this.urlGetAllUsers).pipe(
+      switchMap((users: UserModel[]) => {
+        const usersWithBlobs$ = users.map(user => {
+          return this.uploadService.getUploadFile(user.profilePhoto).pipe(
+            map((blob: Blob) => {
+              const blobUrl = URL.createObjectURL(blob);
+              return {
+                ...user,
+                profilePhoto: blobUrl
+              } as UserModel;
+            })
+          );
+        });
+  
+        return forkJoin(usersWithBlobs$);
+      }),
+      tap(users => this.userTab = users)
+    );
   }
+  
 
 
 

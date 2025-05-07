@@ -5,7 +5,7 @@ import { Public } from 'src/auth/public.decorator';
 import { MessageModel } from 'src/common/model/message.interface';
 import { CurrentUser } from 'src/auth/current-user.guard';
 import { CreateFileModel } from 'src/file/dto/create-file.interface';
-import { Role } from 'generated/prisma';
+import { Role } from '@prisma/client';
 
 @Controller('user')
 export class UserController {
@@ -23,8 +23,8 @@ export class UserController {
   }
 
   @Get('get-all-users')
-  findAllUsers(@CurrentUser('sub') userId: string, @CurrentUser('role') role : Role) {
-    return this.userService.getAllUsers(userId, role);
+  findAllUsers() {
+    return this.userService.getAllUsers();
   }
 
   @Put('change-pp')
@@ -35,6 +35,21 @@ export class UserController {
   @Put('change-pp-by-perso-picture')
   changeProfilPhotoByPersoPicture(@Body() createFileDto: CreateFileModel, @CurrentUser('sub') userId: string) {
     return this.userService.createNewProfilPhoto(createFileDto, userId);
+  }
+
+  @Put('modify-role/:id')
+  async modiyRoleByUserId(@CurrentUser('role') role: Role, @Param('id') id: string, @Body('role') newRole: Role) {
+    return await this.userService.modifyRoleUser(role, id, newRole);
+  }
+
+  @Put('enable-user/:id')
+  async enableUserById(@CurrentUser('role') role: Role, @Param('id') id: string) {
+    return await this.userService.enableUser(role, id);
+  }
+
+  @Put('disable-user/:id')
+  async disableUserById(@CurrentUser('role') role: Role, @Param('id') id: string) {
+    return await this.userService.disableUser(role, id);
   }
 
 }
