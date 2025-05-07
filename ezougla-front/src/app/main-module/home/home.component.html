@@ -1,1 +1,10 @@
-<p> Bienvenue </p>
+<div class="container-home">
+
+    <div class="container-tmp"></div>
+
+    <div class="container-pp">
+        <img [src]="user?.profilePhoto">
+    </div>
+    <p class="welcom"> Bienvenu dans votre espace </p>
+    <p class="name"> {{ user?.firstName}} {{ user?.lastName}}</p>
+</div>

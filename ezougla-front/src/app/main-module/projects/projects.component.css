@@ -8,18 +8,23 @@
 .container-background-project {
     min-height: 150px;
     height: 30%;
-    background-color: wheat;
+    background-color: rgb(56, 56, 56);
     position: relative;
 }
 
-.container-delete-button {
+.container-buttons {
     position: absolute;
-    height: 50px;
-    width: 50px;
-    cursor: pointer;
-    transition: 0.2s background-color;
     top: 20px;
     right: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.container-button {
+    height: 40px;
+    width: 40px;
+    cursor: pointer;
+    transition: 0.2s background-color;
     border-radius: 5px;
     display: flex;
     justify-content: center;
@@ -35,6 +40,14 @@
     }
 }
 
+.projet-background {
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    object-fit: cover;
+    animation: 0.3s enterBack;
+}
+
 .container-project {
     flex: 1;
     padding: 30px;
@@ -47,10 +60,13 @@
     left: 20px;
     bottom: 40px;
     width: 90%;
+    font-weight: bold;
 
     textarea {
         height: auto;
         margin: 0;
+        font-family: 'Inter Bold';
+        color: rgb(255, 249, 240);
     }
 }
 
@@ -128,6 +144,7 @@ textarea:focus {
     width: 100%;
     overflow-x: scroll;
     height: auto;
+    padding-bottom: 20px;
 }
 
 .div-flex {
@@ -142,10 +159,33 @@ textarea:focus {
         cursor: pointer;
         transition: 0.2s background-color;
         border-radius: 5px;
+
         &:hover {
             background-color: #141414;
         }
     }
+}
 
-    
+@keyframes enterBack {
+    0% {
+        opacity: 0;
+        transform: translateY(-20%);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes enterFile {
+    0% {
+        opacity: 0;
+        transform: translateY(20%);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }

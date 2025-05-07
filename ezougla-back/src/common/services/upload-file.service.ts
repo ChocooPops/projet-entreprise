@@ -9,7 +9,7 @@ export class UploadFileService {
     private readonly folderUser: string = 'user';
     private readonly folderProjects: string = 'projects';
     private readonly folderFile: string = 'file';
-   
+
     public getBaseName(pathUrl: string | null): string | null {
         if (pathUrl) {
             return path.basename(pathUrl);
@@ -44,10 +44,11 @@ export class UploadFileService {
     }
 
     private async saveFile(base64: string, directory: string, filename: string): Promise<any> {
+        console.log(filename)
         if (!base64 || !filename) {
             throw new Error('base64 ou filename manquant');
         }
-        
+
         const matches = base64.match(/^data:(.+);base64,(.+)$/);
         if (!matches || matches.length !== 3) {
             throw new Error('Format base64 invalide');
@@ -55,17 +56,17 @@ export class UploadFileService {
         const buffer = Buffer.from(matches[2], 'base64');
         const projectRoot = process.cwd();
         const uploadsDir = path.join(projectRoot, directory);
-        
+
         if (!fs.existsSync(uploadsDir)) {
             fs.mkdirSync(uploadsDir, { recursive: true });
         }
-        
+
         const extension = path.extname(filename);
         const baseName = path.basename(filename, extension);
         const savedFileName = `${baseName}-${Date.now()}${extension}`;
         const fullPath = path.join(uploadsDir, savedFileName);
         fs.writeFileSync(fullPath, buffer);
-        
+
         const relativePath = path.relative(projectRoot, fullPath);
         return relativePath;
     }
@@ -82,21 +83,21 @@ export class UploadFileService {
 
     public async saveFiletoFile(file: string, filename: string): Promise<string> {
         const directoryPath = path.join(this.folderUploads, this.folderFile);
-        return this.saveFile(file, directoryPath, filename);
+        return await this.saveFile(file, directoryPath, filename);
     }
 
     public async deleteFileOrFolder(directory: string): Promise<boolean> {
         try {
             const filePath = path.join(process.cwd(), directory);
-        
+
             if (!fs.existsSync(filePath)) {
-              return true;
+                return true;
             }
-        
+
             fs.unlinkSync(filePath);
-        
+
             return true;
-          } catch (error) {
+        } catch (error) {
             return false;
         }
     }

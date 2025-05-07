@@ -4,6 +4,9 @@
         <div class="container-button" (click)="onClickLogout()" title="déconnexion">
             <img [src]="srcDeconnexion">
         </div>
+        <div class="container-button" (click)="onClickAccueil()" title="accueil">
+            <img [src]="srcHome">
+        </div>
         @if(user && (user.role === 'DIRECTOR' || user.role === 'MANAGER')) {
         <div class="container-button" (click)="addNeWproject()" title="ajouter un nouveau projet">
             <img [src]="srcAdd">
@@ -17,7 +20,10 @@
 
     <div class="container-welcome">
         @if(user) {
-        <div class="container-pp">
+        <div class="container-pp" (click)="onClickPp()">
+            <div class="pp-hovering">
+                <img [src]="srcEdit">
+            </div>
             <img [src]="user.profilePhoto">
         </div>
         <p> {{ user.firstName }} {{ user.lastName }}</p>

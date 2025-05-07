@@ -1,0 +1,15 @@
+<div class="container-edit-projet-page" (click)="onClickPage()">
+
+    <div class="container-edit" (click)="onClick($event)">
+        <p> Choose Icon </p>
+        <div class="container-photo">
+            @for(photo of photos; track photo) {
+            <div class="photo" (click)="onClickPhoto(photo)">
+                <div class="container-tmp"></div>
+                <img [src]="photo.blob">
+            </div>
+            }
+        </div>
+    </div>
+
+</div>

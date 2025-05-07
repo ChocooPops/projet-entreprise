@@ -15,6 +15,8 @@ import { FileComponent } from '../file/file.component';
 import { TaskComponent } from '../task/task.component';
 import { CreateFileModel } from '../../model/create-file.interface';
 import { NgClass } from '@angular/common';
+import { UploadService } from '../../services/upload/upload.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-projects',
@@ -27,20 +29,28 @@ export class ProjectsComponent {
   subscription: Subscription = new Subscription();
   subscriptionTask !: Subscription;
   subscriptionFile !: Subscription;
+  subscriptionUpload !: Subscription;
   project !: ProjectModel | undefined;
   formGroupName!: FormGroup;
   formGroupDescription !: FormGroup;
-  user !: UserModel;
+  user: UserModel | undefined;
   srcDelete: string = './poubelle.png';
+  srcEdit: string = './add.png';
+  srcTask: string = './tache.png';
+  srcMessage: string = './message.png';
   tasks: TaskModel[] = [];
   files: FileModel[] = [];
+  srcBack: string | undefined;
+  displayEditProject: boolean = true;
 
   constructor(private projectService: ProjectService,
     private route: ActivatedRoute,
     private fb: FormBuilder,
     private userService: UserService,
     private fileService: FileService,
-    private taskService: TaskService
+    private taskService: TaskService,
+    private uploadService: UploadService,
+    private router: Router
   ) {
 
   }
@@ -51,11 +61,18 @@ export class ProjectsComponent {
 
     this.route.paramMap.subscribe(params => {
       const id = params.get('id');
-      if(id) {
+      if (id) {
         this.projectService.setProjectClicked(id);
       }
       this.subscription.add(this.projectService.getAllProjectsByUser().subscribe((projects: ProjectModel[]) => {
         this.project = projects.find((pro) => pro.id === id);
+        this.srcBack = undefined;
+        if (this.project) {
+          this.subscriptionUpload = this.uploadService.getUploadFile(this.project?.srcBackground).subscribe((blob: Blob) => {
+            this.srcBack = URL.createObjectURL(blob);
+          })
+        }
+
         this.loadFormName();
         this.loadFormDescription();
         this.setTaskAndFile();
@@ -64,7 +81,7 @@ export class ProjectsComponent {
     });
 
     this.subscription.add(
-      this.userService.fetchGetUserConnected().subscribe(user => {
+      this.userService.getUserSubject().subscribe(user => {
         this.user = user
         this.loadFormName();
         this.loadFormDescription();
@@ -74,7 +91,7 @@ export class ProjectsComponent {
 
   setUser(): void {
     this.subscription.add(
-      this.userService.fetchGetUserConnected().subscribe(user => {
+      this.userService.getUserSubject().subscribe(user => {
         this.user = user
         this.loadFormName();
         this.loadFormDescription();
@@ -138,8 +155,14 @@ export class ProjectsComponent {
 
   onClickDelete(): void {
     if (this.project) {
-      this.projectService.fetDeleteById(this.project?.id).pipe(take(1)).subscribe(() => { });
+      this.projectService.fetDeleteById(this.project?.id).pipe(take(1)).subscribe(() => {
+        this.router.navigate(['/main']);
+      });
     }
+  }
+
+  onClickEdit(): void {
+    this.projectService.setDisplayEditProject(true);
   }
 
   onFileSelected(event: Event): void {
@@ -151,7 +174,7 @@ export class ProjectsComponent {
 
   private handleFile(file: File): void {
     const reader = new FileReader();
-  
+
     reader.onload = () => {
       const base64 = reader.result as string;
       if (this.project) {
@@ -165,32 +188,32 @@ export class ProjectsComponent {
         });
       }
     };
-  
+
     reader.onerror = (error) => {
       console.error('Erreur de lecture du fichier :', error);
     };
-  
+
     reader.readAsDataURL(file);
   }
 
   @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
-  
+
   triggerFileInput(): void {
     this.fileInput.nativeElement.click();
   }
 
-  deleteFileWhenEmit(file : FileModel) : void {
+  deleteFileWhenEmit(file: FileModel): void {
     this.files = this.files.filter((item) => item.id !== file.id);
   }
 
-  isDragging : boolean = false;
+  isDragging: boolean = false;
 
   onFileDropped(event: DragEvent): void {
     event.preventDefault();
     if (event.dataTransfer && event.dataTransfer.files.length > 0) {
       this.handleFile(event.dataTransfer.files[0]);
     }
-    this.isDragging = false; 
+    this.isDragging = false;
   }
 
   onDragOver(event: DragEvent): void {

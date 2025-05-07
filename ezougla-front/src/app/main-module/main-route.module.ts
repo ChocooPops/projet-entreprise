@@ -6,32 +6,36 @@ import { ConversationComponent } from './conversation/conversation.component';
 import { MainPageComponent } from './main-page/main-page.component';
 
 export const routes: Routes = [
-    {
-      path : '',
-      component : MainPageComponent,
-      children : [
-        {
-          path : 'home',
-          component: HomeComponent
-        },
-        {
-          path : 'projects/:id',
-          component : ProjectsComponent
-        },
-        {
-          path: 'conversation/:id',
-          component : ConversationComponent
-        }, 
-      ]
-    },
-    {
-      path : '**',
-      component : MainPageComponent,
-    }
+  {
+    path: '',
+    component: MainPageComponent,
+    children: [
+      {
+        path: 'home',
+        component: HomeComponent
+      },
+      {
+        path: 'projects/:id',
+        component: ProjectsComponent
+      },
+      {
+        path: 'conversation/:id',
+        component: ConversationComponent
+      },
+      {
+        path: '**',
+        component: HomeComponent,
+      }
+    ]
+  },
+  {
+    path: '**',
+    component: MainPageComponent,
+  }
 ];
 
 @NgModule({
-  imports : [RouterModule.forChild(routes)],
-  exports : [RouterModule]
+  imports: [RouterModule.forChild(routes)],
+  exports: [RouterModule]
 })
-export class MainRoutingModule {}
+export class MainRoutingModule { }

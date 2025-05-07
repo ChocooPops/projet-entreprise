@@ -1,0 +1,21 @@
+<div class="container-edit-user-page" (click)="onClickPage()">
+
+    <div class="container-edit-user" (click)="onClick($event)" (drop)="onFileDropped($event)"
+        (dragover)="onDragOver($event)" (dragleave)="onDragLeave($event)" [ngClass]="{'is-dragging' : isDragging}">
+        <p> Choose Icon</p>
+        <div class="container-photo">
+            @for(photo of profilPhotos; track photo) {
+            <div class="photo" (click)="onClickPhoto(photo)">
+                <div class="container-tmp"></div>
+                <img [src]="photo.blob">
+            </div>
+            }
+        </div>
+        <input type="file" #fileInput (change)="onFileSelected($event)" style="display: none;" />
+        <div class="photo-input" (click)="triggerFileInput()">
+            <img [src]="srcInputPicture">
+            <p class="description">Insérer vos propres images</p>
+        </div>
+    </div>
+
+</div>

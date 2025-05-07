@@ -27,6 +27,17 @@ export class ProjectController {
     return await this.projectService.updateDescriptionProjectById(id, description, role);
   }
 
+  @Put('change-back/:id')
+  async updateBack(@CurrentUser('role') role: Role, @Param('id') id: string, @Body('url') url: string) {
+    return await this.projectService.updateBackgroundImage(id, role, url);
+  }
+
+  @Put('change-back-perso')
+  async updateBackPersonalized(@CurrentUser('role') role: Role, @Param('id') id: string, @Body('url') url: string) {
+    return await this.projectService.updateBackgroundImage(id, role, url);
+  }
+
+
   @Delete(':id')
   remove(@Param('id') id: string, @CurrentUser('role') role: Role) {
     return this.projectService.deleteProjectById(id, role);

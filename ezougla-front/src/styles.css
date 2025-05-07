@@ -3,6 +3,11 @@
     src: url('../public/police/Inter-SemiBold.ttf');
 }
 
+@font-face {
+    font-family: 'Inter Bold';
+    src: url('../public/police/Inter-Bold.ttf');
+}
+
 html,
 body {
     height: 100vh;

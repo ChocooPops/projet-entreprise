@@ -72,7 +72,7 @@ export class ProjectService {
     }
   }
 
-  async deleteProjectById(id: string, role: Role): Promise<void> {
+  async deleteProjectById(id: string, role: Role): Promise<any> {
     if (role === 'DIRECTOR' || role === 'MANAGER') {
       await this.prismaService.task.deleteMany({
         where: { projectId: id },
@@ -86,9 +86,21 @@ export class ProjectService {
       await this.prismaService.project.delete({
         where: { id: id }
       })
+    } else {
+      return new UnauthorizedException();
     }
   }
 
 
+  async updateBackgroundImage(id: string, role: Role, url: string): Promise<any> {
+    if (role === 'DIRECTOR' || role === 'MANAGER') {
+      return this.prismaService.project.update({
+        where: { id: id },
+        data: { srcBackground: url }
+      })
+    } else {
+      return new UnauthorizedException();
+    }
+  }
 
 }

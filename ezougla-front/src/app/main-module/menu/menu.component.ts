@@ -7,7 +7,6 @@ import { Subscription } from 'rxjs';
 import { NgClass } from '@angular/common';
 import { AuthService } from '../../services/auth/auth.service';
 import { Router } from '@angular/router';
-import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-menu',
@@ -20,14 +19,15 @@ export class MenuComponent {
   constructor(private projectService: ProjectService,
     private userService: UserService,
     private authService: AuthService,
-    private router: Router,
-    private route: ActivatedRoute
+    private router: Router
   ) { }
 
   srcDeconnexion: string = './se-deconnecter.png';
   srcAdd: string = './add.png';
   srcUsers: string = './users.png';
-  user !: UserModel;
+  srcEdit: string = './editer.png';
+  srcHome: string = '/accueil.png';
+  user: UserModel | undefined = undefined;
   projects: ProjectModel[] = [];
   subscription: Subscription = new Subscription();
   idProjectClicked: string = '';
@@ -40,12 +40,12 @@ export class MenuComponent {
       })
     )
     this.subscription.add(
-      this.userService.fetchGetUserConnected().subscribe((data: UserModel) => {
-        this.user = data;
+      this.userService.getUserSubject().subscribe((user: UserModel | undefined) => {
+        this.user = user;
       })
     )
     this.subscription.add(
-      this.projectService.getPorjectClicked().subscribe((data : string) => {
+      this.projectService.getPorjectClicked().subscribe((data: string) => {
         this.idProjectClicked = data;
       })
     )
@@ -81,4 +81,11 @@ export class MenuComponent {
     this.projectService.fetchCreateProject().subscribe(() => { })
   }
 
+  onClickPp(): void {
+    this.userService.setDisplayEditUser(true);
+  }
+
+  onClickAccueil(): void {
+    this.router.navigate(['/main']);
+  }
 }

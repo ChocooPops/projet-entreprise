@@ -1,9 +1,16 @@
+@if(displayEditUser) {
+<app-edit-user class="position-absolute"></app-edit-user>
+}
+@if(displayEditProject) {
+<app-edit-project-back class="position-absolute"></app-edit-project-back>
+}
+
 <div class="container">
     <div class="left">
-    <app-menu></app-menu>
+        <app-menu></app-menu>
     </div>
     <div class="resizer" (mousedown)="onMouseDown($event)"></div>
     <div class="right">
         <router-outlet></router-outlet>
     </div>
-  </div>
+</div>

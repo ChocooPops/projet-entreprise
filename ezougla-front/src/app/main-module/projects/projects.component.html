@@ -1,8 +1,25 @@
 <div class="container-all-project">
 
     <div class="container-background-project">
-        <div class="container-delete-button" (click)="onClickDelete()">
-            <img [src]="srcDelete">
+        @if(srcBack) {
+        <img [src]="srcBack" class="projet-background">
+        }
+
+        <div class="container-buttons">
+            @if(user && (user.role === 'DIRECTOR' || user.role === 'MANAGER')) {
+            <div class="container-button" (click)="onClickDelete()">
+                <img [src]="srcDelete">
+            </div>
+            <div class="container-button" (click)="onClickEdit()">
+                <img [src]="srcEdit">
+            </div>
+            <div class="container-button">
+                <img [src]="srcTask">
+            </div>
+            <div class="container-button">
+                <img [src]="srcMessage">
+            </div>
+            }
         </div>
 
         <form [formGroup]="formGroupName" class="container-form-name">
@@ -16,9 +33,8 @@
             <textarea maxlength="1000" formControlName="inputDescription" (blur)="onInputBlurDescription()"> </textarea>
         </form>
 
-        <div class="container-files" (drop)="onFileDropped($event)" 
-        (dragover)="onDragOver($event)" 
-        (dragleave)="onDragLeave($event)" [ngClass]="{'is-dragging' : isDragging}">
+        <div class="container-files" (drop)="onFileDropped($event)" (dragover)="onDragOver($event)"
+            (dragleave)="onDragLeave($event)" [ngClass]="{'is-dragging' : isDragging}">
             <div class="div-flex">
                 <p> Vos fichiers : </p>
                 <img src="./add.png" (click)="triggerFileInput()">
@@ -26,9 +42,9 @@
             </div>
             <div class="container-file">
                 @for (file of files; track file.id) {
-                    <app-file [file]="file" (emitRemoveFile)="deleteFileWhenEmit($event)"></app-file>
+                <app-file [file]="file" (emitRemoveFile)="deleteFileWhenEmit($event)"></app-file>
                 }
-                <app-file (emitRemoveFile)="deleteFileWhenEmit($event)"></app-file>
+                <app-file (click)="triggerFileInput()"></app-file>
             </div>
         </div>
         <div class="container-task">

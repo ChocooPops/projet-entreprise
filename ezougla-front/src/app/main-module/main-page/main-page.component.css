@@ -4,25 +4,43 @@
     width: 100%;
     overflow: hidden;
 }
-  
-.left, .right {
+
+.left,
+.right {
     height: 100%;
     overflow: auto;
 }
-  
+
 .left {
     background-color: #141414;
     width: 30%;
 }
-  
+
 .right {
     background-color: #202020;
     flex: 1;
 }
-  
+
 .resizer {
     width: 2px;
     background: #141414;
     cursor: col-resize;
 }
-  
+
+.position-absolute {
+    position: absolute;
+    z-index: 9999;
+    animation: 0.5s enter;
+}
+
+@keyframes enter {
+    0% {
+        opacity: 0;
+        transform: translateY(20%);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

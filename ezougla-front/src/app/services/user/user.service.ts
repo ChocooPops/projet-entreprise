@@ -2,24 +2,53 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environnments/environments';
 import { RegisterModel } from '../../model/register.interface';
-import { catchError, map, Observable, of, switchMap } from 'rxjs';
+import { BehaviorSubject, catchError, map, Observable, of, take } from 'rxjs';
 import { MessageModel } from '../../model/message.interface';
 import { UserModel } from '../../model/user.interface';
 import { UploadService } from '../upload/upload.service';
+import { ProfilePhotoModel } from '../../model/profil-photo.interface';
+import { CreateFileModel } from '../../model/create-file.interface';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
 
-  constructor(private http: HttpClient, 
-    private uploadService : UploadService
-  ) { }
+  constructor(private http: HttpClient,
+    private uploadService: UploadService
+  ) {
+    this.fillProfilPhotoBold();
+    this.fetchGetUserConnected().subscribe((user: UserModel) => {
+      this.uploadService.getUploadFile(user.profilePhoto).subscribe((blob: Blob) => {
+        this.setUserProfilPhoto(blob);
+      })
+    });
+  }
 
   private readonly apiUrlRegister: string = `${environment.apiUrl}/${environment.apiUrlUser}/${environment.apiUrlRegister}`;
   private readonly apiUrlGetUser: string = `${environment.apiUrl}/${environment.apiUrlUser}/${environment.apiUrlFindUser}`;
+  private urlProfilPhoto: string = `uploads/user`;
+  private urlProfiChangePhoto: string = `${environment.apiUrl}/${environment.apiUrlUser}/${environment.apiUrlUserChangePhoto}`;
+  private urlProfiChangePhotoPerso: string = `${environment.apiUrl}/${environment.apiUrlUser}/${environment.apiUrlUserChangePhotoPerso}`;
 
-  private user: UserModel | undefined;
+
+  private userSubject: BehaviorSubject<UserModel | undefined> = new BehaviorSubject<UserModel | undefined>(undefined);
+  private user$: Observable<UserModel | undefined> = this.userSubject.asObservable();
+
+  private photos: string[] = [
+    'user-1.png',
+    'user-2.png',
+    'user-3.png',
+    'user-4.png',
+    'user-5.png',
+    'user-6.png',
+    'user-7.png',
+    'user-8.png',
+    'user-9.png',
+    'user-10.png'
+  ]
+
+  private profilePhotos: ProfilePhotoModel[] = [];
 
   public fetchRegister(register: RegisterModel): Observable<MessageModel> {
     return this.http.post<any>(`${this.apiUrlRegister}`, register).pipe(
@@ -35,30 +64,78 @@ export class UserService {
   }
 
   public fetchGetUserConnected(): Observable<UserModel> {
-    if (!this.user) {
-      return this.http.get<any>(this.apiUrlGetUser).pipe(
-        switchMap((data: any) => {
-          return this.uploadService.getUploadFile(data.profilePhoto).pipe(
-            map((blob : Blob) => {
-              const objectUrl = URL.createObjectURL(blob);
-              this.user = {
-                id: data.id,
-                firstName: data.firstName,
-                lastName: data.lastName,
-                email: data.email,
-                role: data.role,
-                creationDate: data.createdAt,
-                profilePhoto: objectUrl,
-              };
-              return this.user;
-            })
-          );
-        })
-      );
-    } else {
-      return of(this.user);
+    return this.http.get<any>(this.apiUrlGetUser).pipe(
+      map((data: any) => {
+        const user: UserModel = {
+          id: data.id,
+          firstName: data.firstName,
+          lastName: data.lastName,
+          email: data.email,
+          role: data.role,
+          creationDate: data.createdAt,
+          profilePhoto: data.profilePhoto,
+        };
+        this.userSubject.next(user);
+        return user;
+      })
+    );
+  }
+
+  public getUserSubject(): Observable<UserModel | undefined> {
+    return this.user$;
+  }
+
+  public setUserProfilPhoto(pp: Blob): void {
+    const user: UserModel | undefined = this.userSubject.value;
+    if (user) {
+      user.profilePhoto = URL.createObjectURL(pp);
+      this.userSubject.next(user);
     }
   }
-  
+
+  public fillProfilPhotoBold(): void {
+    for (const photo of this.photos) {
+      const url: string = `${this.urlProfilPhoto}/${photo}`;
+      this.uploadService.getUploadFile(url).pipe(take(1)).subscribe((blob: Blob) => {
+        this.profilePhotos.push({ photo: url, blob: URL.createObjectURL(blob) });
+      })
+    }
+  }
+
+  public getProfilPhotoBlob(): ProfilePhotoModel[] {
+    return this.profilePhotos;
+  }
+
+  public fetchChangeProfilPhoto(photo: ProfilePhotoModel): Observable<any> {
+    const url: string = photo.photo;
+    return this.http.put<any>(this.urlProfiChangePhoto, { url }).pipe(
+      map((data: UserModel) => {
+        this.uploadService.getUploadFile(data.profilePhoto).subscribe((blob: Blob) => {
+          this.setUserProfilPhoto(blob);
+        })
+      })
+    )
+  }
+
+  public fetchChangeProfilPhotoPersonalized(file: CreateFileModel): Observable<any> {
+    return this.http.put<any>(this.urlProfiChangePhotoPerso, file).pipe(
+      map((data: UserModel) => {
+        this.uploadService.getUploadFile(data.profilePhoto).subscribe((blob: Blob) => {
+          this.setUserProfilPhoto(blob);
+        })
+      })
+    )
+  }
+
+  private displayEditUserSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  private displayEditUser$: Observable<boolean> = this.displayEditUserSubject.asObservable();
+
+  public setDisplayEditUser(state: boolean): void {
+    this.displayEditUserSubject.next(state);
+  }
+
+  public getDisplayEditUser(): Observable<boolean> {
+    return this.displayEditUser$;
+  }
 
 }

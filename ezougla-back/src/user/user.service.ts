@@ -5,11 +5,15 @@ import { RegisterUser } from './dto/create-user.interface';
 import { MessageModel } from 'src/common/model/message.interface';
 import { User } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
+import { CreateFileModel } from 'src/file/dto/create-file.interface';
+import { UploadFileService } from 'src/common/services/upload-file.service';
 
 @Injectable()
 export class UserService {
 
-  constructor(private readonly prisma: PrismaService) { }
+  constructor(private readonly prisma: PrismaService,
+    private uploadFileService: UploadFileService
+  ) { }
 
   async findByEmail(email: string): Promise<User | null> {
     return this.prisma.user.findUnique({
@@ -46,7 +50,28 @@ export class UserService {
     return message;
   }
 
-  async findUserById(id : string) : Promise<User> {
-    return this.prisma.user.findFirst({ where : { id : id}})
+  async findUserById(id: string): Promise<User> {
+    return this.prisma.user.findFirst({ where: { id: id } })
   }
+
+  async changeProfilPhoto(id: string, newUrl: string): Promise<User> {
+    return await this.prisma.user.update({
+      where: { id },
+      data: { profilePhoto: newUrl },
+    });
+  }
+
+  async createNewProfilPhoto(file: CreateFileModel, idUser: string): Promise<User> {
+    if (file.file) {
+      const url = await this.uploadFileService.saveFileToUser(file.file, file.name);
+      if (url) {
+        return await this.prisma.user.update({
+          where: { id: idUser },
+          data: { profilePhoto: url },
+        });
+      }
+    }
+  }
+
+
 }

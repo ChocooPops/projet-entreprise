@@ -89,4 +89,9 @@
 .new-file {
     border: dashed 3px white;
     background-color: transparent;
+    transition: 0.3s background-color;
+
+    &:hover {
+        background-color: hsla(0, 0%, 100%, 0.1);
+    }
 }

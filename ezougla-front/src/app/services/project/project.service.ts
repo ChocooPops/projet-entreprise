@@ -1,8 +1,11 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environnments/environments';
-import { BehaviorSubject, map, Observable, of } from 'rxjs';
+import { BehaviorSubject, map, Observable, of, take } from 'rxjs';
 import { ProjectModel } from '../../model/project.interface';
+import { ProfilePhotoModel } from '../../model/profil-photo.interface';
+import { UploadService } from '../upload/upload.service';
+import { CreateFileModel } from '../../model/create-file.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -14,23 +17,31 @@ export class ProjectService {
   private apiUrlUpdateName: string = `${environment.apiUrl}/${environment.apiUrlProject}/${environment.apiUrlUpdateProjectName}`
   private apiUrlUpdateDescription: string = `${environment.apiUrl}/${environment.apiUrlProject}/${environment.apiUrlUpdateProjectDescription}`
   private apiUrlDelete: string = `${environment.apiUrl}/${environment.apiUrlProject}`
+  private apiUrlUpdateBack: string = `${environment.apiUrl}/${environment.apiUrlProject}/${environment.apiUrlUpdateProjectBack}`
+  private apiUrlUpdateBackPersonalized: string = `${environment.apiUrl}/${environment.apiUrlProject}/${environment.apiUrlUpdateProjectBackPersonalized}`
 
   private projectsSubject: BehaviorSubject<ProjectModel[]> = new BehaviorSubject<ProjectModel[]>([]);
   private project$: Observable<ProjectModel[]> = this.projectsSubject.asObservable();
 
-  private projectClickedSubject : BehaviorSubject<string> = new BehaviorSubject<string>('');
-  private projectClicked$ : Observable<string> = this.projectClickedSubject.asObservable();
+  private projectClickedSubject: BehaviorSubject<string> = new BehaviorSubject<string>('');
+  private projectClicked$: Observable<string> = this.projectClickedSubject.asObservable();
 
-  constructor(private http: HttpClient) {
+  private displayEditProjectSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  private displayEditProject$: Observable<boolean> = this.displayEditProjectSubject.asObservable();
+
+  constructor(private http: HttpClient,
+    private uploadService: UploadService
+  ) {
     this.fetchAllProjectByUser().subscribe(() => {
     })
+    this.fillBackgroundPhotoProject();
   }
 
-  getPorjectClicked() : Observable<string> {
+  getPorjectClicked(): Observable<string> {
     return this.projectClicked$;
   }
 
-  setProjectClicked(id : string) : void {
+  setProjectClicked(id: string): void {
     this.projectClickedSubject.next(id);
   }
 
@@ -44,7 +55,7 @@ export class ProjectService {
               id: project.id,
               name: project.name,
               description: project.description,
-              srcBackground: `${environment.apiUrl}/${project.srcBackground}`
+              srcBackground: project.srcBackground
             })
           })
           this.projectsSubject.next(projects);
@@ -66,7 +77,7 @@ export class ProjectService {
           id: data.id,
           name: data.name,
           description: data.description,
-          srcBackground: `${environment.apiUrl}/${data.srcBackground}`
+          srcBackground: data.srcBackground
         });
         this.projectsSubject.next(projects);
       })
@@ -108,5 +119,61 @@ export class ProjectService {
       })
     )
   }
+
+  private urlProjectPhotoBack: string = `uploads/projects`;
+
+  private photos: string[] = [
+    'back-1.jpg',
+    'back-2.jpg',
+    'back-3.jpg',
+    'back-4.jpg',
+    'back-5.jpg',
+    'back-6.jpg',
+    'back-7.jpg',
+    'back-8.jpg'
+  ]
+
+  private backgroundPhoto: ProfilePhotoModel[] = [];
+
+  public fillBackgroundPhotoProject(): void {
+    for (const photo of this.photos) {
+      const url: string = `${this.urlProjectPhotoBack}/${photo}`;
+      this.uploadService.getUploadFile(url).pipe(take(1)).subscribe((blob: Blob) => {
+        this.backgroundPhoto.push({ photo: url, blob: URL.createObjectURL(blob) });
+      })
+    }
+  }
+
+  public fetchUpdateBackProject(photo: ProfilePhotoModel): Observable<string> {
+    const url: string = photo.photo;
+    return this.http.put<any>(`${this.apiUrlUpdateBack}/${this.projectClickedSubject.value}`, { url }).pipe(
+      map((data: any) => {
+        return this.projectClickedSubject.value;
+      })
+    )
+  }
+
+  public fetchUpdateBackProjectPersonalized(file: CreateFileModel): Observable<any> {
+    return this.http.put<any>(`${this.apiUrlUpdateBackPersonalized}`, file).pipe(
+      map((data: any) => {
+        return data;
+      })
+    )
+  }
+
+
+  getBackgroundPhotoProject(): ProfilePhotoModel[] {
+    return this.backgroundPhoto;
+  }
+
+  public setDisplayEditProject(state: boolean): void {
+    this.displayEditProjectSubject.next(state);
+  }
+
+  public getDisplayEditProject(): Observable<boolean> {
+    return this.displayEditProject$;
+  }
+
+
 
 }

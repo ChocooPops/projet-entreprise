@@ -1,0 +1,42 @@
+.container-home {
+    height: 100%;
+    width: 100%;
+    padding: 70px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.container-tmp {
+    height: 15%;
+}
+
+.welcom {
+    font-family: 'Inter Bold';
+    font-size: 60px;
+}
+
+.name {
+    font-family: 'Inter Bold';
+    font-size: 35px;
+}
+
+.container-pp {
+    height: 200px;
+    width: 200px;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 10px 10px 15px rgba(0, 0, 0, 0.8);
+    margin-bottom: 50px;
+
+    img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+}
+
+p {
+    margin: 0;
+}

@@ -17,63 +17,65 @@ export class FileComponent {
   @Output() emitRemoveFile = new EventEmitter<FileModel>();
 
   srcImage !: string;
-  type : string = ''
+  type: string = '';
 
-  srcButtonApercu : string = './apercu.png';
-  srcButtonDowload : string = './download.png';
-  srcButtonDelete : string = './poubelle.png';
-  srcNewFile : string = './new-file.png';
+  srcButtonApercu: string = './apercu.png';
+  srcButtonDowload: string = './download.png';
+  srcButtonDelete: string = './poubelle.png';
+  srcNewFile: string = './new-file.png';
 
-  constructor(private fileService : FileService) {}
+  constructor(private fileService: FileService) { }
 
   ngOnInit(): void {
-    this.type = this.detectFileType(this.file.type);
-    if(this.type === 'document') {
-      this.srcImage = './docs.png';
-    } else if(this.type === 'spreadsheet') {
-      this.srcImage = './xls.png';
-    } else if (this.type === 'image') {
-      this.srcImage = './picture.png';
-    } else if (this.type === 'pdf') {
-      this.srcImage = './pdf.png';
-    } else {
-      this.srcImage = './other.png';
+    if (this.file) {
+      this.type = this.detectFileType(this.file.type);
+      if (this.type === 'document') {
+        this.srcImage = './docs.png';
+      } else if (this.type === 'spreadsheet') {
+        this.srcImage = './xls.png';
+      } else if (this.type === 'image') {
+        this.srcImage = './picture.png';
+      } else if (this.type === 'pdf') {
+        this.srcImage = './pdf.png';
+      } else {
+        this.srcImage = './other.png';
+      }
     }
   }
 
-  detectFileType(type: string) : string {
+  detectFileType(type: string): string {
     const fileTypes = {
       document: ['doc', 'docx', 'odt', 'txt', 'rtf'],
-      pdf : ['pdf'],
+      pdf: ['pdf'],
       spreadsheet: ['xls', 'xlsx', 'ods', 'csv'],
       image: ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'svg', 'webp'],
       other: []
     };
 
-    if(fileTypes.document.find((item) => item === type)) {
+    if (fileTypes.document.find((item) => item === type)) {
       return 'document';
     } else if (fileTypes.pdf.find((item) => item === type)) {
       return 'pdf';
     } else if (fileTypes.spreadsheet.find((item) => item === type)) {
       return 'spreadsheet';
-    }else if (fileTypes.image.find((item) => item === type)) {
+    } else if (fileTypes.image.find((item) => item === type)) {
       return 'image';
     } else {
       return 'other';
     }
   }
 
-  onClickDelete() : void {
-      this.fileService.fetchDeleteFile(this.file.id).pipe(take(1)).subscribe((data) => {
-        this.emitRemoveFile.emit(data)
-      });
+  onClickDelete(): void {
+    this.fileService.fetchDeleteFile(this.file.id).pipe(take(1)).subscribe((data) => {
+      this.emitRemoveFile.emit(data)
+    });
   }
 
-  onClickApercu() : void {
+  onClickApercu(): void {
     this.fileService.fetchApercu();
   }
 
-  onClickDownload() : void {
+  onClickDownload(): void {
     this.fileService.fetchDownloadFile();
   }
 
