@@ -7,7 +7,6 @@ import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { UserService } from '../../services/user/user.service';
 import { UserModel } from '../../model/user.interface';
 import { take } from 'rxjs';
-import { UploadService } from '../../services/upload/upload.service';
 import { Router } from '@angular/router';
 import { DetailProjectComponent } from '../detail-project/detail-project.component';
 import { CreateFileModel } from '../../model/create-file.interface';
@@ -33,14 +32,12 @@ export class ProjectsComponent {
   srcTask: string = './tache.png';
   srcMessage: string = './message.png';
   
-  srcBack: string | undefined;
   displayEditProject: boolean = true;
 
   constructor(private projectService: ProjectService,
     private route: ActivatedRoute,
     private fb: FormBuilder,
     private userService: UserService,
-    private uploadService: UploadService,
     private router: Router
   ) {
 
@@ -54,14 +51,9 @@ export class ProjectsComponent {
       if (id) {
         this.projectService.setProjectClicked(id);
       }
+      this.project = undefined;
       this.subscription.add(this.projectService.getAllProjectsByUser().subscribe((projects: ProjectModel[]) => {
         this.project = projects.find((pro) => pro.id === id);
-        this.srcBack = undefined;
-        if (this.project) {
-          this.subscriptionUpload = this.uploadService.getUploadFile(this.project?.srcBackground).subscribe((blob: Blob) => {
-            this.srcBack = URL.createObjectURL(blob);
-          })
-        }
         this.loadFormName();
       })
       )

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environnments/environments';
-import { BehaviorSubject, map, Observable, of, take } from 'rxjs';
+import { BehaviorSubject, map, Observable, of, take, switchMap, forkJoin, tap } from 'rxjs';
 import { ProjectModel } from '../../model/project.interface';
 import { ProfilePhotoModel } from '../../model/profil-photo.interface';
 import { UploadService } from '../upload/upload.service';
@@ -44,23 +44,25 @@ export class ProjectService {
 
   fetchAllProjectByUser(): Observable<void> {
     if (this.projectsSubject.value.length < 1) {
-      return this.http.get<any[]>(`${this.apiUrlGetProject}`).pipe(
-        map((data: any[]) => {
-          const projects: ProjectModel[] = [];
-          data.forEach((project: any) => {
-            projects.push({
-              id: project.id,
-              name: project.name,
-              description: project.description,
-              srcBackground: project.srcBackground
-            })
-          })
-          this.projectsSubject.next(projects);
-          return;
-        })
+      return this.http.get<ProjectModel[]>(`${this.apiUrlGetProject}`).pipe(
+        switchMap((projects: ProjectModel[]) => {
+          const requests = projects.map(project =>
+            this.uploadService.getUploadFile(project.srcBackground).pipe(
+              map((blob: Blob): ProjectModel => ({
+                ...project,
+                srcBackground: URL.createObjectURL(blob)
+              }))
+            )
+          );
+          return forkJoin(requests);
+        }),
+        tap((projectsWithUrl: ProjectModel[]) => {
+          this.projectsSubject.next(projectsWithUrl);
+        }),
+        map(() => void 0)
       );
     } else {
-      return of()
+      return of();
     }
   }
 
@@ -68,14 +70,9 @@ export class ProjectService {
     return this.http.post<any>(
       this.apiUrlCreateHollowProject, {}
     ).pipe(
-      map((data: any) => {
+      map((data: ProjectModel) => {
         const projects: ProjectModel[] = this.projectsSubject.value;
-        projects.push({
-          id: data.id,
-          name: data.name,
-          description: data.description,
-          srcBackground: data.srcBackground
-        });
+        projects.push(data);
         this.projectsSubject.next(projects);
       })
     );
@@ -83,7 +80,7 @@ export class ProjectService {
 
   fetchUpdatName(id: string, name: string): Observable<void> {
     return this.http.put<any>(`${this.apiUrlUpdateName}/${id}`, { name }).pipe(
-      map((data: any) => {
+      map((data: ProjectModel) => {
         const projects: ProjectModel[] = this.projectsSubject.value;
         const index: number = projects.findIndex(item => item.id === id);
         projects[index].name = data.name;
@@ -94,7 +91,7 @@ export class ProjectService {
 
   fetchUpdatDescription(id: string, description: string): Observable<void> {
     return this.http.put<any>(`${this.apiUrlUpdateDescription}/${id}`, { description }).pipe(
-      map((data: any) => {
+      map((data: ProjectModel) => {
         const projects: ProjectModel[] = this.projectsSubject.value;
         const index: number = projects.findIndex(item => item.id === id);
         projects[index].description = data.description;
@@ -109,9 +106,9 @@ export class ProjectService {
 
   fetDeleteById(id: string): Observable<void> {
     return this.http.delete<any>(`${this.apiUrlDelete}/${id}`).pipe(
-      map((data: any) => {
+      map((data: ProjectModel) => {
         let projects: ProjectModel[] = this.projectsSubject.value;
-        projects = projects.filter(item => item.id !== id);
+        projects = projects.filter(item => item.id !== data.id);
         this.projectsSubject.next(projects);
       })
     )
@@ -145,25 +142,35 @@ export class ProjectService {
 
   public fetchUpdateBackProject(photo: ProfilePhotoModel): Observable<any> {
     const url: string = photo.photo;
-    return this.http.put<any>(`${this.apiUrlUpdateBack}/${this.projectClickedSubject.value}`, { url }).pipe(
-      map((data: ProjectModel) => {
-          const projects: ProjectModel[] = this.projectsSubject.value;
-          const index: number = projects.findIndex(item => item.id === data.id);
-          projects[index].srcBackground = data.srcBackground;
-          this.projectsSubject.next(projects);
-      })
-    )
+    return this.http.put<ProjectModel>(`${this.apiUrlUpdateBack}/${this.projectClickedSubject.value}`, { url }).pipe(
+      switchMap((data: ProjectModel) =>
+        this.uploadService.getUploadFile(data.srcBackground).pipe(
+          map((blob: Blob) => {
+            const blobUrl = URL.createObjectURL(blob);
+            const projects: ProjectModel[] = this.projectsSubject.value;
+            const index: number = projects.findIndex(item => item.id === data.id);
+            projects[index].srcBackground = blobUrl;
+            this.projectsSubject.next(projects);
+          })
+        )
+      )
+    );
   }
 
   public fetchUpdateBackProjectPersonalized(file: CreateFileModel): Observable<any> {
-    return this.http.put<any>(`${this.apiUrlUpdateBackPersonalized}`, file).pipe(
-      map((data: ProjectModel) => {
-        const projects: ProjectModel[] = this.projectsSubject.value;
-        const index: number = projects.findIndex(item => item.id === data.id);
-        projects[index].srcBackground = data.srcBackground;
-        this.projectsSubject.next(projects);
-      })
-    )
+    return this.http.put<ProjectModel>(`${this.apiUrlUpdateBackPersonalized}`, file).pipe(
+      switchMap((data: ProjectModel) =>
+        this.uploadService.getUploadFile(data.srcBackground).pipe(
+          map((blob: Blob) => {
+            const blobUrl = URL.createObjectURL(blob);
+            const projects: ProjectModel[] = this.projectsSubject.value;
+            const index: number = projects.findIndex(item => item.id === data.id);
+            projects[index].srcBackground = blobUrl;
+            this.projectsSubject.next(projects);
+          })
+        )
+      )
+    );
   }
 
   getBackgroundPhotoProject(): ProfilePhotoModel[] {
