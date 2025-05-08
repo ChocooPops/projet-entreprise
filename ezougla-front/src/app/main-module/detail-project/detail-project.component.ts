@@ -1,4 +1,4 @@
-import { Component, ViewChild, ElementRef } from '@angular/core';
+import { Component, ViewChild, ElementRef, QueryList, ViewChildren, HostListener } from '@angular/core';
 import { ProjectService } from '../../services/project/project.service';
 import { TaskService } from '../../services/task/task.service';
 import { FileService } from '../../services/file/file.service';
@@ -10,19 +10,19 @@ import { ProjectModel } from '../../model/project.interface';
 import { FileModel } from '../../model/file.interface';
 import { TaskModel } from '../../model/task.interface';
 import { CreateFileModel } from '../../model/create-file.interface';
-import { TaskComponent } from '../task/task.component';
 import { FileComponent } from '../file/file.component';
 import { NgClass } from '@angular/common';
+import { SyncColumnWidthDirective } from '../sync-column-width.directive';
 
 @Component({
   selector: 'app-detail-project',
-  imports: [ReactiveFormsModule, NgClass, TaskComponent, FileComponent],
+  imports: [ReactiveFormsModule, NgClass, FileComponent, SyncColumnWidthDirective],
   templateUrl: './detail-project.component.html',
   styleUrl: './detail-project.component.css'
 })
 export class DetailProjectComponent {
 
-  listUsers: UserModel[] | undefined = [];
+  usersActivate: UserModel[] | undefined = [];
   tasks: TaskModel[] = [];
   files: FileModel[] = [];
   user: UserModel | undefined;
@@ -35,9 +35,19 @@ export class DetailProjectComponent {
   srcAddFile: string = './add.png';
   srcAddUser: string = './add-user.png';
   srcDelete: string = './poubelle.png';
+  srcAddTask: string = './add-task.png';
+  srcDeleteTask: string = './remove-task.png';
+  srcChangeStatus: string = './change-status.png';
   assignedUsers: UserModel[] = [];
 
   formGroupDescription !: FormGroup;
+  taskStatus: string[] = [
+    'TODO',
+    'IN_PROGRESS',
+    'DONE'
+  ]
+
+  @ViewChildren('autoArea') textareas!: QueryList<ElementRef<HTMLTextAreaElement>>;
 
   constructor(private projectService: ProjectService,
     private taskService: TaskService,
@@ -53,13 +63,15 @@ export class DetailProjectComponent {
         this.assignedUsers = []
         this.projectService.getAllProjectsByUser().subscribe((projects: ProjectModel[]) => {
           this.project = projects.find((pro) => pro.id === id);
+          this.currentTaskClickedForUsers = undefined;
           if (this.project) {
             this.userService.getUserTab().subscribe((usersTab: UserModel[] | undefined) => {
-              this.listUsers = usersTab;
+              this.currentTaskClickedForUsers = undefined;
+              this.usersActivate = usersTab?.filter((item) => item.role !== 'NOT_ACTIVATE');
               this.assignedUsers = []
               this.project?.assignedUsers.forEach((user) => {
-                if (usersTab) {
-                  const userTmp = usersTab.find(item => item.id === user.id);
+                if (this.usersActivate) {
+                  const userTmp = this.usersActivate.find(item => item.id === user.id);
                   if (userTmp) {
                     this.assignedUsers.push(userTmp);
                   }
@@ -85,6 +97,16 @@ export class DetailProjectComponent {
     this.subscriptionProject.unsubscribe();
   }
 
+  setHeighTexArea() {
+    setTimeout(() => {
+      this.textareas.forEach(textareaRef => {
+        const el = textareaRef.nativeElement;
+        el.style.height = 'auto';
+        el.style.height = el.scrollHeight + 'px';
+      });
+    }, 10);
+  }
+
   loadFormDescription(): void {
     this.formGroupDescription = this.fb.group({
       inputDescription: [this.project?.description],
@@ -103,6 +125,7 @@ export class DetailProjectComponent {
       })
       this.subscriptionTask = this.taskService.fetchTasksByProject(this.project.id).subscribe((data) => {
         this.tasks = data
+        this.setHeighTexArea()
       })
     }
   }
@@ -176,6 +199,8 @@ export class DetailProjectComponent {
 
   isClickOnAddUser: boolean = false;
   isUserHovering: string = '';
+  currentTaskClickedForStatus: string = '';
+  currentTaskClickedForUsers: string | undefined = undefined;
 
   onMouseEnter(userId: string): void {
     this.isUserHovering = userId;
@@ -187,16 +212,24 @@ export class DetailProjectComponent {
 
   onClicAddNewUser(event: MouseEvent): void {
     event.stopPropagation();
-    this.isClickOnAddUser = true;
+    if (this.user?.role === 'DIRECTOR' || this.user?.role === 'MANAGER') {
+      this.isClickOnAddUser = true;
+    }
+    this.currentTaskClickedForStatus = '';
+    this.currentTaskClickedForUsers = undefined;
   }
 
   onClickPage(): void {
     this.isClickOnAddUser = false;
+    this.currentTaskClickedForStatus = '';
+    this.currentTaskClickedForUsers = undefined;
   }
 
   assignedUserByIdIntoProject(userId: string) {
     if (this.project) {
-      this.projectService.fetchAssignedUserIntoProjectById(userId, this.project.id).subscribe(() => { });
+      this.projectService.fetchAssignedUserIntoProjectById(userId, this.project.id).subscribe(() => {
+        this.isClickOnAddUser = false;
+      });
     }
   }
 
@@ -204,6 +237,113 @@ export class DetailProjectComponent {
     if (this.project) {
       this.projectService.fetchUnassignedUserIntoProjectById(userId, this.project.id).subscribe(() => { });
     }
+  }
+
+  onClickAddTask(): void {
+    if (this.project) {
+      this.taskService.fetchCreateEmptyTask(this.project.id).subscribe((data: TaskModel) => {
+        this.tasks.push(data)
+      })
+    }
+  }
+
+  onClickRemoveTask(taskId: string): void {
+    this.taskService.fetchDeleteTaskById(taskId).subscribe((data: TaskModel) => {
+      this.tasks = this.tasks.filter((task) => task.id !== data.id);
+    })
+  }
+
+  onBlurTitleTask(taskId: string, event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const value = input.value;
+    this.taskService.fetchUpdateTitleTask(taskId, value).subscribe((data) => {
+      const index: number = this.tasks.findIndex((task) => task.id === data.id);
+      if (index >= 0) {
+        this.tasks[index].title = data.title;
+      }
+    })
+  }
+
+  onBlurDescriptionTask(taskId: string, event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const value = input.value;
+    this.taskService.fetchUpdateDescriptionTask(taskId, value).subscribe((data) => {
+      const index: number = this.tasks.findIndex((task) => task.id === data.id);
+      if (index >= 0) {
+        this.tasks[index].description = data.description;
+      }
+    })
+  }
+
+  onClickChangeStatus(taskId: string, status: string): void {
+    this.taskService.fetchUpdateStatusTask(taskId, status).subscribe((data) => {
+      const index: number = this.tasks.findIndex((task) => task.id === data.id);
+      if (index >= 0) {
+        this.tasks[index].status = data.status;
+      }
+      this.currentTaskClickedForStatus = '';
+    })
+  }
+
+  onClickedDisplayAllStatus(taskId: string, event: MouseEvent): void {
+    event.stopPropagation();
+    this.currentTaskClickedForStatus = taskId;
+    this.currentTaskClickedForUsers = undefined;
+    this.isClickOnAddUser = false;
+  }
+
+  autoResize(event: Event) {
+    const textarea = event.target as HTMLTextAreaElement;
+    textarea.style.height = 'auto';
+    textarea.style.height = textarea.scrollHeight + 'px';
+  }
+
+  addUserToTask(idUser: string, event: MouseEvent): void {
+    event.stopPropagation();
+    this.currentTaskClickedForStatus = '';
+    this.isClickOnAddUser = false;
+    if (this.currentTaskClickedForUsers) {
+      this.taskService.fetchAssignedNewUserToTask(this.currentTaskClickedForUsers, idUser).subscribe((data) => {
+        const index: number = this.tasks.findIndex((task) => task.id === data.id);
+        if (index >= 0) {
+          this.tasks[index].assignedUsers = data.assignedUsers;
+        }
+        this.currentTaskClickedForUsers = undefined;
+      })
+    }
+  }
+
+  deleteUserTask(taskId: string, userId: string) {
+    this.taskService.fetchUnassignedUserToTask(taskId, userId).subscribe((data) => {
+      const index: number = this.tasks.findIndex((task) => task.id === data.id);
+      if (index >= 0) {
+        this.tasks[index].assignedUsers = data.assignedUsers;
+      }
+    })
+  }
+
+  offsetX: number = 0;
+  offsetY: number = 0;
+
+  onClickDisplayUserAvailable(taskId: string, event: MouseEvent) {
+    this.currentTaskClickedForUsers = taskId;
+    const element = event.target as HTMLElement;
+    const rect = element.getBoundingClientRect();
+    event.stopPropagation();
+    this.currentTaskClickedForStatus = '';
+    this.isClickOnAddUser = false;
+    this.offsetX = rect.left - 5;
+    this.offsetY = rect.top + 25;
+  }
+
+  @HostListener('window:resize')
+  onResize(): void {
+    this.textareas.forEach(textareaRef => {
+      const el = textareaRef.nativeElement;
+      el.style.height = 'auto';
+      el.style.height = el.scrollHeight + 'px';
+    });
+    this.currentTaskClickedForUsers = undefined;
   }
 
 }

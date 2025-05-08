@@ -12,21 +12,24 @@
             @if(isUserClicked(user.id) && user.role != 'NOT_ACTIVATE') {
             <div class="container-action-role" (click)="onClickContainerRole($event)">
                 @for(role of roles; track role) {
-                <p (click)="onClickModifyRole(user.id, role)" class="role"
+
+                <div class="container-roles-options" (click)="onClickModifyRole(user.id, role)"
                     [ngClass]="{'red-back' : role === 'DIRECTOR', 'green-back' : role === 'EMPLOYEE', 'blue-back' : role === 'MANAGER'}">
-                    <span
-                        [ngClass]="{'red' : role === 'DIRECTOR', 'green' : role === 'EMPLOYEE', 'blue' : role === 'MANAGER'}">
-                        •</span> {{ role }}
-                </p>
+                    <div class="point"
+                        [ngClass]="{'red-point' : role === 'DIRECTOR', 'green-point' : role === 'EMPLOYEE', 'blue-point' : role === 'MANAGER'}">
+                    </div>
+                    <p> {{ role }} </p>
+                </div>
                 }
             </div>
             }
-            <p class="role" (click)="onClickRole(user.id, $event)"
-                [ngClass]="{'red-back' : user.role === 'DIRECTOR', 'green-back' :  user.role === 'EMPLOYEE', 'blue-back' :  user.role === 'MANAGER', 'grey-back' : user.role === 'NOT_ACTIVATE'}">
-                <span
-                    [ngClass]="{'red' :  user.role === 'DIRECTOR', 'green' :  user.role === 'EMPLOYEE', 'blue' :  user.role === 'MANAGER'}">
-                    •</span> {{ user.role }}
-            </p>
+            <div class="container-roles-options" (click)="onClickRole(user.id, $event)"
+                [ngClass]="{'red-back' : user.role === 'DIRECTOR', 'green-back' : user.role === 'EMPLOYEE', 'blue-back' : user.role === 'MANAGER', 'grey-back' : user.role === 'NOT_ACTIVATE'}">
+                <div class="point"
+                    [ngClass]="{'red-point' : user.role === 'DIRECTOR', 'green-point' : user.role === 'EMPLOYEE', 'blue-point' : user.role === 'MANAGER', 'grey-point' : user.role === 'NOT_ACTIVATE'}">
+                </div>
+                <p> {{ user.role }} </p>
+            </div>
         </div>
         <div class="container-action">
             @if(user.role === 'NOT_ACTIVATE') {

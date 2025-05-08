@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, UnauthorizedException, NotFoundException, NotAcceptableException } from '@nestjs/common';
 import { Project, User } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { Role } from '@prisma/client';
@@ -8,47 +8,61 @@ import { CreateFileModel } from 'src/file/dto/create-file.interface';
 @Injectable()
 export class ProjectService {
 
-  constructor(private prismaService: PrismaService, 
-    private uploadFileService : UploadFileService
+  constructor(private prismaService: PrismaService,
+    private uploadFileService: UploadFileService
   ) { }
 
-  async createHollowNewProject(role: Role): Promise<Project> {
+  async createHollowNewProject(role: Role, userId: string): Promise<Project> {
     if (role === 'DIRECTOR' || role === 'MANAGER') {
       return await this.prismaService.project.create({
         data: {
           name: 'Projet sans nom',
-          description: 'Description ...'
-        }
-      })
+          description: 'Description ...',
+          assignedUsers: {
+            connect: { id: userId },
+          },
+        },
+        include: {
+          assignedUsers: true,
+        },
+      });
     } else {
       throw new UnauthorizedException();
     }
   }
 
   async getAllProjectByUser(userId: string): Promise<Project[]> {
-    const user: User = await this.prismaService.user.findUnique({
-      where: { id: userId }
+    const user: User | null = await this.prismaService.user.findUnique({
+      where: { id: userId },
     });
-    if (user) {
-      if (user.role === 'DIRECTOR') {
-        return await this.prismaService.project.findMany();
-      } else {
-        return this.prismaService.project.findMany({
-          where: {
-            assignedUsers: {
-              some: {
-                id: userId,
-              },
-            },
-          },
-          orderBy: {
-            createdAt: 'asc',
-          },
-        });
-      }
-    } else {
+
+    if (!user) {
       return [];
     }
+
+    if (user.role === 'DIRECTOR') {
+      return await this.prismaService.project.findMany({
+        include: {
+          assignedUsers: true,
+        },
+      });
+    }
+
+    return await this.prismaService.project.findMany({
+      where: {
+        assignedUsers: {
+          some: {
+            id: userId,
+          },
+        },
+      },
+      include: {
+        assignedUsers: true,
+      },
+      orderBy: {
+        createdAt: 'asc',
+      },
+    });
   }
 
   async updateNameProjectById(idProject: string, newName: string, role: Role): Promise<Project> {
@@ -107,7 +121,7 @@ export class ProjectService {
     }
   }
 
-  async updateBackgroundImagePersonalize(role : Role, file : CreateFileModel) : Promise<any> {
+  async updateBackgroundImagePersonalize(role: Role, file: CreateFileModel): Promise<any> {
     if (role === 'DIRECTOR' || role === 'MANAGER') {
       const url = await this.uploadFileService.saveFileToProjects(file.file, file.name);
       return await this.prismaService.project.update({
@@ -118,5 +132,84 @@ export class ProjectService {
       throw new UnauthorizedException();
     }
   }
+
+  async addUserToProject(roleAdmin: Role, userId: string, projectId: string): Promise<Project> {
+    if (roleAdmin === 'DIRECTOR' || roleAdmin === 'MANAGER') {
+      const [user, project] = await Promise.all([
+        this.prismaService.user.findUnique({ where: { id: userId } }),
+        this.prismaService.project.findUnique({ where: { id: projectId } }),
+      ]);
+
+      if (!user || !project) {
+        throw new NotFoundException('Utilisateur ou projet introuvable');
+      }
+
+      if (user.role === 'NOT_ACTIVATE') {
+        throw new NotAcceptableException()
+      }
+
+      return await this.prismaService.project.update({
+        where: { id: projectId },
+        data: {
+          assignedUsers: {
+            connect: { id: userId },
+          },
+        },
+        include: {
+          assignedUsers: true,
+        },
+      });
+    } else {
+      throw new UnauthorizedException();
+    }
+  }
+
+  async removeUserToProject(roleAdmin: Role, userId: string, projectId: string): Promise<Project> {
+    if (roleAdmin !== 'DIRECTOR' && roleAdmin !== 'MANAGER') {
+      throw new UnauthorizedException();
+    }
+
+    const [user, project] = await Promise.all([
+      this.prismaService.user.findUnique({ where: { id: userId } }),
+      this.prismaService.project.findUnique({ where: { id: projectId } }),
+    ]);
+
+    if (!user || !project) {
+      throw new NotFoundException('Utilisateur ou projet introuvable');
+    }
+
+    if (user.role === 'NOT_ACTIVATE') {
+      throw new NotAcceptableException();
+    }
+    const projectTasks = await this.prismaService.task.findMany({
+      where: { projectId },
+      select: { id: true },
+    });
+
+    const updateTasks = projectTasks.map(task =>
+      this.prismaService.task.update({
+        where: { id: task.id },
+        data: {
+          assignedUsers: {
+            disconnect: { id: userId },
+          },
+        },
+      }),
+    );
+
+    await Promise.all(updateTasks);
+    return await this.prismaService.project.update({
+      where: { id: projectId },
+      data: {
+        assignedUsers: {
+          disconnect: { id: userId },
+        },
+      },
+      include: {
+        assignedUsers: true,
+      },
+    });
+  }
+
 
 }

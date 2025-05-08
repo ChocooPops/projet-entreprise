@@ -87,7 +87,7 @@ textarea:focus {
     display: flex;
     align-items: center;
     gap: 20px;
-    font-size: 18px;
+    font-size: 20px;
 
     img {
         height: 15px;
@@ -114,26 +114,13 @@ textarea:focus {
     display: flex;
     gap: 15px;
     flex-wrap: wrap;
-    cursor: pointer;
-
-    p {
-        width: auto;
-        font-weight: normal;
-        font-family: 'Inter Normal';
-        font-size: 14px;
-        padding-inline: 10px;
-        padding-block: 5px;
-        border-radius: 5px;
-        word-break: keep-all;
-        white-space: nowrap;
-        background-color: hsla(0, 0%, 64%, 0.4);
-    }
 }
 
 .assigned-user {
     display: flex;
     align-items: center;
     gap: 5px;
+    cursor: pointer;
 }
 
 .pp {
@@ -158,6 +145,11 @@ textarea:focus {
 .img-delete {
     height: 60%;
     animation: 0.4s enter;
+    transition: transform 0.3s;
+
+    &:hover {
+        transform: scale(0.7);
+    }
 }
 
 p {
@@ -195,7 +187,8 @@ p {
 
 .container-list-all-user {
     position: absolute;
-    height: 200px;
+    max-height: 200px;
+    height: auto;
     width: 100%;
     top: 37px;
     left: 0;
@@ -208,6 +201,7 @@ p {
     border-radius: 0px 0px 5px 5px;
     background-color: #252525;
     z-index: 999;
+    animation: 0.2s enter;
 }
 
 .user-hovering {
@@ -229,4 +223,220 @@ p {
         opacity: 1;
         transform: translateY(0);
     }
+}
+
+.container-task {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.resizable-table {
+    width: auto;
+    max-width: 100%;
+    table-layout: fixed;
+    border-collapse: collapse;
+    border-radius: 10px;
+    overflow: hidden;
+
+    textarea {
+        color: rgb(255, 255, 255);
+        font-size: 14px;
+        width: 100%;
+        height: auto;
+        border: none;
+        font-weight: bold;
+        box-sizing: border-box;
+        background-color: transparent;
+        resize: none;
+        font-family: 'Inter';
+    }
+}
+
+.resizable-table td,
+.resizable-table th {
+    vertical-align: top !important;
+    text-align: left !important;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+th,
+td {
+    border: 1px solid #ccc;
+    padding: 8px;
+    overflow: hidden;
+    white-space: nowrap;
+    resize: both;
+    width: 300px;
+}
+
+th {
+    cursor: col-resize;
+    font-size: 17px;
+}
+
+td {
+    font-size: 14px;
+}
+
+
+tbody {
+    position: relative;
+}
+
+.container-cells-task {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    gap: 10px;
+    position: relative;
+    justify-content: flex-start;
+    align-items: flex-start;
+    padding-left: 5px;
+    padding-top: 5px;
+    box-sizing: border-box;
+
+    img {
+        height: 20px;
+        width: 20px;
+        cursor: pointer;
+        transition: transform 0.3s;
+
+        &:hover {
+            transform: scale(0.75);
+        }
+    }
+}
+
+.container-other-status {
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    height: 28px;
+    background-color: #181818;
+    position: absolute;
+    width: auto;
+    top: 50%;
+    left: 30px;
+    transform: translateY(-50%);
+    gap: 15px;
+    animation: enter-status 0.5s;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+@keyframes enter-status {
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(-50%);
+    }
+}
+
+.violet-back {
+    background-color: #A85BF257;
+}
+
+.yellow-back {
+    background-color: #FAB14380;
+}
+
+.pink-back {
+    background-color: #DC4C9166;
+}
+
+.violet-point {
+    background-color: #9B61D3E8;
+}
+
+.yellow-point {
+    background-color: #DD9A22E8;
+}
+
+.pink-point {
+    background-color: #D85795E8;
+}
+
+.grey-back {
+    background-color: #FFFFFF21;
+}
+
+.grey-point {
+    background-color: #9B9B9B;
+}
+
+.container-option {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    width: auto;
+    font-weight: normal;
+    font-family: 'Inter Normal';
+    padding-inline: 10px;
+    padding-block: 5px;
+    border-radius: 5px;
+    cursor: pointer;
+    word-break: keep-all;
+    white-space: nowrap;
+
+    &:hover {
+        p {
+            text-decoration: underline;
+        }
+    }
+}
+
+.point {
+    height: 8px;
+    width: 8px;
+    border-radius: 100%;
+}
+
+.user-available {
+    width: 300px;
+    border-radius: 5px;
+}
+
+.container-assigned-user-task {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.delete-user {
+    height: 15px !important;
+    width: 15px !important;
+}
+
+.red-back {
+    background-color: #DE555373;
+}
+
+.green-back {
+    background-color: #2D996480;
+}
+
+.blue-back {
+    background-color: #337EA980;
+}
+
+.red-point {
+    background-color: #DE5550E8;
+}
+
+.green-point {
+    background-color: #2CA76AE8;
+}
+
+.blue-point {
+    background-color: #337EA9E8;
 }

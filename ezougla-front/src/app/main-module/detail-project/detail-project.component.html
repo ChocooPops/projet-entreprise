@@ -10,27 +10,30 @@
             @for(assignedUser of assignedUsers; track assignedUser.id) {
             <div class="assigned-user" (mouseenter)="onMouseEnter(assignedUser.id)" (mouseleave)="onMouseLeave()">
                 <div class="pp">
-                    @if(isUserHovering === assignedUser.id) {
+                    @if(isUserHovering === assignedUser.id && (user?.role === 'DIRECTOR' || user?.role === 'MANAGER')) {
                     <img [src]="srcDelete" class="img-delete" (click)="unassignedUserByIdIntoProject(assignedUser.id)">
                     } @else {
                     <img [src]="assignedUser.profilePhoto" class="img-pp">
                     }
                 </div>
-                <p> • {{ assignedUser.lastName }} {{ assignedUser.firstName }} </p>
+                <div class="container-option" [ngClass]="{'grey-back' : true}">
+                    <div class="point" [ngClass]="{'grey-point' : true}"></div>
+                    <p> {{ assignedUser.firstName }} {{ assignedUser.lastName }} </p>
+                </div>
             </div>
             }
             <div class="add-collaborators" (click)="onClicAddNewUser($event)"
                 [ngClass]="{'border-radius-top' : isClickOnAddUser}">
                 @if(isClickOnAddUser) {
                 <div class="container-list-all-user">
-                    @if (listUsers) {
-                    @for (userIntoList of listUsers; track userIntoList.id) {
+                    @if (usersActivate) {
+                    @for (userActivate of usersActivate; track userActivate.id) {
                     <div class="assigned-user" [ngClass]="{'user-hovering' : true}"
-                        (click)="assignedUserByIdIntoProject(userIntoList.id)">
+                        (click)="assignedUserByIdIntoProject(userActivate.id)">
                         <div class="pp">
-                            <img class="img-pp" [src]="userIntoList.profilePhoto">
+                            <img class="img-pp" style="animation: none;" [src]="userActivate.profilePhoto">
                         </div>
-                        <p> {{ userIntoList.lastName }} {{ userIntoList.firstName }} </p>
+                        <p> {{ userActivate.firstName }} {{ userActivate.lastName }} </p>
                     </div>
                     }
                     }
@@ -44,7 +47,8 @@
 
     <form [formGroup]="formGroupDescription" class="container-form-describe">
         <label class="label">Description : </label>
-        <textarea maxlength="1000" formControlName="inputDescription" (blur)="onInputBlurDescription()"> </textarea>
+        <textarea #autoArea maxlength="5000" formControlName="inputDescription" (input)="autoResize($event)" rows="1"
+            (blur)="onInputBlurDescription()"> </textarea>
     </form>
 
     <div class="container-files" (drop)="onFileDropped($event)" (dragover)="onDragOver($event)"
@@ -62,8 +66,100 @@
         </div>
     </div>
     <div class="container-task">
-        @for(task of tasks; track task.id) {
-        <app-task [task]="task"></app-task>
-        }
+        <div class="div-flex">
+            <p> Vos tâches : </p>
+            <img [src]="srcAddTask" (click)="onClickAddTask()">
+        </div>
+
+        <table class="resizable-table">
+            <thead>
+                <tr>
+                    <th [appSyncColumnWidth]="0" data-col="0">Title</th>
+                    <th [appSyncColumnWidth]="1" data-col="1">Description</th>
+                    <th [appSyncColumnWidth]="2" data-col="2">Status</th>
+                    <th [appSyncColumnWidth]="3" data-col="3">Users</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for(task of tasks; track task.id) {
+                <tr>
+                    <td data-col="0">
+                        <div class="container-cells-task">
+                            <img [src]="srcDeleteTask" (click)="onClickRemoveTask(task.id)">
+                            <textarea #autoArea type="text" rows="1" (input)="autoResize($event)" id="myInputTitle"
+                                placeholder="titre" [value]="task.title" (blur)="onBlurTitleTask(task.id, $event)"
+                                (change)="autoResize($event)"></textarea>
+                        </div>
+                    </td>
+                    <td data-col="1">
+                        <div class="container-cells-task">
+                            <textarea maxlength="1000" #autoArea (input)="autoResize($event)" type="text"
+                                id="myInputDescription" placeholder="description" rows="1" [value]="task.description"
+                                (blur)="onBlurDescriptionTask(task.id, $event)"></textarea>
+                        </div>
+                    </td>
+                    <td data-col="2">
+                        <div class="container-cells-task">
+                            <img [src]="srcChangeStatus" (click)="onClickedDisplayAllStatus(task.id, $event)">
+                            <div class="container-option" (click)="onClickedDisplayAllStatus(task.id, $event)"
+                                [ngClass]="{'violet-back' : task.status === 'TODO', 'yellow-back' : task.status === 'IN_PROGRESS', 'pink-back' : task.status === 'DONE'}">
+                                <div class="point"
+                                    [ngClass]="{'violet-point' : task.status === 'TODO', 'yellow-point' : task.status === 'IN_PROGRESS', 'pink-point' : task.status === 'DONE'}">
+                                </div>
+                                <p> {{ task.status }}</p>
+                            </div>
+                            @if(currentTaskClickedForStatus === task.id) {
+                            <div class="container-other-status">
+                                @for(status of taskStatus; track status) {
+                                <div class="container-option" (click)="onClickChangeStatus(task.id, status)"
+                                    [ngClass]="{'violet-back' : status === 'TODO', 'yellow-back' : status === 'IN_PROGRESS', 'pink-back' : status === 'DONE'}">
+                                    <div class="point"
+                                        [ngClass]="{'violet-point' : status === 'TODO', 'yellow-point' : status === 'IN_PROGRESS', 'pink-point' : status === 'DONE'}">
+                                    </div>
+                                    <p> {{ status}}</p>
+                                </div>
+                                }
+                            </div>
+                            }
+                        </div>
+                    </td>
+                    <td data-col="3">
+                        <div class="container-cells-task">
+                            <img [src]="srcAddUser" (click)="onClickDisplayUserAvailable(task.id, $event)">
+                            <div class="container-assigned-user-task">
+                                @for(userIntoTask of task.assignedUsers; track userIntoTask.id) {
+                                <div class="container-option"
+                                    [ngClass]="{'red-back' : userIntoTask.role === 'DIRECTOR', 'blue-back' : userIntoTask.role === 'MANAGER', 'green-back' : userIntoTask.role === 'EMPLOYEE'}">
+                                    <img [src]="srcDelete" class="delete-user"
+                                        (click)="deleteUserTask(task.id, userIntoTask.id)">
+                                    <div class="point"
+                                        [ngClass]="{'red-point' : userIntoTask.role === 'DIRECTOR', 'blue-point' : userIntoTask.role === 'MANAGER', 'green-point' : userIntoTask.role === 'EMPLOYEE'}">
+                                    </div>
+                                    <p> {{ userIntoTask.firstName }} {{ userIntoTask.lastName }}</p>
+                                </div>
+                                }
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                }
+            </tbody>
+        </table>
     </div>
 </div>
+
+@if(currentTaskClickedForUsers) {
+<div class="container-list-all-user" [ngClass]="{'user-available' : true}" [style.left.px]="offsetX"
+    [style.top.px]="offsetY">
+    @if (usersActivate) {
+    @for (userActivate of assignedUsers; track userActivate.id) {
+    <div class="assigned-user" [ngClass]="{'user-hovering' : true}" (click)="addUserToTask(userActivate.id, $event)">
+        <div class="pp">
+            <img class="img-pp" style="animation: none;" [src]="userActivate.profilePhoto">
+        </div>
+        <p> {{ userActivate.firstName }} {{ userActivate.lastName }} </p>
+    </div>
+    }
+    }
+</div>
+}

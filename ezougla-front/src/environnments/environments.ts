@@ -27,6 +27,12 @@ export const environment = {
 
     apiUrlTask: 'task',
     apiUrlGetTaskByProject: 'tasks-by-project',
+    apiUrlCreateTask: 'create-task',
+    apiUrlUpdateTitleTask: 'update-title',
+    apiUrlUpdateDescriptionTask: 'update-description',
+    apiUrlUpdateStatusTask: 'update-status',
+    apiUrlAddUserToTask: 'add-user-to-task',
+    apiUrlRemoveUserToTask: 'remove-user-to-task',
 
     apiUrlFile: 'file',
     apiUrlGetFileByProject: 'files-by-project',

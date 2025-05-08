@@ -6,7 +6,6 @@ import { ProjectModel } from '../../model/project.interface';
 import { ProfilePhotoModel } from '../../model/profil-photo.interface';
 import { UploadService } from '../upload/upload.service';
 import { CreateFileModel } from '../../model/create-file.interface';
-import { ProjectsComponent } from '../../main-module/projects/projects.component';
 
 @Injectable({
   providedIn: 'root'

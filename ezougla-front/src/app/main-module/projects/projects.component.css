@@ -132,3 +132,8 @@ textarea:focus {
         transform: translateY(0);
     }
 }
+
+.container-project-part {
+    flex: 1;
+    overflow-y: auto;
+}

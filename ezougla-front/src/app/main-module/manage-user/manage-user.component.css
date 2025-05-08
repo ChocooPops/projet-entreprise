@@ -61,18 +61,6 @@
     }
 }
 
-.red {
-    color: #E5252A
-}
-
-.green {
-    color: #23A566;
-}
-
-.blue {
-    color: #4086F4;
-}
-
 .container-role {
     position: relative;
 }
@@ -86,28 +74,31 @@
     align-items: center;
     gap: 10px;
     left: 50%;
-    transform: translateX(-50%);
+    top: 50%;
+    transform: translate(-50%, -50%);
     padding-inline: 15px;
+    padding-block: 10px;
     border-radius: 3px;
     animation: 0.2s enter;
     background-color: #252525;
     z-index: 9999;
-
-    p {
-        width: auto;
-        font-weight: normal;
-        font-family: 'Inter Normal';
-        padding-inline: 10px;
-        padding-block: 5px;
-        border-radius: 5px;
-        cursor: pointer;
-        word-break: keep-all;
-        white-space: nowrap;
-    }
-
 }
 
-.role {
+p {
+    margin: 0;
+}
+
+.point {
+    height: 8px;
+    width: 8px;
+    border-radius: 100%;
+}
+
+.container-roles-options {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    height: auto;
     width: auto;
     font-weight: normal;
     font-family: 'Inter Normal';
@@ -117,7 +108,21 @@
     cursor: pointer;
     word-break: keep-all;
     white-space: nowrap;
-    font-size: 13px;
+    font-size: 14px;
+
+    &:hover {
+        p {
+            text-decoration: underline;
+        }
+    }
+}
+
+.red {
+    color: #DE5550E8;
+}
+
+.grey {
+    color: #9B9B9B;
 }
 
 .role:hover {
@@ -125,27 +130,35 @@
 }
 
 .red-back {
-    background-color: hsla(359, 79%, 67%, 0.4);
+    background-color: #DE555373;
 }
 
 .green-back {
-    background-color: hsla(151, 42%, 69%, 0.4);
+    background-color: #2D996480;
 }
 
 .blue-back {
-    background-color: hsla(217, 90%, 74%, 0.4);
+    background-color: #337EA980;
+}
+
+.red-point {
+    background-color: #DE5550E8;
+}
+
+.green-point {
+    background-color: #2CA76AE8;
+}
+
+.blue-point {
+    background-color: #337EA9E8;
 }
 
 .grey-back {
-    background-color: hsla(0, 0%, 64%, 0.4);
+    background-color: #FFFFFF21;
 }
 
-.grey {
-    color: rgb(196, 196, 196);
-}
-
-span {
-    font-size: 15px;
+.grey-point {
+    background-color: #9B9B9B;
 }
 
 @keyframes enter {
@@ -156,7 +169,7 @@ span {
 
     100% {
         opacity: 1;
-        transform: translate(-50%, 0px);
+        transform: translate(-50%, -50%);
     }
 }
 

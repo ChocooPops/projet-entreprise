@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, HostListener, ViewChild, ElementRef } from '@angular/core';
 import { ProjectService } from '../../services/project/project.service';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
@@ -21,6 +21,7 @@ import { NgClass } from '@angular/common';
 export class ProjectsComponent {
 
   subscription: Subscription = new Subscription();
+  @ViewChild('autoArea') autoArea!: ElementRef<HTMLTextAreaElement>;
 
   subscriptionUpload !: Subscription;
   project !: ProjectModel | undefined;
@@ -40,7 +41,6 @@ export class ProjectsComponent {
     private userService: UserService,
     private router: Router
   ) {
-
   }
 
   ngOnInit(): void {
@@ -53,6 +53,9 @@ export class ProjectsComponent {
       this.subscription.add(this.projectService.getAllProjectsByUser().subscribe((projects: ProjectModel[]) => {
         this.project = projects.find((pro) => pro.id === id);
         this.loadFormName();
+        setTimeout(() => {
+          this.resizeTextarea();
+        })
       })
       )
     });
@@ -140,6 +143,25 @@ export class ProjectsComponent {
 
   onDragLeave(event: DragEvent): void {
     this.isDragging = false;
+  }
+
+  @HostListener('window:resize')
+  onResize(): void {
+    this.resizeTextarea();
+  }
+
+  resizeTextarea(): void {
+    if (this.autoArea) {
+      const textarea = this.autoArea.nativeElement;
+      textarea.style.height = 'auto';
+      textarea.style.height = textarea.scrollHeight + 'px';
+    }
+  }
+
+  autoResize(event: Event) {
+    const textarea = event.target as HTMLTextAreaElement;
+    textarea.style.height = 'auto';
+    textarea.style.height = textarea.scrollHeight + 'px';
   }
 
 }

@@ -25,11 +25,13 @@
         </div>
 
         <form [formGroup]="formGroupName" class="container-form-name">
-            <textarea maxlength="100" rows="1" formControlName="inputName" (blur)="onInputBlurName()"> </textarea>
+            <textarea #autoArea (input)="autoResize($event)" maxlength="100" rows="1" formControlName="inputName"
+                (blur)="onInputBlurName()"> </textarea>
         </form>
     </div>
 
-    <app-detail-project></app-detail-project>
-
+    <div class="container-project-part">
+        <app-detail-project></app-detail-project>
+    </div>
 
 </div>

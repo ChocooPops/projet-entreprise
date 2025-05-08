@@ -14,8 +14,8 @@ export class ProjectController {
   }
 
   @Post('create')
-  async create(@CurrentUser('role') role: Role) {
-    return await this.projectService.createHollowNewProject(role);
+  async create(@CurrentUser('role') role: Role, @CurrentUser('sub') userId: string) {
+    return await this.projectService.createHollowNewProject(role, userId);
   }
 
   @Put('update-name/:id')
@@ -34,8 +34,18 @@ export class ProjectController {
   }
 
   @Put('change-back-perso')
-  async updateBackPersonalized(@CurrentUser('role') role: Role, @Body() file : CreateFileModel) {
+  async updateBackPersonalized(@CurrentUser('role') role: Role, @Body() file: CreateFileModel) {
     return await this.projectService.updateBackgroundImagePersonalize(role, file);
+  }
+
+  @Put('add-user-from-project/:idUser/:idProject')
+  async assignedUserIntoProjectById(@CurrentUser('role') role: Role, @Param('idUser') idUser: string, @Param('idProject') idProject: string) {
+    return await this.projectService.addUserToProject(role, idUser, idProject);
+  }
+
+  @Put('remove-user-from-project/:idUser/:idProject')
+  async unassignedUserIntoProjectById(@CurrentUser('role') role: Role, @Param('idUser') idUser: string, @Param('idProject') idProject: string) {
+    return await this.projectService.removeUserToProject(role, idUser, idProject);
   }
 
   @Delete(':id')
