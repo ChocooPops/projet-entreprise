@@ -10,8 +10,8 @@ export const environment = {
     apiUrlFindUser: 'find-user',
     apiUrlUserChangePhoto: 'change-pp',
     apiUrlUserChangePhotoPerso: 'change-pp-by-perso-picture',
-    apiUrlGetAllUsers : 'get-all-users',
-    apiUrlUserModifyRole : 'modify-role',
+    apiUrlGetAllUsers: 'get-all-users',
+    apiUrlUserModifyRole: 'modify-role',
     apiUrlUserEnable: 'enable-user',
     apiUrlUserDisable: 'disable-user',
 
@@ -22,6 +22,8 @@ export const environment = {
     apiUrlUpdateProjectDescription: 'update-description',
     apiUrlUpdateProjectBack: 'change-back',
     apiUrlUpdateProjectBackPersonalized: 'change-back-perso',
+    apiUrlAssignedUser: 'add-user-from-project',
+    apiUrlUnassignedUser: 'remove-user-from-project',
 
     apiUrlTask: 'task',
     apiUrlGetTaskByProject: 'tasks-by-project',

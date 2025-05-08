@@ -6,19 +6,22 @@ import { ProjectModel } from '../../model/project.interface';
 import { ProfilePhotoModel } from '../../model/profil-photo.interface';
 import { UploadService } from '../upload/upload.service';
 import { CreateFileModel } from '../../model/create-file.interface';
+import { ProjectsComponent } from '../../main-module/projects/projects.component';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProjectService {
 
-  private apiUrlGetProject: string = `${environment.apiUrl}/${environment.apiUrlProject}/${environment.apiUrlFindManyProjects}`
-  private apiUrlCreateHollowProject: string = `${environment.apiUrl}/${environment.apiUrlProject}/${environment.apiUrlCreateProject}`
-  private apiUrlUpdateName: string = `${environment.apiUrl}/${environment.apiUrlProject}/${environment.apiUrlUpdateProjectName}`
-  private apiUrlUpdateDescription: string = `${environment.apiUrl}/${environment.apiUrlProject}/${environment.apiUrlUpdateProjectDescription}`
-  private apiUrlDelete: string = `${environment.apiUrl}/${environment.apiUrlProject}`
-  private apiUrlUpdateBack: string = `${environment.apiUrl}/${environment.apiUrlProject}/${environment.apiUrlUpdateProjectBack}`
-  private apiUrlUpdateBackPersonalized: string = `${environment.apiUrl}/${environment.apiUrlProject}/${environment.apiUrlUpdateProjectBackPersonalized}`
+  private apiUrlGetProject: string = `${environment.apiUrl}/${environment.apiUrlProject}/${environment.apiUrlFindManyProjects}`;
+  private apiUrlCreateHollowProject: string = `${environment.apiUrl}/${environment.apiUrlProject}/${environment.apiUrlCreateProject}`;
+  private apiUrlUpdateName: string = `${environment.apiUrl}/${environment.apiUrlProject}/${environment.apiUrlUpdateProjectName}`;
+  private apiUrlUpdateDescription: string = `${environment.apiUrl}/${environment.apiUrlProject}/${environment.apiUrlUpdateProjectDescription}`;
+  private apiUrlDelete: string = `${environment.apiUrl}/${environment.apiUrlProject}`;
+  private apiUrlUpdateBack: string = `${environment.apiUrl}/${environment.apiUrlProject}/${environment.apiUrlUpdateProjectBack}`;
+  private apiUrlUpdateBackPersonalized: string = `${environment.apiUrl}/${environment.apiUrlProject}/${environment.apiUrlUpdateProjectBackPersonalized}`;
+  private apiUrlAssignedUser: string = `${environment.apiUrl}/${environment.apiUrlProject}/${environment.apiUrlAssignedUser}`;
+  private apiUrlUnassignedUser: string = `${environment.apiUrl}/${environment.apiUrlProject}/${environment.apiUrlUnassignedUser}`;
 
   private projectsSubject: BehaviorSubject<ProjectModel[]> = new BehaviorSubject<ProjectModel[]>([]);
   private project$: Observable<ProjectModel[]> = this.projectsSubject.asObservable();
@@ -68,9 +71,10 @@ export class ProjectService {
 
   fetchCreateProject(): Observable<void> {
     return this.http.post<ProjectModel>(this.apiUrlCreateHollowProject, {}).pipe(
-      switchMap((project: ProjectModel) =>
+      switchMap((project: any) =>
         this.uploadService.getUploadFile(project.srcBackground).pipe(
           map((blob: Blob) => {
+            console.log(project);
             const blobUrl = URL.createObjectURL(blob);
             project.srcBackground = blobUrl;
 
@@ -197,6 +201,27 @@ export class ProjectService {
 
   public resetProjects(): void {
     this.projectsSubject.next([])
+  }
+
+  public fetchAssignedUserIntoProjectById(userId: string, projectId: string): Observable<any> {
+    return this.http.put<any>(`${this.apiUrlAssignedUser}/${userId}/${projectId}`, {}).pipe(
+      map((data: ProjectModel) => {
+        const projects: ProjectModel[] = this.projectsSubject.value;
+        const index: number = projects.findIndex(item => item.id === data.id);
+        projects[index].assignedUsers = data.assignedUsers;
+        this.projectsSubject.next(projects);
+      })
+    )
+  }
+  public fetchUnassignedUserIntoProjectById(userId: string, projectId: string): Observable<any> {
+    return this.http.put<any>(`${this.apiUrlUnassignedUser}/${userId}/${projectId}`, {}).pipe(
+      map((data: ProjectModel) => {
+        const projects: ProjectModel[] = this.projectsSubject.value;
+        const index: number = projects.findIndex(item => item.id === data.id);
+        projects[index].assignedUsers = data.assignedUsers;
+        this.projectsSubject.next(projects);
+      })
+    )
   }
 
 }

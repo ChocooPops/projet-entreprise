@@ -1,4 +1,47 @@
-<div class="container-project">
+<div class="container-project" (click)="onClickPage()">
+
+    <div class="container-assigned-users">
+        <div class="div-flex">
+            <p> Utilisateurs assignés : </p>
+            <img [src]="srcAddUser" (click)="onClicAddNewUser($event)">
+        </div>
+
+        <div class="assigned-users">
+            @for(assignedUser of assignedUsers; track assignedUser.id) {
+            <div class="assigned-user" (mouseenter)="onMouseEnter(assignedUser.id)" (mouseleave)="onMouseLeave()">
+                <div class="pp">
+                    @if(isUserHovering === assignedUser.id) {
+                    <img [src]="srcDelete" class="img-delete" (click)="unassignedUserByIdIntoProject(assignedUser.id)">
+                    } @else {
+                    <img [src]="assignedUser.profilePhoto" class="img-pp">
+                    }
+                </div>
+                <p> • {{ assignedUser.lastName }} {{ assignedUser.firstName }} </p>
+            </div>
+            }
+            <div class="add-collaborators" (click)="onClicAddNewUser($event)"
+                [ngClass]="{'border-radius-top' : isClickOnAddUser}">
+                @if(isClickOnAddUser) {
+                <div class="container-list-all-user">
+                    @if (listUsers) {
+                    @for (userIntoList of listUsers; track userIntoList.id) {
+                    <div class="assigned-user" [ngClass]="{'user-hovering' : true}"
+                        (click)="assignedUserByIdIntoProject(userIntoList.id)">
+                        <div class="pp">
+                            <img class="img-pp" [src]="userIntoList.profilePhoto">
+                        </div>
+                        <p> {{ userIntoList.lastName }} {{ userIntoList.firstName }} </p>
+                    </div>
+                    }
+                    }
+                </div>
+                }
+                <img [src]="srcAddUser" class="img-collab">
+                <p> Ajouter un nouveau collaborateur </p>
+            </div>
+        </div>
+    </div>
+
     <form [formGroup]="formGroupDescription" class="container-form-describe">
         <label class="label">Description : </label>
         <textarea maxlength="1000" formControlName="inputDescription" (blur)="onInputBlurDescription()"> </textarea>
@@ -8,7 +51,7 @@
         (dragleave)="onDragLeave($event)" [ngClass]="{'is-dragging' : isDragging}">
         <div class="div-flex">
             <p> Vos fichiers : </p>
-            <img src="./add.png" (click)="triggerFileInput()">
+            <img [src]="srcAddFile" (click)="triggerFileInput()">
             <input type="file" #fileInput (change)="onFileSelected($event)" style="display: none;" />
         </div>
         <div class="container-file">

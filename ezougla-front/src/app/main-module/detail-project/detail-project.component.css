@@ -2,6 +2,9 @@
     flex: 1;
     padding: 30px;
     box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
 }
 
 textarea {
@@ -38,6 +41,10 @@ textarea:focus {
 }
 
 .container-form-describe {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+
     textarea {
         color: white;
         font-size: 15px;
@@ -53,7 +60,7 @@ textarea:focus {
 .container-files {
     display: flex;
     flex-direction: column;
-    gap: 0px;
+    gap: 5px;
     width: 100%;
     transition: background-colo 0.2s;
     box-sizing: border-box;
@@ -80,6 +87,7 @@ textarea:focus {
     display: flex;
     align-items: center;
     gap: 20px;
+    font-size: 18px;
 
     img {
         height: 15px;
@@ -92,5 +100,133 @@ textarea:focus {
         &:hover {
             background-color: #141414;
         }
+    }
+}
+
+.container-assigned-users {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+}
+
+.assigned-users {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    cursor: pointer;
+
+    p {
+        width: auto;
+        font-weight: normal;
+        font-family: 'Inter Normal';
+        font-size: 14px;
+        padding-inline: 10px;
+        padding-block: 5px;
+        border-radius: 5px;
+        word-break: keep-all;
+        white-space: nowrap;
+        background-color: hsla(0, 0%, 64%, 0.4);
+    }
+}
+
+.assigned-user {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.pp {
+    height: 30px;
+    width: 30px;
+    background-color: #141414;
+    border-radius: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.img-pp {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+    animation: 0.4s enter;
+}
+
+.img-delete {
+    height: 60%;
+    animation: 0.4s enter;
+}
+
+p {
+    margin: 0;
+}
+
+.add-collaborators {
+    border: 2px white dashed;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    height: 35px;
+    background-color: hsla(0, 0%, 64%, 0.4);
+    cursor: pointer;
+    border-radius: 5px;
+    padding-inline: 10px;
+    padding-block: 5px;
+    gap: 10px;
+    position: relative;
+    transition: 0.2s border-radius;
+
+    p {
+        background-color: transparent;
+        padding: 0;
+    }
+}
+
+.img-collab {
+    height: 80%;
+}
+
+.border-radius-top {
+    border-radius: 5px 5px 0px 0px;
+}
+
+.container-list-all-user {
+    position: absolute;
+    height: 200px;
+    width: 100%;
+    top: 37px;
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    padding-block: 10px;
+    box-sizing: border-box;
+    border: solid 2px white;
+    border-radius: 0px 0px 5px 5px;
+    background-color: #252525;
+    z-index: 999;
+}
+
+.user-hovering {
+    padding-inline: 10px;
+    padding-block: 5px;
+
+    &:hover {
+        background-color: #323232;
+    }
+}
+
+@keyframes enter {
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0);
     }
 }

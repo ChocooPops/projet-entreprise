@@ -64,9 +64,9 @@ export class ProjectsComponent {
     )
   }
 
-
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
+    this.projectService.setProjectClicked('');
   }
 
   loadFormName(): void {
