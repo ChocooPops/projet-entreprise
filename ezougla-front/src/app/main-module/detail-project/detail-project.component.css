@@ -87,7 +87,7 @@ textarea:focus {
     display: flex;
     align-items: center;
     gap: 20px;
-    font-size: 20px;
+    font-size: 18px;
 
     img {
         height: 15px;
@@ -271,7 +271,7 @@ td {
     overflow: hidden;
     white-space: nowrap;
     resize: both;
-    width: 300px;
+    width: 200px
 }
 
 th {

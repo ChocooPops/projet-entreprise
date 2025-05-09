@@ -20,6 +20,11 @@ enum TaskStatus {
   DONE
 }
 
+enum MessageType {
+  USER
+  AI
+}
+
 model User {
   id                 String            @id @default(uuid())
   email              String            @unique
@@ -98,7 +103,7 @@ model Conversation {
 model Message {
   id             String       @id @default(uuid())
   content        String
-  role           String // "user" ou "ai"
+  type           MessageType
   conversationId String
   authorId       String?
   conversation   Conversation @relation(fields: [conversationId], references: [id])
@@ -111,5 +116,5 @@ model DeepResearchLog {
   userId      String
   user        User     @relation(fields: [userId], references: [id])
   date        DateTime @default(now())
-  triggeredBy String // nom de la feature
+  triggeredBy String
 }

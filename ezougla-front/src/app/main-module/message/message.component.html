@@ -4,9 +4,17 @@
         <div class="separation-bar"></div>
         <div class="container-title">
             <p> Vos conversations : </p>
-            <div class="container-img">
+            <div class="container-img" (click)="addNewConversation()">
                 <img [src]="srcAddConversation">
             </div>
+        </div>
+        <div class="container-conversations">
+
+            @for(conversation of conversations; track conversation.id) {
+                <div class="conversation" [ngClass]="{'grey-back' : conversation.id === currentConversationId }" (click)="onClickChangeConversation(conversation.id)">
+                    <p> {{ conversation.title }} </p>
+                </div>
+            }
         </div>
     </div>
 
@@ -14,11 +22,27 @@
 
         <div class="container-conversation">
             <div class="container-messages">
-
+                @if(messages) {
+                    @for(message of messages; track message.id) {
+                        @if(currentUser && message.author && currentUser.id == message.author.id) {
+                            <div class="placement-message" [ngClass]="{'right-placement' : true}">
+                                <div class="message" [ngClass]="{'background-message-user' : true}">
+                                    <p> {{ message.content }}</p>
+                                </div>
+                            </div>
+                        }@else {
+                            <div class="placement-message" [ngClass]="{'left-placement' : true}">
+                                <div class="message" [ngClass]="{'background-massage-other-users' : true}">
+                                    <p> {{ message.content }}</p>
+                                </div>
+                            </div>
+                        }
+                    }
+                }
             </div>
             <div class="container-input-message">
                 <form [formGroup]="formGroupMessage">
-                    <textarea (input)="autoResize($event)" rows="1" formControlName="inputMessage"> </textarea>
+                    <textarea (keydown.enter)="sendMessage($event)" (input)="autoResize($event)" rows="1" formControlName="inputMessage"> </textarea>
                 </form>
             </div>
         </div>

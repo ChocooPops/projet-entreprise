@@ -35,8 +35,9 @@ export class ProjectsComponent {
   srcMessage: string = './message.png';
 
   displayEditProject: boolean = true;
-
   partOfProjectToDisplay: boolean = true;
+  activateAnimationBackground : boolean = false;
+
 
   constructor(private projectService: ProjectService,
     private route: ActivatedRoute,
@@ -50,6 +51,7 @@ export class ProjectsComponent {
     this.loadFormName();
     this.route.paramMap.subscribe(params => {
       const id = params.get('id');
+      this.activateAnimationBackground = !this.activateAnimationBackground;
       if (id) {
         this.projectService.setProjectClicked(id);
       }

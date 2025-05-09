@@ -3,11 +3,11 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environnments/environments';
 import { RegisterModel } from '../../model/register.interface';
 import { BehaviorSubject, catchError, map, Observable, of, take, switchMap, forkJoin, tap } from 'rxjs';
-import { MessageModel } from '../../model/message.interface';
 import { UserModel } from '../../model/user.interface';
 import { UploadService } from '../upload/upload.service';
 import { ProfilePhotoModel } from '../../model/profil-photo.interface';
 import { CreateFileModel } from '../../model/create-file.interface';
+import { MessageApiModel } from '../../model/message-api.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -56,9 +56,9 @@ export class UserService {
 
   private profilePhotos: ProfilePhotoModel[] = [];
 
-  public fetchRegister(register: RegisterModel): Observable<MessageModel> {
+  public fetchRegister(register: RegisterModel): Observable<MessageApiModel> {
     return this.http.post<any>(`${this.apiUrlRegister}`, register).pipe(
-      map((data: MessageModel) => {
+      map((data: MessageApiModel) => {
         return data
       }),
       catchError((error) => {

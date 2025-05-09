@@ -3,8 +3,8 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
 import { Router } from '@angular/router';
 import { RegisterModel } from '../../model/register.interface';
 import { UserService } from '../../services/user/user.service';
-import { MessageModel } from '../../model/message.interface';
 import { ProjectService } from '../../services/project/project.service';
+import { MessageApiModel } from '../../model/message-api.interface';
 
 @Component({
   selector: 'app-register',
@@ -59,7 +59,7 @@ export class RegisterComponent {
           email: email,
           password: password
         }
-        this.userService.fetchRegister(register).subscribe((data: MessageModel) => {
+        this.userService.fetchRegister(register).subscribe((data: MessageApiModel) => {
           this.message = data.message;
         })
       }

@@ -1,7 +1,6 @@
 @if(currentUser && currentUser.role === 'DIRECTOR') {
 
 <div class="container-manage-user-page" (click)="onClickPage()">
-
     @for(user of users; track user) {
     <div class="container-user">
         <div class="container-pp">

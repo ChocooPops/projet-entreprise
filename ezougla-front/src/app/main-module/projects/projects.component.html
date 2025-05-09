@@ -3,7 +3,11 @@
     <div class="container-background-project" (drop)="onFileDropped($event)" (dragover)="onDragOver($event)"
         (dragleave)="onDragLeave($event)" [ngClass]="{'is-dragging' : isDragging}">
         @if(project != undefined) {
-        <img [src]="project.srcBackground" class="projet-background">
+            @if(activateAnimationBackground) {
+                <img [src]="project.srcBackground" class="projet-background">
+            }@else {
+                <img [src]="project.srcBackground" class="projet-background">
+            }
         }
 
         <div class="container-buttons">
