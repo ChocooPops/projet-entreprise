@@ -15,10 +15,12 @@
                 <img [src]="srcEdit">
             </div>
             }
-            <div class="container-button">
+            <div class="container-button" (click)="displayDetailsProject()"
+                [ngClass]="{'grey-background-color' : partOfProjectToDisplay}">
                 <img [src]="srcTask">
             </div>
-            <div class="container-button">
+            <div class="container-button" (click)="displayMessageProject()"
+                [ngClass]="{'grey-background-color' : !partOfProjectToDisplay}">
                 <img [src]="srcMessage">
             </div>
 
@@ -30,8 +32,16 @@
         </form>
     </div>
 
-    <div class="container-project-part">
-        <app-detail-project></app-detail-project>
+
+    @if(partOfProjectToDisplay) {
+    <div class="container-project-part-left">
+        <app-detail-project class="detail"></app-detail-project>
+
     </div>
+    }@else {
+    <div class="container-project-part-right">
+        <app-message class="message"></app-message>
+    </div>
+    }
 
 </div>

@@ -3,6 +3,7 @@
     width: 100%;
     display: flex;
     flex-direction: column;
+    overflow: hidden;
 }
 
 .container-background-project {
@@ -24,6 +25,7 @@
     top: 20px;
     right: 20px;
     display: flex;
+    gap: 4px;
 }
 
 .container-button {
@@ -44,6 +46,10 @@
         height: 50%;
         width: 50%;
     }
+}
+
+.grey-background-color {
+    background-color: #202020;
 }
 
 .projet-background {
@@ -133,7 +139,46 @@ textarea:focus {
     }
 }
 
-.container-project-part {
+.container-project-part-left {
     flex: 1;
     overflow-y: auto;
+    animation: 0.3s enter-detail;
+}
+
+.container-project-part-right {
+    flex: 1;
+    overflow-y: auto;
+    animation: 0.3s enter-message;
+}
+
+.detail {
+    animation: 0.3s enter-detail;
+}
+
+.message {
+    animation: 0.3s enter-message;
+}
+
+@keyframes enter-detail {
+    0% {
+        opacity: 0;
+        transform: translateX(-20%);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes enter-message {
+    0% {
+        opacity: 0;
+        transform: translateX(20%);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateX(0);
+    }
 }

@@ -99,7 +99,7 @@ export class UserService {
 
       const userTab: UserModel[] = this.userTabSubject.value;
       const index: number = userTab.findIndex((item) => item.id === user.id);
-      if (index) {
+      if (index >= 0) {
         userTab[index].profilePhoto = URL.createObjectURL(pp);
         this.userTabSubject.next(userTab);
       }

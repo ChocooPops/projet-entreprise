@@ -232,7 +232,7 @@ p {
 }
 
 .resizable-table {
-    width: auto;
+    width: min-content;
     max-width: 100%;
     table-layout: fixed;
     border-collapse: collapse;

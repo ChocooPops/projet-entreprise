@@ -1,8 +1,27 @@
-<div class="container-menu">
+<div class="container-all-conversation">
 
-    <div class="deconnexion">
-        <img [src]="srcDeconnexion">
+    <div class="container-list-all-conversation">
+        <div class="separation-bar"></div>
+        <div class="container-title">
+            <p> Vos conversations : </p>
+            <div class="container-img">
+                <img [src]="srcAddConversation">
+            </div>
+        </div>
     </div>
 
+    <div class="container-one-conversation">
+
+        <div class="container-conversation">
+            <div class="container-messages">
+
+            </div>
+            <div class="container-input-message">
+                <form [formGroup]="formGroupMessage">
+                    <textarea (input)="autoResize($event)" rows="1" formControlName="inputMessage"> </textarea>
+                </form>
+            </div>
+        </div>
+    </div>
 
 </div>

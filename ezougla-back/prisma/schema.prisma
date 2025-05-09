@@ -70,8 +70,8 @@ model Task {
 model File {
   id             String        @id @default(uuid())
   name           String
-  url            String // vers le bucket
-  type           String // pdf, docx, etc.
+  url            String
+  type           String
   content        String? // extrait via Mistral
   uploadedById   String
   uploadedBy     User          @relation(fields: [uploadedById], references: [id])

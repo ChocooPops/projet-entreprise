@@ -11,10 +11,11 @@ import { Router } from '@angular/router';
 import { DetailProjectComponent } from '../detail-project/detail-project.component';
 import { CreateFileModel } from '../../model/create-file.interface';
 import { NgClass } from '@angular/common';
+import { MessageComponent } from '../message/message.component';
 
 @Component({
   selector: 'app-projects',
-  imports: [ReactiveFormsModule, DetailProjectComponent, NgClass],
+  imports: [ReactiveFormsModule, DetailProjectComponent, NgClass, MessageComponent],
   templateUrl: './projects.component.html',
   styleUrl: './projects.component.css'
 })
@@ -34,6 +35,8 @@ export class ProjectsComponent {
   srcMessage: string = './message.png';
 
   displayEditProject: boolean = true;
+
+  partOfProjectToDisplay: boolean = true;
 
   constructor(private projectService: ProjectService,
     private route: ActivatedRoute,
@@ -162,6 +165,14 @@ export class ProjectsComponent {
     const textarea = event.target as HTMLTextAreaElement;
     textarea.style.height = 'auto';
     textarea.style.height = textarea.scrollHeight + 'px';
+  }
+
+  displayDetailsProject(): void {
+    this.partOfProjectToDisplay = true;
+  }
+
+  displayMessageProject(): void {
+    this.partOfProjectToDisplay = false;
   }
 
 }
