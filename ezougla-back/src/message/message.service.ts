@@ -56,47 +56,72 @@ export class MessageService {
     });
   }
 
-  async sendMessageToMistralApi(conversationId: string, content: string, authorId: string): Promise<Message[]> {
+  async sendMessageToMistralApi(conversationId: string, content: string, authorId: string, files: CreateFileModel[]): Promise<Message[]> {
     const messages: Message[] = [];
+    if ((content && content !== '') || (files && files.length > 0)) {
 
-    const userMessage = await this.addMessageToConversationByUser(conversationId, content, authorId);
-    messages.push(userMessage);
+      if (content && content !== '') {
+        const userMessage: Message = await this.addMessageToConversationByUser(conversationId, content, authorId);
+        messages.push(userMessage);
+      }
+      const filesMessages: Message[] = await this.addFileMessageIntoConversation(conversationId, files, authorId);
+      filesMessages.forEach((fileMessage: Message) => {
+        messages.push(fileMessage);
+      })
 
-    try {
-      const resMistral: any = await this.mistralApiService.fetchSendQuestion(content);
-      const contentMistralMessage: string = resMistral.choices[0].message.content;
-      const messageMistral: Message = await this.prismaService.message.create({
-        data: {
-          content: contentMistralMessage,
-          type: MessageType.TEXT_AI_SUCCESS,
-          conversationId,
-          authorId,
-        },
-        include: {
-          conversation: true,
-          author: true,
-          file: true,
-        },
-      });
+      try {
+        let extractTextFromFiles: string = '';
+        if (content && content !== '') {
+          extractTextFromFiles = `${content} : `;
+        } else {
+          extractTextFromFiles = 'Analyse mes fichiers : ';
+        }
+        for (const file of files) {
+          const textFromFile: string = await this.uploadFileService.extractAllTextFromBase64(file.name, file.file);
+          extractTextFromFiles += `Mon fichier ${file.name} : ${textFromFile} \n `;
+        }
 
-      messages.push(messageMistral);
-    } catch (error) {
-      const errorMessage: Message = await this.prismaService.message.create({
-        data: {
-          content: 'Erreur Mistral API : ' + error,
-          type: MessageType.TEXT_AI_ERROR,
-          conversationId,
-          authorId,
-        },
-        include: {
-          conversation: true,
-          author: true,
-          file: true,
-        },
-      });
+        let resMistral !: any;
+        if (files.length > 0) {
+          resMistral = await this.mistralApiService.fetchSendQuestion(extractTextFromFiles);
+        } else {
+          resMistral = await this.mistralApiService.fetchSendQuestion(content);
+        }
+        const contentMistralMessage: string = resMistral.choices[0].message.content;
+        const messageMistral: Message = await this.prismaService.message.create({
+          data: {
+            content: contentMistralMessage,
+            type: MessageType.TEXT_AI_SUCCESS,
+            conversationId,
+            authorId,
+          },
+          include: {
+            conversation: true,
+            author: true,
+            file: true,
+          },
+        });
 
-      messages.push(errorMessage);
+        messages.push(messageMistral);
+      } catch (error) {
+        const errorMessage: Message = await this.prismaService.message.create({
+          data: {
+            content: 'Erreur Mistral API : ' + error,
+            type: MessageType.TEXT_AI_ERROR,
+            conversationId,
+            authorId,
+          },
+          include: {
+            conversation: true,
+            author: true,
+            file: true,
+          },
+        });
+
+        messages.push(errorMessage);
+      }
     }
+
     return messages;
   }
 
@@ -202,6 +227,4 @@ export class MessageService {
       throw new UnprocessableEntityException();
     }
   }
-
-
 }

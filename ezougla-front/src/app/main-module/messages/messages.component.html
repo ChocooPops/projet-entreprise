@@ -29,7 +29,7 @@
             </div>
         </div>
         <div class="message"
-            [ngClass]="{'back-api-blue' : message.type === 'TEXT_AI_SUCCESS', 'back-api-red' : message.type === 'TEXT_AI_ERROR'}">
+            [ngClass]="{'back-api-blue' : message.type === 'TEXT_AI_SUCCESS', 'back-api-red' : message.type === 'TEXT_AI_ERROR', 'back-api-loading' : loading}">
             <p> {{ message.content }}</p>
         </div>
         }@else {
@@ -50,7 +50,7 @@
     }
     }
     <div class="div-tmp"></div>
-    }@else {
+    }@else if(!notDisplayAnyConv){
     <div class="container-any-conv">
         <img [src]="srcStartConv">
         <p>Commencer la conversation</p>

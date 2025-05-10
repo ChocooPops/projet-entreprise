@@ -127,9 +127,11 @@ export class ConversationsComponent {
               this.setStateForm(false);
             }
           })
+        } else {
+          this.setStateForm(false)
         }
-        this.setStateForm(true)
         if (this.addedFile.length > 0) {
+          this.setStateForm(true)
           this.conversationService.fetchSendNewFileMessage(this.currentConversationId, this.addedFile).subscribe(() => {
             this.addedFile = [];
             this.setScrollingBottom();
@@ -137,12 +139,17 @@ export class ConversationsComponent {
               this.setStateForm(false);
             }
           })
+        } else {
+          this.setStateForm(false)
         }
       } else {
-        if (message && message.trim()) {
-          this.setStateForm(true)
-          this.loadingResponseApiMistral = true;
-          if (this.currentUser) {
+        let messageApi = '';
+        const filesApi: CreateFileModel[] = [];
+        if (message) {
+          messageApi = message.trim();
+        }
+        if (this.currentUser) {
+          if (messageApi !== '') {
             this.messageLoading.push({
               id: '0',
               content: message,
@@ -150,35 +157,40 @@ export class ConversationsComponent {
               type: 'TEXT_USER',
               author: this.currentUser
             })
-            this.addedFile.forEach((file) => {
-              if (this.currentUser && this.currentConversationId) {
-                this.messageLoading.push({
-                  id: this.getIdFile(),
-                  content: '',
-                  conversationId: this.currentConversationId,
-                  type: 'FILE',
-                  author: this.currentUser,
-                  file: {
-                    id: this.getIdFile(),
-                    name: file.name,
-                    url: 'vide',
-                    type: file.name.split('.')[1]
-                  }
-                })
-              }
-            })
-            this.messageLoading.push({
-              id: '1',
-              content: 'Chargement ...',
-              conversationId: this.currentConversationId,
-              type: 'TEXT_AI_SUCCESS',
-              author: this.currentUser
-            })
           }
-          this.setScrollingBottom();
-          this.formGroupMessage.get('inputMessage')?.reset();
-          this.addedFile = [];
-          this.conversationService.fetchSendMessageToMistralAI(this.currentConversationId, message).subscribe(() => {
+          this.addedFile.forEach((file) => {
+            filesApi.push(file);
+            if (this.currentUser && this.currentConversationId) {
+              this.messageLoading.push({
+                id: this.getIdFile(),
+                content: '',
+                conversationId: this.currentConversationId,
+                type: 'FILE',
+                author: this.currentUser,
+                file: {
+                  id: this.getIdFile(),
+                  name: file.name,
+                  url: 'vide',
+                  type: file.name.split('.')[1]
+                }
+              })
+            }
+          })
+          this.messageLoading.push({
+            id: '1',
+            content: 'Chargement ...',
+            conversationId: this.currentConversationId,
+            type: 'TEXT_AI_SUCCESS',
+            author: this.currentUser
+          })
+        }
+        this.setScrollingBottom();
+        this.formGroupMessage.get('inputMessage')?.reset();
+        this.addedFile = [];
+        if (messageApi !== '' || filesApi.length > 0) {
+          this.setStateForm(true)
+          this.loadingResponseApiMistral = true;
+          this.conversationService.fetchSendMessageToMistralAI(this.currentConversationId, messageApi, filesApi).subscribe(() => {
             this.formGroupMessage.get('inputMessage')?.reset();
             this.addedFile = [];
             this.messageLoading = [];

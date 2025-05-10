@@ -50,7 +50,8 @@ export class FileComponent {
     }
 
     if (this.createFile) {
-      const extension: string = this.createFile.name.split('.')[1];
+      const extractExtansion: string[] = this.createFile.name.split('.');
+      const extension: string = extractExtansion[extractExtansion.length - 1];
       this.type = this.detectFileType(extension);
       if (this.type === 'document') {
         this.srcImage = './docs.png';

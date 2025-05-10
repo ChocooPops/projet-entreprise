@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environnments/environments';
-import { BehaviorSubject, map, Observable, of } from 'rxjs';
+import { BehaviorSubject, catchError, map, Observable, of } from 'rxjs';
 import { ConversationModel } from '../../model/conversation.interface';
 import { MessageModel } from '../../model/message.interface';
 import { CreateFileModel } from '../../model/create-file.interface';
@@ -98,12 +98,15 @@ export class ConversationService {
           conversations[index].messages.push(data);
           this.conversationsSubject.next(conversations);
         }
+      }),
+      catchError((error) => {
+        return of();
       })
     )
   }
 
-  fetchSendMessageToMistralAI(conversationId: string, content: string): Observable<any> {
-    return this.http.post<any>(`${this.apiUrlSendMessageToMistral}/${conversationId}`, { content }).pipe(
+  fetchSendMessageToMistralAI(conversationId: string, content: string, files: CreateFileModel[]): Observable<any> {
+    return this.http.post<any>(`${this.apiUrlSendMessageToMistral}/${conversationId}`, { content, files }).pipe(
       map((data: MessageModel[]) => {
         const conversations: ConversationModel[] = this.conversationsSubject.value;
         const index: number = conversations.findIndex((item) => item.id === conversationId);
@@ -113,6 +116,9 @@ export class ConversationService {
           })
         }
         this.conversationsSubject.next(conversations);
+      }),
+      catchError((error) => {
+        return of();
       })
     )
   }
@@ -128,6 +134,9 @@ export class ConversationService {
           })
         }
         this.conversationsSubject.next(conversations);
+      }),
+      catchError((error) => {
+        return of();
       })
     )
   }

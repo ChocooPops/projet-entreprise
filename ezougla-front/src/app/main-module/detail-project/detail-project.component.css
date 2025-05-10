@@ -83,6 +83,11 @@ textarea:focus {
     padding-bottom: 20px;
 }
 
+.container-file::-webkit-scrollbar {
+    height: 4px;
+    width: 4px;
+}
+
 .div-flex {
     display: flex;
     align-items: center;

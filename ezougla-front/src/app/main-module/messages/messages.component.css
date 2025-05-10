@@ -97,6 +97,23 @@ p {
     border: #337EA9E8 1px solid;
 }
 
+.back-api-loading {
+    background: linear-gradient(90deg, #337EA980, #337EA9);
+    border: #337EA9E8 1px solid;
+    animation: gradientAnimation 10s linear infinite;
+    background-size: 200% 100%;
+}
+
+@keyframes gradientAnimation {
+    0% {
+        background-position: 200% 0;
+    }
+
+    100% {
+        background-position: -1000% 0;
+    }
+}
+
 .back-api-red {
     background-color: #DE555373;
     border: #DE5550E8 1px solid;

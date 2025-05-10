@@ -30,12 +30,21 @@
     "@nestjs/platform-express": "^10.0.0",
     "@nestjs/serve-static": "^4.0.0",
     "@prisma/client": "^6.7.0",
+    "adm-zip": "^0.5.16",
     "bcrypt": "^5.1.1",
+    "buffer": "^6.0.3",
+    "csv-parser": "^3.2.0",
     "express": "^4.18.2",
+    "fast-xml-parser": "^5.2.2",
+    "file-type": "^16.5.4",
+    "mammoth": "^1.9.0",
     "passport": "^0.7.0",
     "passport-jwt": "^4.0.1",
+    "pdf-parse": "^1.1.1",
     "reflect-metadata": "^0.2.0",
-    "rxjs": "^7.8.1"
+    "rxjs": "^7.8.1",
+    "textract": "^2.5.0",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@nestjs/cli": "^10.0.0",

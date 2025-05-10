@@ -25,14 +25,15 @@
         <div class="container-conversation">
 
             <div class="container-all-messages" #messagesContainer>
-                <app-messages [messages]="messages" [currentUser]="currentUser"></app-messages>
+                <app-messages [notDisplayAnyConv]="loadingResponseApiMistral" [messages]="messages"
+                    [currentUser]="currentUser"></app-messages>
                 @if(loadingResponseApiMistral) {
-                <app-messages [messages]="messageLoading" [currentUser]="currentUser"></app-messages>
+                <app-messages [loading]="true" [messages]="messageLoading" [currentUser]="currentUser"></app-messages>
                 }
             </div>
 
             <div class="container-input-message">
-                <div class="container-files">
+                <div class="container-files" [ngClass]="{'transparent-back' :  addedFile.length <= 0}">
                     @for (file of addedFile; track file.idProjects) {
                     <app-file [createFile]="file" (emitRemoveCreateFile)="deleteFileBeforeSending($event)"></app-file>
                     }

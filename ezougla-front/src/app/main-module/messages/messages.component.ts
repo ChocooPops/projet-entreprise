@@ -14,6 +14,8 @@ export class MessagesComponent {
 
   @Input() messages: MessageModel[] | undefined = undefined;
   @Input() currentUser: UserModel | undefined = undefined;
+  @Input() loading: boolean = false;
+  @Input() notDisplayAnyConv: boolean = false;
 
   srcPpMistral: string = './mistral.png';
   srcAnyConv: string = './any-conv.svg';

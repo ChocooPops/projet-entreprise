@@ -33,8 +33,8 @@ export class MessageController {
   }
 
   @Post('send-message-to-mistral/:conversationId')
-  async saveResponseMistralApi(@CurrentUser('sub') userId: string, @Param('conversationId') conversationId, @Body('content') content) {
-    return await this.messageService.sendMessageToMistralApi(conversationId, content, userId);
+  async saveResponseMistralApi(@CurrentUser('sub') userId: string, @Param('conversationId') conversationId, @Body('content') content, @Body('files') files: CreateFileModel[]) {
+    return await this.messageService.sendMessageToMistralApi(conversationId, content, userId, files);
   }
 
   @Post('add-file/:conversationId')

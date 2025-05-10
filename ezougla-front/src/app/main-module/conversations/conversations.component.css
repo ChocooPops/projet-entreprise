@@ -281,3 +281,7 @@ p {
     height: 2px;
     width: 2px;
 }
+
+.transparent-back {
+    background-color: transparent;
+}
