@@ -119,6 +119,11 @@
     overflow-y: auto;
 }
 
+.container-project-list::-webkit-scrollbar {
+    height: 3px;
+    width: 3px;
+}
+
 .container-projects {
     display: flex;
     flex-direction: column;

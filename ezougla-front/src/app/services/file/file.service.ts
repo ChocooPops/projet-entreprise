@@ -5,6 +5,7 @@ import { map, Observable } from 'rxjs';
 import { FileModel } from '../../model/file.interface';
 import { CreateFileModel } from '../../model/create-file.interface';
 import { UploadService } from '../upload/upload.service';
+import { ConversationService } from '../conversation/conversation.service';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +17,8 @@ export class FileService {
   private readonly apiUrlDeleteFile: string = `${environment.apiUrl}/${environment.apiUrlFile}`;
 
   constructor(private http: HttpClient,
-    private uploadService: UploadService
+    private uploadService: UploadService,
+    private conversationService: ConversationService
   ) { }
 
   fetchGetFileByProject(idProject: string): Observable<FileModel[]> {
@@ -38,6 +40,7 @@ export class FileService {
   fetchDeleteFile(idFile: string): Observable<FileModel> {
     return this.http.delete<any>(`${this.apiUrlDeleteFile}/${idFile}`).pipe(
       map((data: FileModel) => {
+        this.conversationService.deleteMessagesByFileId(data.id)
         return data;
       })
     )

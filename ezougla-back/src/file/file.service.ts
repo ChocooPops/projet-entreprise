@@ -16,6 +16,9 @@ export class FileService {
         where: {
           projectId: projectId,
         },
+        orderBy: {
+          createdAt: 'asc',
+        },
       });
       return files;
     } catch (error) {

@@ -27,6 +27,11 @@
     animation: 0.5s enterPhoto;
 }
 
+.container-edit-user::-webkit-scrollbar {
+    height: 3px;
+    width: 3px;
+}
+
 .is-dragging {
     background-color: hsla(0, 0%, 38%, 0.5);
     border: white 3px dashed;

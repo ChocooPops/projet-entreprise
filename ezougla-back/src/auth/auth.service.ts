@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -17,12 +17,17 @@ export class AuthService {
                 email: email
             }
         });
-        if (user && user.role !== 'NOT_ACTIVATE' && await bcrypt.compare(password, user.password)) {
-            return {
-                access_token: await this.generateJwt(user)
-            };
+
+        if (user && await bcrypt.compare(password, user.password)) {
+            if (user.role !== 'NOT_ACTIVATE') {
+                return {
+                    access_token: await this.generateJwt(user)
+                };
+            } else {
+                throw new UnauthorizedException('Invalid credentials');
+            }
         } else {
-            throw new UnauthorizedException('Invalid credentials');
+            throw new NotFoundException()
         }
     }
 

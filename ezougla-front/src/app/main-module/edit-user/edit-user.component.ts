@@ -41,6 +41,11 @@ export class EditUserComponent {
   isDragging: boolean = false;
 
   private handleFile(file: File): void {
+    if (!file.type.startsWith('image/')) {
+      console.warn('Seuls les fichiers image sont acceptés.');
+      return;
+    }
+
     const reader = new FileReader();
 
     reader.onload = () => {
@@ -50,8 +55,11 @@ export class EditUserComponent {
         idProjects: 'garzgerththt',
         file: base64,
         name: file.name
-      }
-      this.userService.fetchChangeProfilPhotoPersonalized(createFile).pipe(take(1)).subscribe(() => { });
+      };
+
+      this.userService.fetchChangeProfilPhotoPersonalized(createFile)
+        .pipe(take(1))
+        .subscribe(() => { });
     };
 
     reader.onerror = (error) => {
@@ -69,9 +77,14 @@ export class EditUserComponent {
 
   onFileDropped(event: DragEvent): void {
     event.preventDefault();
-    if (event.dataTransfer && event.dataTransfer.files.length > 0) {
-      this.handleFile(event.dataTransfer.files[0]);
+    const file = event.dataTransfer?.files[0];
+
+    if (file && file.type.startsWith('image/')) {
+      this.handleFile(file);
+    } else {
+      console.warn('Seuls les fichiers image sont acceptés.');
     }
+
     this.isDragging = false;
   }
 

@@ -47,6 +47,10 @@ export class ConversationsComponent {
   addedFile: CreateFileModel[] = [];
   modeActivate: boolean = true;
 
+  loadingResponseApiMistral: boolean = false;
+  loadingForm: boolean = false;
+  messageLoading: MessageModel[] = [];
+
   constructor(private fb: FormBuilder,
     private projectService: ProjectService,
     private conversationService: ConversationService,
@@ -61,6 +65,7 @@ export class ConversationsComponent {
         this.currentProjectId = projectId;
         this.currentConversationId = undefined;
         this.addedFile = [];
+        this.loadingForm = false;
         this.conversationService.fetchAllConversation(this.currentProjectId).subscribe(() => { })
         this.conversationService.getConversationsSubject().subscribe((conversations: ConversationModel[]) => {
           this.conversations = conversations.filter((conv) => conv.projectId === this.currentProjectId);
@@ -97,10 +102,6 @@ export class ConversationsComponent {
     });
   }
 
-  loadingResponseApiMistral: boolean = false;
-  loadingForm: boolean = false;
-  messageLoading: MessageModel[] = [];
-
   setStateForm(state: boolean): void {
     this.loadingForm = state;
     if (this.loadingForm) {
@@ -114,9 +115,9 @@ export class ConversationsComponent {
   sendMessage(event: Event) {
     event.preventDefault();
     const message = this.formGroupMessage.get('inputMessage')?.value;
-    if (!this.loadingForm) {
+    if (!this.loadingForm && this.currentConversationId) {
       if (this.modeActivate) {
-        if (message && message.trim() && this.currentConversationId) {
+        if (message && message.trim()) {
           this.setStateForm(true)
           this.conversationService.fetchSendNewMessage(this.currentConversationId, message).subscribe(() => {
             this.formGroupMessage.get('inputMessage')?.reset();
@@ -128,7 +129,7 @@ export class ConversationsComponent {
           })
         }
         this.setStateForm(true)
-        if (this.addedFile.length > 0 && this.currentConversationId) {
+        if (this.addedFile.length > 0) {
           this.conversationService.fetchSendNewFileMessage(this.currentConversationId, this.addedFile).subscribe(() => {
             this.addedFile = [];
             this.setScrollingBottom();
@@ -138,10 +139,10 @@ export class ConversationsComponent {
           })
         }
       } else {
-        if (message && message.trim() && this.currentConversationId) {
+        if (message && message.trim()) {
           this.setStateForm(true)
           this.loadingResponseApiMistral = true;
-          if (this.currentUser && this.currentConversationId) {
+          if (this.currentUser) {
             this.messageLoading.push({
               id: '0',
               content: message,
@@ -152,13 +153,13 @@ export class ConversationsComponent {
             this.addedFile.forEach((file) => {
               if (this.currentUser && this.currentConversationId) {
                 this.messageLoading.push({
-                  id: file.idProjects,
+                  id: this.getIdFile(),
                   content: '',
                   conversationId: this.currentConversationId,
                   type: 'FILE',
                   author: this.currentUser,
                   file: {
-                    id: file.idProjects,
+                    id: this.getIdFile(),
                     name: file.name,
                     url: 'vide',
                     type: file.name.split('.')[1]
@@ -240,6 +241,7 @@ export class ConversationsComponent {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
       this.handleFile(input.files[0]);
+      this.focusOnInputMessage();
     }
   }
 

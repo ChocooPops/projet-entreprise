@@ -72,6 +72,7 @@
 form {
     height: 100%;
     position: relative;
+    overflow: hidden;
 }
 
 textarea {
@@ -111,7 +112,6 @@ textarea:focus {
     p {
         margin: 0;
         font-size: 14px;
-
     }
 }
 
@@ -251,14 +251,23 @@ p {
     gap: 5px;
     max-width: 100%;
     overflow-x: auto;
-    bottom: 80px;
+    bottom: 75px;
     left: 20px;
     z-index: 999999;
+    background-color: #202020;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.container-files::-webkit-scrollbar {
+    height: 2px;
+    width: 2px;
 }
 
 .container-all-messages {
     height: 100%;
     width: 100%;
+    overflow-x: hidden;
     overflow-y: auto;
     scroll-behavior: smooth;
     padding-inline: 20px;

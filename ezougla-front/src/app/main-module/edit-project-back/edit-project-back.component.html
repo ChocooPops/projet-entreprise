@@ -1,6 +1,7 @@
 <div class="container-edit-projet-page" (click)="onClickPage()">
 
-    <div class="container-edit" (click)="onClick($event)">
+    <div class="container-edit" (click)="onClick($event)" (drop)="onFileDropped($event)" (dragover)="onDragOver($event)"
+        (dragleave)="onDragLeave($event)" [ngClass]="{'is-dragging' : isDragging}">
         <p> Choose Icon </p>
         <div class="container-photo">
             @for(photo of photos; track photo) {
@@ -9,6 +10,11 @@
                 <img [src]="photo.blob">
             </div>
             }
+        </div>
+        <input type="file" #fileInput (change)="onFileSelected($event)" style="display: none;" accept="image/*" />
+        <div class="photo-input" (click)="triggerFileInput()">
+            <img [src]="srcInputPicture">
+            <p class="description">Insérer vos propres images</p>
         </div>
     </div>
 

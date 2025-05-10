@@ -10,7 +10,8 @@
             @for(assignedUser of assignedUsers; track assignedUser.id) {
             <div class="assigned-user" (mouseenter)="onMouseEnter(assignedUser.id)" (mouseleave)="onMouseLeave()">
                 <div class="pp">
-                    @if(isUserHovering === assignedUser.id && (user?.role === 'DIRECTOR' || user?.role === 'MANAGER')) {
+                    @if(isUserHovering === assignedUser.id && (currentUser?.role === 'DIRECTOR' || currentUser?.role ===
+                    'MANAGER')) {
                     <img [src]="srcDelete" class="img-delete" (click)="unassignedUserByIdIntoProject(assignedUser.id)">
                     } @else {
                     <img [src]="assignedUser.profilePhoto" class="img-pp">
@@ -27,7 +28,7 @@
                 @if(isClickOnAddUser) {
                 <div class="container-list-all-user">
                     @if (usersActivate) {
-                    @for (userActivate of usersActivate; track userActivate.id) {
+                    @for (userActivate of getAllUsersActivateNotAssignedToProject(); track userActivate.id) {
                     <div class="assigned-user" [ngClass]="{'user-hovering' : true}"
                         (click)="assignedUserByIdIntoProject(userActivate.id)">
                         <div class="pp">
@@ -152,7 +153,7 @@
 <div class="container-list-all-user" [ngClass]="{'user-available' : true}" [style.left.px]="offsetX"
     [style.top.px]="offsetY">
     @if (usersActivate) {
-    @for (userActivate of assignedUsers; track userActivate.id) {
+    @for (userActivate of getAllUsersIntoProjectNotAssignedToTask(); track userActivate.id) {
     <div class="assigned-user" [ngClass]="{'user-hovering' : true}" (click)="addUserToTask(userActivate.id, $event)">
         <div class="pp">
             <img class="img-pp" style="animation: none;" [src]="userActivate.profilePhoto">

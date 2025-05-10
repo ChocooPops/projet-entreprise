@@ -28,6 +28,11 @@
     animation: 0.5s enterPhoto;
 }
 
+.container-edit::-webkit-scrollbar {
+    height: 3px;
+    width: 3px;
+}
+
 p {
     margin: 0;
     font-size: 30px;
@@ -93,4 +98,41 @@ p {
     100% {
         opacity: 1;
     }
+}
+
+.is-dragging {
+    background-color: hsla(0, 0%, 38%, 0.5);
+    border: white 3px dashed;
+}
+
+
+.photo-input {
+    height: 100px;
+    width: 100px;
+    border: 2px dashed white;
+    border-radius: 5px;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    cursor: pointer;
+    transition: 0.3s background-color;
+    padding: 5px;
+    gap: 8px;
+
+    img {
+        height: 40px;
+        width: 40px;
+    }
+
+    &:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+    }
+
+}
+
+.description {
+    font-size: 10px;
+    font-weight: normal;
+    text-align: center;
 }

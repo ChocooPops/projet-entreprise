@@ -74,7 +74,11 @@ export class UserService {
   }
 
   async getAllUsers(): Promise<User[]> {
-    return await this.prisma.user.findMany({});
+    return await this.prisma.user.findMany({
+      orderBy: {
+        createdAt: 'asc',
+      },
+    });
   }
 
   async modifyRoleUser(roleAdmin: Role, idUser: string, newRole: Role): Promise<User> {

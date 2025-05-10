@@ -131,3 +131,7 @@ button:hover {
     transform: translateY(-50%);
     cursor: pointer;
 }
+
+.message {
+    text-align: center;
+}

@@ -141,4 +141,13 @@ export class ConversationService {
     )
   }
 
+  deleteMessagesByFileId(fileIdToDelete: string): void {
+    const updatedConversations = this.conversationsSubject.value.map(convo => {
+      const filteredMessages = convo.messages.filter(msg => msg.file?.id !== fileIdToDelete);
+      return { ...convo, messages: filteredMessages };
+    });
+
+    this.conversationsSubject.next(updatedConversations);
+  }
+
 }

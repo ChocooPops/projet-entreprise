@@ -11,7 +11,7 @@
             </div>
             }
         </div>
-        <input type="file" #fileInput (change)="onFileSelected($event)" style="display: none;" />
+        <input type="file" #fileInput (change)="onFileSelected($event)" style="display: none;" accept="image/*" />
         <div class="photo-input" (click)="triggerFileInput()">
             <img [src]="srcInputPicture">
             <p class="description">Insérer vos propres images</p>

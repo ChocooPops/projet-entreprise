@@ -18,6 +18,9 @@ export class TaskService {
         include: {
           assignedUsers: true,
         },
+        orderBy: {
+          createdAt: 'asc',
+        },
       });
       return tasks;
     } catch (error) {

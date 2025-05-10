@@ -46,7 +46,7 @@ async function main() {
             name: 'CRM Migration',
             description: 'Migration du CRM vers un système plus moderne',
             tasks: ['Export des données', 'Nettoyage des doublons', 'Import dans nouveau CRM', 'Formation des équipes'],
-            srcBackground: 'uploads/projects/back-2.jpg'
+            srcBackground: 'uploads/projects/back-10.jpg'
         },
         {
             name: 'Mobile App V2',
@@ -64,13 +64,13 @@ async function main() {
             name: 'Refonte Site Web',
             description: 'Nouveau site vitrine pour l’entreprise',
             tasks: ['Choix du CMS', 'Design maquettes', 'Mise en ligne'],
-            srcBackground: 'uploads/projects/back-11.jpg'
+            srcBackground: 'uploads/projects/back-12.jpg'
         },
         {
             name: 'Automatisation RH',
             description: 'Automatiser la gestion des congés',
             tasks: ['Analyse des besoins', 'Développement workflow', 'Tests'],
-            srcBackground: 'uploads/projects/back-10.jpg'
+            srcBackground: 'uploads/projects/back-11.jpg'
         },
         {
             name: 'Déploiement DevOps',
@@ -88,7 +88,7 @@ async function main() {
             name: 'Projet R&D IA',
             description: 'Prototype d’outil d’analyse d’image par IA',
             tasks: ['Collecte de données', 'Entraînement du modèle', 'Évaluation des résultats'],
-            srcBackground: 'uploads/projects/back-12.jpg'
+            srcBackground: 'uploads/projects/back-2.jpg'
         },
         {
             name: 'Support Client 24/7',

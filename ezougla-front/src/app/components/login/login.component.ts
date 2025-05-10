@@ -26,8 +26,8 @@ export class LoginComponent {
   constructor(private fb: FormBuilder,
     private authService: AuthService,
     private router: Router,
-    private userService : UserService,
-    private projectService : ProjectService
+    private userService: UserService,
+    private projectService: ProjectService
   ) { }
 
   ngOnInit(): void {
@@ -53,7 +53,13 @@ export class LoginComponent {
           this.router.navigate(['main']);
         },
         error: err => {
-          this.message = 'Identifiant ou mots de passe invalide';
+          if (err.status === 401) {
+            this.message = "Votre compte n'est pas activé ou a été désactivé";
+          } else if (err.status === 404) {
+            this.message = 'Identifiant ou mot de passe incorrect.';
+          } else {
+            this.message = 'Une erreur est survenue. Veuillez réessayer plus tard.';
+          }
         }
       })
     } else {

@@ -4,6 +4,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { Role } from '@prisma/client';
 import { UploadFileService } from 'src/common/services/upload-file.service';
 import { CreateFileModel } from 'src/file/dto/create-file.interface';
+import { File } from '@prisma/client';
 
 @Injectable()
 export class ProjectService {
@@ -45,9 +46,11 @@ export class ProjectService {
         include: {
           assignedUsers: true,
         },
+        orderBy: {
+          createdAt: 'asc',
+        },
       });
     }
-
     return await this.prismaService.project.findMany({
       where: {
         assignedUsers: {
@@ -90,25 +93,57 @@ export class ProjectService {
     }
   }
 
-  async deleteProjectById(id: string, role: Role): Promise<any> {
+  async deleteProjectById(projectId: string, role: Role): Promise<Project> {
     if (role === 'DIRECTOR' || role === 'MANAGER') {
-      await this.prismaService.task.deleteMany({
-        where: { projectId: id },
+      const project = await this.prismaService.project.findUnique({
+        where: { id: projectId },
+        select: { id: true }
       });
-      await this.prismaService.conversation.deleteMany({
-        where: { projectId: id },
+
+      if (!project) {
+        throw new NotFoundException(`Le projet avec l'id ${projectId} n'existe pas.`);
+      }
+      const conversations = await this.prismaService.conversation.findMany({
+        where: { projectId },
+        select: { id: true }
+      });
+      const conversationIds = conversations.map(c => c.id);
+
+      const files: File[] = await this.prismaService.file.findMany({
+        where: {
+          projectId: project.id
+        }
+      })
+
+      for (const file of files) {
+        await this.uploadFileService.deleteFileOrFolder(file.url);
+      }
+
+      await this.prismaService.message.deleteMany({
+        where: { conversationId: { in: conversationIds } }
       });
       await this.prismaService.file.deleteMany({
-        where: { projectId: id },
+        where: {
+          OR: [
+            { projectId },
+            { conversationId: { in: conversationIds } }
+          ]
+        }
       });
+      await this.prismaService.task.deleteMany({
+        where: { projectId }
+      });
+      await this.prismaService.conversation.deleteMany({
+        where: { projectId }
+      });
+
       return await this.prismaService.project.delete({
-        where: { id: id }
-      })
+        where: { id: projectId }
+      });
     } else {
       throw new UnauthorizedException();
     }
   }
-
 
   async updateBackgroundImage(id: string, role: Role, url: string): Promise<any> {
     if (role === 'DIRECTOR' || role === 'MANAGER') {

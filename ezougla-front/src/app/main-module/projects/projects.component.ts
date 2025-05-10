@@ -111,6 +111,11 @@ export class ProjectsComponent {
   isDragging: boolean = false;
 
   private handleFile(file: File): void {
+    if (!file.type.startsWith('image/')) {
+      console.warn('Seuls les fichiers image sont acceptés.');
+      return;
+    }
+
     const reader = new FileReader();
 
     reader.onload = () => {

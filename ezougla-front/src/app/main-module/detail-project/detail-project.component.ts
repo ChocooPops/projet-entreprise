@@ -22,10 +22,13 @@ import { SyncColumnWidthDirective } from '../sync-column-width.directive';
 })
 export class DetailProjectComponent {
 
+  currentUser: UserModel | undefined;
   usersActivate: UserModel[] = [];
+  assignedUsers: UserModel[] = [];
+
   tasks: TaskModel[] = [];
   files: FileModel[] = [];
-  user: UserModel | undefined;
+
   subscriptionTask !: Subscription;
   subscriptionFile !: Subscription;
   subscriptionProject !: Subscription;
@@ -38,7 +41,6 @@ export class DetailProjectComponent {
   srcAddTask: string = './add-task.png';
   srcDeleteTask: string = './remove-task.png';
   srcChangeStatus: string = './change-status.png';
-  assignedUsers: UserModel[] = [];
 
   formGroupDescription !: FormGroup;
   taskStatus: string[] = [
@@ -84,7 +86,7 @@ export class DetailProjectComponent {
     });
     this.subscriptionUser =
       this.userService.getUserSubject().subscribe(user => {
-        this.user = user;
+        this.currentUser = user;
         this.loadFormDescription();
       })
   }
@@ -110,7 +112,7 @@ export class DetailProjectComponent {
     this.formGroupDescription = this.fb.group({
       inputDescription: [this.project?.description],
     });
-    if (this.user && (this.user.role === 'DIRECTOR' || this.user.role === 'MANAGER')) {
+    if (this.currentUser && (this.currentUser.role === 'DIRECTOR' || this.currentUser.role === 'MANAGER')) {
       this.formGroupDescription.get('inputDescription')?.enable();
     } else {
       this.formGroupDescription.get('inputDescription')?.disable();
@@ -211,7 +213,7 @@ export class DetailProjectComponent {
 
   onClicAddNewUser(event: MouseEvent): void {
     event.stopPropagation();
-    if (this.user?.role === 'DIRECTOR' || this.user?.role === 'MANAGER') {
+    if (this.currentUser?.role === 'DIRECTOR' || this.currentUser?.role === 'MANAGER') {
       this.isClickOnAddUser = true;
     }
     this.currentTaskClickedForStatus = '';
@@ -343,6 +345,30 @@ export class DetailProjectComponent {
       el.style.height = el.scrollHeight + 'px';
     });
     this.currentTaskClickedForUsers = undefined;
+  }
+
+  getAllUsersActivateNotAssignedToProject(): UserModel[] {
+    return this.usersActivate.filter(
+      user => !this.assignedUsers.some(assigned => assigned.id === user.id)
+    );
+  }
+
+  getAllUsersIntoProjectNotAssignedToTask(): UserModel[] {
+    if (this.currentTaskClickedForUsers) {
+      const taskUsers: UserModel[] | undefined = this.tasks.find(
+        (task) => task.id === this.currentTaskClickedForUsers
+      )?.assignedUsers;
+
+      if (taskUsers) {
+        return this.assignedUsers.filter(
+          user => !taskUsers.some(taskUser => taskUser.id === user.id)
+        );
+      } else {
+        return [...this.assignedUsers];
+      }
+    } else {
+      return [];
+    }
   }
 
 }
