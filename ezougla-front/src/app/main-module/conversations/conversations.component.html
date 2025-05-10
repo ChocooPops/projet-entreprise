@@ -1,0 +1,56 @@
+<div class="container-all-conversation">
+
+    <div class="container-list-all-conversation">
+        <div class="separation-bar"></div>
+        <div class="container-title">
+            <p> Vos conversations : </p>
+            <div class="container-img" (click)="addNewConversation()">
+                <img [src]="srcAddConversation" title="ajouter une conversation">
+            </div>
+        </div>
+        <div class="container-conversations">
+            @for(conversation of conversations; track conversation.id) {
+            <div class="conversation" [ngClass]="{'grey-back' : conversation.id === currentConversationId }"
+                (click)="onClickChangeConversation(conversation.id)">
+                <input [value]="conversation.title" (blur)="onBlurConversation(conversation.id, $event)">
+                <img [src]="srcRemoveConc" (click)="onClickDeleteConv(conversation.id)"
+                    title="supprimer la conversation">
+            </div>
+            }
+        </div>
+    </div>
+
+    <div class="container-one-conversation" [ngClass]="{'is-dragging' : isDragging}" (drop)="onFileDropped($event)"
+        (dragover)="onDragOver($event)" (dragleave)="onDragLeave($event)">
+        <div class="container-conversation">
+
+            <div class="container-all-messages" #messagesContainer>
+                <app-messages [messages]="messages" [currentUser]="currentUser"></app-messages>
+                @if(loadingResponseApiMistral) {
+                <app-messages [messages]="messageLoading" [currentUser]="currentUser"></app-messages>
+                }
+            </div>
+
+            <div class="container-input-message">
+                <div class="container-files">
+                    @for (file of addedFile; track file.idProjects) {
+                    <app-file [createFile]="file" (emitRemoveCreateFile)="deleteFileBeforeSending($event)"></app-file>
+                    }
+                </div>
+                <form [formGroup]="formGroupMessage">
+                    <textarea (keydown.enter)="sendMessage($event)" (input)="autoResize($event)" rows="1"
+                        formControlName="inputMessage" #inputMessage> </textarea>
+                    <div class="container-button-sender">
+                        <img class="button-file" [src]="srcInputFile" (click)="triggerFileInput()"
+                            title="joindre un fichier">
+                        <img class="button-api" [src]="srcIaMessage" (click)="onClickModeApiMistral()"
+                            [ngClass]="{'back-api-blue' : !modeActivate}" title="communiquer avec mistral">
+                        <img class="button-normal" [src]="srcTextMessage" (click)="onClickModeNormalUser()"
+                            [ngClass]="{'back-normal-red' : modeActivate}" title="discussion normale">
+                    </div>
+                    <input type="file" #fileInput (change)="onFileSelected($event)" style="display: none;" />
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

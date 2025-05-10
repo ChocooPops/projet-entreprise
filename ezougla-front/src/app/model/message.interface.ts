@@ -5,8 +5,8 @@ export interface MessageModel {
     id: string,
     content: string,
     conversationId: string,
-    type: 'TEXT_USER' | 'TEXT_AI' | 'FILE',
+    type: 'TEXT_USER' | 'TEXT_AI_SUCCESS' | 'TEXT_AI_ERROR' | 'FILE',
     author: UserModel,
-    createdAt: Date,
-    file: FileModel
+    createdAt?: Date,
+    file?: FileModel
 }

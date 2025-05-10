@@ -11,11 +11,11 @@ import { Router } from '@angular/router';
 import { DetailProjectComponent } from '../detail-project/detail-project.component';
 import { CreateFileModel } from '../../model/create-file.interface';
 import { NgClass } from '@angular/common';
-import { MessageComponent } from '../message/message.component';
+import { ConversationsComponent } from '../conversations/conversations.component';
 
 @Component({
   selector: 'app-projects',
-  imports: [ReactiveFormsModule, DetailProjectComponent, NgClass, MessageComponent],
+  imports: [ReactiveFormsModule, DetailProjectComponent, NgClass, ConversationsComponent],
   templateUrl: './projects.component.html',
   styleUrl: './projects.component.css'
 })

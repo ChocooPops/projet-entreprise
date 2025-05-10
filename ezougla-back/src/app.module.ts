@@ -11,11 +11,13 @@ import { AuthModule } from './auth/auth.module';
 import { JwtAuthGuard } from './auth/jwt-auth.guard';
 import { APP_GUARD } from '@nestjs/core';
 import { UploadController } from './upload/upload.controller';
+import { HttpModule } from '@nestjs/axios';
+import { MistralApiService } from './common/services/msitral-api.service';
 
 @Module({
-  imports: [TaskModule, AuthModule, ProjectModule, UserModule, FileModule, ConversationModule, MessageModule],
+  imports: [TaskModule, AuthModule, HttpModule, ProjectModule, UserModule, FileModule, ConversationModule, MessageModule],
   controllers: [AppController, UploadController],
-  providers: [AppService,
+  providers: [AppService, MistralApiService,
     {
       provide: APP_GUARD,
       useClass: JwtAuthGuard,

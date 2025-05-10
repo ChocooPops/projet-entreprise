@@ -10,16 +10,26 @@ import { UserService } from '../../services/user/user.service';
 import { UserModel } from '../../model/user.interface';
 import { CreateFileModel } from '../../model/create-file.interface';
 import { FileComponent } from '../file/file.component';
+import { MessagesComponent } from '../messages/messages.component';
 
 @Component({
-  selector: 'app-message',
-  imports: [ReactiveFormsModule, NgClass, FileComponent],
-  templateUrl: './message.component.html',
-  styleUrl: './message.component.css'
+  selector: 'app-conversations',
+  imports: [ReactiveFormsModule, NgClass, FileComponent, MessagesComponent],
+  templateUrl: './conversations.component.html',
+  styleUrl: './conversations.component.css'
 })
-export class MessageComponent {
+export class ConversationsComponent {
 
-  @ViewChild('messagesContainer') private messagesContainer!: ElementRef;
+  @ViewChild('messagesContainer') messagesContainer!: ElementRef;
+  @ViewChild('inputMessage') inputMessageRef!: ElementRef<HTMLInputElement>;
+
+  public setScrollingBottom(): void {
+    setTimeout(() => {
+      if (this.messagesContainer) {
+        this.messagesContainer.nativeElement.scrollTop = this.messagesContainer.nativeElement.scrollHeight;
+      }
+    }, 100);
+  }
 
   srcAddConversation: string = './add-conversation.png';
   srcSendMessage: string = './send-message.png';
@@ -31,20 +41,17 @@ export class MessageComponent {
   currentConversationId: string | undefined;
   currentUser: UserModel | undefined;
   srcRemoveConc: string = './remove-conv.png';
-  srcAnyConv: string = './any-conv.svg';
-  srcStartConv: string = './start-conv.svg';
   srcIaMessage: string = './ia-message.png';
   srcTextMessage: string = './send-message.png';
   srcInputFile: string = './attached.png';
   addedFile: CreateFileModel[] = [];
-
+  modeActivate: boolean = true;
 
   constructor(private fb: FormBuilder,
     private projectService: ProjectService,
     private conversationService: ConversationService,
     private userService: UserService
   ) {
-
   }
 
   ngOnInit(): void {
@@ -90,29 +97,97 @@ export class MessageComponent {
     });
   }
 
+  loadingResponseApiMistral: boolean = false;
+  loadingForm: boolean = false;
+  messageLoading: MessageModel[] = [];
+
+  setStateForm(state: boolean): void {
+    this.loadingForm = state;
+    if (this.loadingForm) {
+      this.formGroupMessage.disable();
+    } else {
+      this.formGroupMessage.enable();
+      this.focusOnInputMessage();
+    }
+  }
+
   sendMessage(event: Event) {
     event.preventDefault();
     const message = this.formGroupMessage.get('inputMessage')?.value;
-    if (message && message.trim() && this.currentConversationId) {
-      this.conversationService.fetchSendNewMessage(this.currentConversationId, message).subscribe(() => {
-        this.formGroupMessage.get('inputMessage')?.reset();
-        this.autoResize(event);
-        setTimeout(() => {
-          if (this.messagesContainer) {
-            this.messagesContainer.nativeElement.scrollTop = this.messagesContainer.nativeElement.scrollHeight;
+    if (!this.loadingForm) {
+      if (this.modeActivate) {
+        if (message && message.trim() && this.currentConversationId) {
+          this.setStateForm(true)
+          this.conversationService.fetchSendNewMessage(this.currentConversationId, message).subscribe(() => {
+            this.formGroupMessage.get('inputMessage')?.reset();
+            this.autoResize(event);
+            this.setScrollingBottom();
+            if (this.addedFile.length <= 0) {
+              this.setStateForm(false);
+            }
+          })
+        }
+        this.setStateForm(true)
+        if (this.addedFile.length > 0 && this.currentConversationId) {
+          this.conversationService.fetchSendNewFileMessage(this.currentConversationId, this.addedFile).subscribe(() => {
+            this.addedFile = [];
+            this.setScrollingBottom();
+            if (!this.formGroupMessage.get('inputMessage')?.value || this.formGroupMessage.get('inputMessage')?.value === '') {
+              this.setStateForm(false);
+            }
+          })
+        }
+      } else {
+        if (message && message.trim() && this.currentConversationId) {
+          this.setStateForm(true)
+          this.loadingResponseApiMistral = true;
+          if (this.currentUser && this.currentConversationId) {
+            this.messageLoading.push({
+              id: '0',
+              content: message,
+              conversationId: this.currentConversationId,
+              type: 'TEXT_USER',
+              author: this.currentUser
+            })
+            this.addedFile.forEach((file) => {
+              if (this.currentUser && this.currentConversationId) {
+                this.messageLoading.push({
+                  id: file.idProjects,
+                  content: '',
+                  conversationId: this.currentConversationId,
+                  type: 'FILE',
+                  author: this.currentUser,
+                  file: {
+                    id: file.idProjects,
+                    name: file.name,
+                    url: 'vide',
+                    type: file.name.split('.')[1]
+                  }
+                })
+              }
+            })
+            this.messageLoading.push({
+              id: '1',
+              content: 'Chargement ...',
+              conversationId: this.currentConversationId,
+              type: 'TEXT_AI_SUCCESS',
+              author: this.currentUser
+            })
           }
-        }, 10);
-      })
-    }
-    if (this.addedFile.length > 0 && this.currentConversationId) {
-      this.conversationService.fetchSendNewFileMessage(this.currentConversationId, this.addedFile).subscribe(() => {
-        this.addedFile = [];
-        setTimeout(() => {
-          if (this.messagesContainer) {
-            this.messagesContainer.nativeElement.scrollTop = this.messagesContainer.nativeElement.scrollHeight;
-          }
-        }, 100);
-      })
+          this.setScrollingBottom();
+          this.formGroupMessage.get('inputMessage')?.reset();
+          this.addedFile = [];
+          this.conversationService.fetchSendMessageToMistralAI(this.currentConversationId, message).subscribe(() => {
+            this.formGroupMessage.get('inputMessage')?.reset();
+            this.addedFile = [];
+            this.messageLoading = [];
+            this.autoResize(event);
+            this.loadingResponseApiMistral = false;
+            this.setScrollingBottom();
+            this.setStateForm(false)
+          });
+        }
+      }
     }
   }
 
@@ -140,13 +215,21 @@ export class MessageComponent {
       this.currentConversationId = conversationId;
       this.conversationService.fetchAllMessageByConversation(this.currentConversationId).subscribe((messages) => {
         this.messages = messages
+        this.setScrollingBottom();
       });
     }
   }
 
-
   isDragging: boolean = false;
   fileId: number = 0;
+
+  onClickModeNormalUser(): void {
+    this.modeActivate = true;
+  }
+
+  onClickModeApiMistral(): void {
+    this.modeActivate = false;
+  }
 
   getIdFile(): string {
     this.fileId++;
@@ -205,6 +288,12 @@ export class MessageComponent {
 
   onDragLeave(event: DragEvent): void {
     this.isDragging = false;
+  }
+
+  focusOnInputMessage(): void {
+    if (this.inputMessageRef) {
+      this.inputMessageRef.nativeElement.focus();
+    }
   }
 
 }

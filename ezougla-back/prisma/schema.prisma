@@ -22,7 +22,8 @@ enum TaskStatus {
 
 enum MessageType {
   TEXT_USER
-  TEXT_AI
+  TEXT_AI_SUCCESS
+  TEXT_AI_ERROR
   FILE
 }
 
@@ -102,7 +103,7 @@ model Conversation {
 
 model Message {
   id             String       @id @default(uuid())
-  content        String       @db.VarChar(2000)
+  content        String       @db.VarChar(5000)
   type           MessageType
   conversationId String
   authorId       String?

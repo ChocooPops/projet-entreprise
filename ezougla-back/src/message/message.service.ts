@@ -5,12 +5,14 @@ import { Conversation } from '@prisma/client';
 import { MessageType } from '@prisma/client';
 import { CreateFileModel } from 'src/file/dto/create-file.interface';
 import { UploadFileService } from 'src/common/services/upload-file.service';
+import { MistralApiService } from 'src/common/services/msitral-api.service';
 
 @Injectable()
 export class MessageService {
 
   constructor(private prismaService: PrismaService,
-    private uploadFileService: UploadFileService
+    private uploadFileService: UploadFileService,
+    private mistralApiService: MistralApiService
   ) { }
 
   async createEmptyConversation(projectId: string, authorId: string): Promise<Conversation> {
@@ -52,6 +54,50 @@ export class MessageService {
         file: true
       },
     });
+  }
+
+  async sendMessageToMistralApi(conversationId: string, content: string, authorId: string): Promise<Message[]> {
+    const messages: Message[] = [];
+
+    const userMessage = await this.addMessageToConversationByUser(conversationId, content, authorId);
+    messages.push(userMessage);
+
+    try {
+      const resMistral: any = await this.mistralApiService.fetchSendQuestion(content);
+      const contentMistralMessage: string = resMistral.choices[0].message.content;
+      const messageMistral: Message = await this.prismaService.message.create({
+        data: {
+          content: contentMistralMessage,
+          type: MessageType.TEXT_AI_SUCCESS,
+          conversationId,
+          authorId,
+        },
+        include: {
+          conversation: true,
+          author: true,
+          file: true,
+        },
+      });
+
+      messages.push(messageMistral);
+    } catch (error) {
+      const errorMessage: Message = await this.prismaService.message.create({
+        data: {
+          content: 'Erreur Mistral API : ' + error,
+          type: MessageType.TEXT_AI_ERROR,
+          conversationId,
+          authorId,
+        },
+        include: {
+          conversation: true,
+          author: true,
+          file: true,
+        },
+      });
+
+      messages.push(errorMessage);
+    }
+    return messages;
   }
 
   async addFileMessageIntoConversation(
@@ -112,7 +158,6 @@ export class MessageService {
     }
     return messages;
   }
-
 
   async getConversationsByProjectId(projectId: string): Promise<Conversation[]> {
     return await this.prismaService.conversation.findMany({

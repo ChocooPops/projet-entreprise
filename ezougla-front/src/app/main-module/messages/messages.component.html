@@ -1,0 +1,65 @@
+<div class="container-messages">
+    @if(messages) {
+    @if(messages.length > 0 ) {
+    @for(message of messages; track message.id) {
+
+    @if(currentUser && message.author && currentUser.id == message.author.id && message.type !==
+    'TEXT_AI_SUCCESS' && message.type !== 'TEXT_AI_ERROR')
+    {
+    <div class="placement-message" [ngClass]="{'right-placement' : true}">
+        @if(message.type === 'TEXT_USER') {
+        <div class="message" [ngClass]="{'background-message-user' : true}">
+            <p> {{ message.content }}</p>
+        </div>
+        }@else if (message.file){
+        <app-file [file]="message.file" [displayDeleteButton]="false"></app-file>
+        }
+        <div class="container-pp">
+            <div class="pp">
+                <img [src]="message.author.profilePhoto">
+            </div>
+        </div>
+    </div>
+    }@else {
+    <div class="placement-message" [ngClass]="{'left-placement' : true}">
+        @if(message.type === 'TEXT_AI_SUCCESS' || message.type === 'TEXT_AI_ERROR') {
+        <div class="container-pp">
+            <div class="pp-mistral">
+                <img [src]="srcPpMistral">
+            </div>
+        </div>
+        <div class="message"
+            [ngClass]="{'back-api-blue' : message.type === 'TEXT_AI_SUCCESS', 'back-api-red' : message.type === 'TEXT_AI_ERROR'}">
+            <p> {{ message.content }}</p>
+        </div>
+        }@else {
+        <div class="container-pp">
+            <div class="pp">
+                <img [src]="message.author.profilePhoto">
+            </div>
+        </div>
+        @if(message.type === 'TEXT_USER') {
+        <div class="message" [ngClass]="{'background-massage-other-users' : true}">
+            <p> {{ message.content }}</p>
+        </div>
+        }@else if (message.file){
+        <app-file [file]="message.file" [displayDeleteButton]="false"></app-file>
+        }
+        }
+    </div>
+    }
+    }
+    <div class="div-tmp"></div>
+    }@else {
+    <div class="container-any-conv">
+        <img [src]="srcStartConv">
+        <p>Commencer la conversation</p>
+    </div>
+    }
+    } @else {
+    <div class="container-any-conv">
+        <img [src]="srcAnyConv">
+        <p>Aucune conversation sélectionnée</p>
+    </div>
+    }
+</div>
