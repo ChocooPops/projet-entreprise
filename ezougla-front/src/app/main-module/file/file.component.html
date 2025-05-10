@@ -1,25 +1,38 @@
 @if(file) {
-    <div class="container-file" [ngClass]="{'blue-back' : type === 'document', 'green-back' : type === 'spreadsheet', 'red-back': type === 'pdf'}">
+<div class="container-file"
+    [ngClass]="{'blue-back' : type === 'document', 'green-back' : type === 'spreadsheet', 'red-back': type === 'pdf'}">
 
-        <div class="container-buttons">
-            <div class="container-button" title="supprimer" (click)="onClickDelete()">
-                <img [src]="srcButtonDelete">
-            </div>
-            <div class="container-button" title="aperçu" (click)="onClickApercu()">
-                <img [src]="srcButtonApercu">
-            </div>
-            <div class="container-button" title="telecharger" (click)="onClickDownload()">
-                <img [src]="srcButtonDowload">
-            </div>
+    <div class="container-buttons">
+        @if(displayDeleteButton) {
+        <div class="container-button" title="supprimer" (click)="onClickDelete()">
+            <img [src]="srcButtonDelete">
         </div>
-    
-        <img [src]="srcImage">
-        <p> {{ file.name }}</p>
-    
+        }
+        <div class="container-button" title="aperçu" (click)="onClickApercu()">
+            <img [src]="srcButtonApercu">
+        </div>
+        <div class="container-button" title="telecharger" (click)="onClickDownload()">
+            <img [src]="srcButtonDowload">
+        </div>
     </div>
-}@else {
-    <div class="container-file" [ngClass]="{'new-file' : true}">
-        <img [src]="srcNewFile">
-        <p> Insérer un fichier </p>
+    <img [src]="srcImage">
+    <p> {{ file.name }}</p>
+</div>
+}@else if(createFile) {
+<div class="container-file"
+    [ngClass]="{'blue-back' : type === 'document', 'green-back' : type === 'spreadsheet', 'red-back': type === 'pdf'}">
+    <div class="container-buttons">
+        <div class="container-button" title="supprimer" (click)="onClickRemoveCreateFile()">
+            <img [src]="srcButtonDelete">
+        </div>
     </div>
+    <img [src]="srcImage">
+    <p> {{ createFile.name }}</p>
+</div>
+
+} @else {
+<div class="container-file" [ngClass]="{'new-file' : true}">
+    <img [src]="srcNewFile">
+    <p> Insérer un fichier </p>
+</div>
 }

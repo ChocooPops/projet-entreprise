@@ -5,47 +5,91 @@
         <div class="container-title">
             <p> Vos conversations : </p>
             <div class="container-img" (click)="addNewConversation()">
-                <img [src]="srcAddConversation">
+                <img [src]="srcAddConversation" title="ajouter une conversation">
             </div>
         </div>
         <div class="container-conversations">
-
             @for(conversation of conversations; track conversation.id) {
-                <div class="conversation" [ngClass]="{'grey-back' : conversation.id === currentConversationId }" (click)="onClickChangeConversation(conversation.id)">
-                    <p> {{ conversation.title }} </p>
-                </div>
+            <div class="conversation" [ngClass]="{'grey-back' : conversation.id === currentConversationId }"
+                (click)="onClickChangeConversation(conversation.id)">
+                <input [value]="conversation.title" (blur)="onBlurConversation(conversation.id, $event)">
+                <img [src]="srcRemoveConc" (click)="onClickDeleteConv(conversation.id)"
+                    title="supprimer la conversation">
+            </div>
             }
         </div>
     </div>
 
-    <div class="container-one-conversation">
-
+    <div class="container-one-conversation" [ngClass]="{'is-dragging' : isDragging}" (drop)="onFileDropped($event)"
+        (dragover)="onDragOver($event)" (dragleave)="onDragLeave($event)">
         <div class="container-conversation">
-            <div class="container-messages">
+            <div class="container-messages" #messagesContainer>
                 @if(messages) {
-                    @for(message of messages; track message.id) {
-                        @if(currentUser && message.author && currentUser.id == message.author.id) {
-                            <div class="placement-message" [ngClass]="{'right-placement' : true}">
-                                <div class="message" [ngClass]="{'background-message-user' : true}">
-                                    <p> {{ message.content }}</p>
-                                </div>
-                            </div>
-                        }@else {
-                            <div class="placement-message" [ngClass]="{'left-placement' : true}">
-                                <div class="message" [ngClass]="{'background-massage-other-users' : true}">
-                                    <p> {{ message.content }}</p>
-                                </div>
-                            </div>
-                        }
+                @if(messages.length > 0 ) {
+                @for(message of messages; track message.id) {
+
+                @if(currentUser && message.author && currentUser.id == message.author.id) {
+                <div class="placement-message" [ngClass]="{'right-placement' : true}">
+                    @if(message.type === 'TEXT_USER') {
+                    <div class="message" [ngClass]="{'background-message-user' : true}">
+                        <p> {{ message.content }}</p>
+                    </div>
+                    }@else if (message.file){
+                    <app-file [file]="message.file" [displayDeleteButton]="false"></app-file>
                     }
+                    <div class="container-pp">
+                        <div class="pp">
+                            <img [src]="message.author.profilePhoto">
+                        </div>
+                    </div>
+                </div>
+                }@else {
+                <div class="placement-message" [ngClass]="{'left-placement' : true}">
+                    <div class="container-pp">
+                        <div class="pp">
+                            <img [src]="message.author.profilePhoto">
+                        </div>
+                    </div>
+                    @if(message.type === 'TEXT_USER') {
+                    <div class="message" [ngClass]="{'background-message-user' : true}">
+                        <p> {{ message.content }}</p>
+                    </div>
+                    }@else if (message.file){
+                    <app-file [file]="message.file" [displayDeleteButton]="false"></app-file>
+                    }
+                </div>
+                }
+                }
+                }@else {
+                <div class="container-any-conv">
+                    <img [src]="srcStartConv">
+                    <p>Commencer une conversation</p>
+                </div>
+                }
+                } @else {
+                <div class="container-any-conv">
+                    <img [src]="srcAnyConv">
+                    <p>Aucune conversation sélectionnée</p>
+                </div>
                 }
             </div>
             <div class="container-input-message">
+                <div class="container-files">
+                    @for (file of addedFile; track file.idProjects) {
+                    <app-file [createFile]="file" (emitRemoveCreateFile)="deleteFileBeforeSending($event)"></app-file>
+                    }
+                </div>
                 <form [formGroup]="formGroupMessage">
-                    <textarea (keydown.enter)="sendMessage($event)" (input)="autoResize($event)" rows="1" formControlName="inputMessage"> </textarea>
+                    <textarea (keydown.enter)="sendMessage($event)" (input)="autoResize($event)" rows="1"
+                        formControlName="inputMessage"> </textarea>
+                    <div class="container-button-sender">
+                        <img [src]="srcInputFile" (click)="triggerFileInput()">
+                        <img [src]="srcIaMessage">
+                        <img [src]="srcTextMessage">
+                    </div>
+                    <input type="file" #fileInput (change)="onFileSelected($event)" style="display: none;" />
                 </form>
             </div>
         </div>
     </div>
-
 </div>

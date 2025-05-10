@@ -3,7 +3,7 @@ import { ProjectService } from '../../services/project/project.service';
 import { TaskService } from '../../services/task/task.service';
 import { FileService } from '../../services/file/file.service';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { Subscription, take } from 'rxjs';
+import { Subscription, take, tap, switchMap, map, filter } from 'rxjs';
 import { UserService } from '../../services/user/user.service';
 import { UserModel } from '../../model/user.interface';
 import { ProjectModel } from '../../model/project.interface';
@@ -22,7 +22,7 @@ import { SyncColumnWidthDirective } from '../sync-column-width.directive';
 })
 export class DetailProjectComponent {
 
-  usersActivate: UserModel[] | undefined = [];
+  usersActivate: UserModel[] = [];
   tasks: TaskModel[] = [];
   files: FileModel[] = [];
   user: UserModel | undefined;
@@ -58,31 +58,30 @@ export class DetailProjectComponent {
   ) { }
 
   ngOnInit(): void {
-    this.subscriptionProject =
-      this.projectService.getPorjectClicked().subscribe((id) => {
-        this.assignedUsers = []
-        this.projectService.getAllProjectsByUser().subscribe((projects: ProjectModel[]) => {
-          this.project = projects.find((pro) => pro.id === id);
-          this.currentTaskClickedForUsers = undefined;
-          if (this.project) {
-            this.userService.getUserTab().subscribe((usersTab: UserModel[] | undefined) => {
-              this.currentTaskClickedForUsers = undefined;
-              this.usersActivate = usersTab?.filter((item) => item.role !== 'NOT_ACTIVATE');
-              this.assignedUsers = []
-              this.project?.assignedUsers.forEach((user) => {
-                if (this.usersActivate) {
-                  const userTmp = this.usersActivate.find(item => item.id === user.id);
-                  if (userTmp) {
-                    this.assignedUsers.push(userTmp);
-                  }
-                }
-              });
-            });
-          }
-          this.loadFormDescription();
-          this.setTaskAndFile();
-        })
-      })
+    this.subscriptionProject = this.projectService.getPorjectClicked().pipe(
+      tap(() => {
+        this.assignedUsers = [];
+        this.currentTaskClickedForUsers = undefined;
+      }),
+      switchMap((id: string) =>
+        this.projectService.getAllProjectsByUser().pipe(
+          map((projects: ProjectModel[]) => projects.find((pro) => pro.id === id)),
+          tap((project) => {
+            this.project = project;
+            this.loadFormDescription();
+            this.setTaskAndFile();
+          }),
+          filter((project): project is ProjectModel => !!project),
+          switchMap(() => this.userService.getUserTab())
+        )
+      )
+    ).subscribe((usersTab: UserModel[] | undefined) => {
+      this.usersActivate = usersTab?.filter((u) => u.role !== 'NOT_ACTIVATE') || [];
+      this.assignedUsers = this.project?.assignedUsers
+        ?.map((assignedUser) => this.usersActivate.find((u) => u.id === assignedUser.id))
+        .filter((u): u is UserModel => !!u) || [];
+
+    });
     this.subscriptionUser =
       this.userService.getUserSubject().subscribe(user => {
         this.user = user;

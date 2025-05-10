@@ -3,16 +3,20 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { Message } from '@prisma/client';
 import { Conversation } from '@prisma/client';
 import { MessageType } from '@prisma/client';
+import { CreateFileModel } from 'src/file/dto/create-file.interface';
+import { UploadFileService } from 'src/common/services/upload-file.service';
 
 @Injectable()
 export class MessageService {
 
-  constructor(private prismaService: PrismaService) { }
+  constructor(private prismaService: PrismaService,
+    private uploadFileService: UploadFileService
+  ) { }
 
   async createEmptyConversation(projectId: string, authorId: string): Promise<Conversation> {
     return await this.prismaService.conversation.create({
       data: {
-        title : 'Conversation sans nom',
+        title: 'Conversation sans nom',
         projectId,
         authorId,
       },
@@ -24,44 +28,103 @@ export class MessageService {
   }
 
   async updateConversationTitle(conversationId: string, newTitle: string): Promise<Conversation> {
-      return await this.prismaService.conversation.update({
-        where: {
-          id: conversationId,
-        },
-        data: {
-          title: newTitle,
-        },
-      });
+    return await this.prismaService.conversation.update({
+      where: {
+        id: conversationId,
+      },
+      data: {
+        title: newTitle,
+      },
+    });
   }
 
   async addMessageToConversationByUser(conversationId: string, content: string, authorId: string): Promise<Message> {
     return await this.prismaService.message.create({
       data: {
         content,
-        type : MessageType.USER,
+        type: MessageType.TEXT_USER,
         conversationId,
         authorId,
       },
       include: {
         conversation: true,
         author: true,
+        file: true
       },
     });
   }
 
-  async getConversationsByProjectId(projectId: string) : Promise<Conversation[]> {
-      return await this.prismaService.conversation.findMany({
-        where: {
-          projectId: projectId,
-        },
-        include: {
-          author: true,
-          messages: true,
-          files: true,
-        },
-      });
+  async addFileMessageIntoConversation(
+    conversationId: string,
+    files: CreateFileModel[],
+    authorId: string
+  ): Promise<Message[]> {
+    const messages: Message[] = [];
+    const conversation = await this.prismaService.conversation.findUnique({
+      where: { id: conversationId },
+      select: { projectId: true },
+    });
+
+    if (!conversation) {
+      throw new Error('Conversation not found');
+    }
+
+    for (const file of files) {
+      const url = await this.uploadFileService.saveFiletoFile(file.file, file.name);
+      if (url) {
+        const createdFile = await this.prismaService.file.create({
+          data: {
+            name: file.name,
+            url: url,
+            type: this.uploadFileService.getExtensionFromFilename(file.name),
+            uploadedBy: {
+              connect: { id: authorId },
+            },
+            project: {
+              connect: { id: conversation.projectId },
+            },
+            conversationId: conversationId,
+          },
+        });
+        const message = await this.prismaService.message.create({
+          data: {
+            content: '',
+            type: MessageType.FILE,
+            conversation: {
+              connect: { id: conversationId },
+            },
+            author: {
+              connect: { id: authorId },
+            },
+            file: {
+              connect: { id: createdFile.id },
+            },
+          },
+          include: {
+            conversation: true,
+            author: true,
+            file: true,
+          },
+        });
+
+        messages.push(message);
+      }
+    }
+    return messages;
   }
-  
+
+
+  async getConversationsByProjectId(projectId: string): Promise<Conversation[]> {
+    return await this.prismaService.conversation.findMany({
+      where: {
+        projectId: projectId,
+      },
+      include: {
+        author: true,
+      },
+    });
+  }
+
   async getMessagesByConversation(conversationId: string): Promise<Message[]> {
     return await this.prismaService.message.findMany({
       where: {
@@ -72,11 +135,12 @@ export class MessageService {
       },
       include: {
         author: true,
+        file: true
       },
     });
   }
 
-  async deleteConversation(conversationId: string) : Promise<Conversation>{
+  async deleteConversation(conversationId: string): Promise<Conversation> {
     try {
       await this.prismaService.message.deleteMany({
         where: {
@@ -88,10 +152,11 @@ export class MessageService {
           id: conversationId,
         },
       });
-  
+
     } catch (error) {
       throw new UnprocessableEntityException();
     }
   }
+
 
 }

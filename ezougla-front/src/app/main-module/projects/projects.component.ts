@@ -36,7 +36,7 @@ export class ProjectsComponent {
 
   displayEditProject: boolean = true;
   partOfProjectToDisplay: boolean = true;
-  activateAnimationBackground : boolean = false;
+  activateAnimationBackground: boolean = false;
 
 
   constructor(private projectService: ProjectService,
@@ -66,7 +66,7 @@ export class ProjectsComponent {
     });
     this.subscription.add(
       this.userService.getUserSubject().subscribe(user => {
-        this.user = user
+        this.user = user;
         this.loadFormName();
       })
     )

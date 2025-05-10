@@ -64,7 +64,6 @@ export class MenuComponent {
   }
 
   onClickedProject(id: string): void {
-    this.projectService.setProjectClicked(id);
     this.router.navigate(['/main/projects', id]);
   }
 
@@ -73,7 +72,7 @@ export class MenuComponent {
     this.router.navigate(['/login']);
   }
 
-  onClickManageUser() : void {
+  onClickManageUser(): void {
     this.router.navigate(['/main/manage-user']);
   }
 

@@ -38,10 +38,11 @@ export const environment = {
     apiUrlGetFileByProject: 'files-by-project',
     apiUrlCreateFileInProject: 'create-file-in-project',
 
-    apiUrlMessage : 'message',
-    apiUrlGeAllConversationByProject : 'get-all-conversation-by-project',
-    apiUrlGetAllMessagesByConversation : 'get-all-messages-by-conversation',
-    apiUrlCreateEmptyConversation : 'create-empty-conversation',
-    apiUrlUpdateNameConversation : 'update-name',
-    apiUrlAddMessage : 'add-message',
+    apiUrlMessage: 'message',
+    apiUrlGeAllConversationByProject: 'get-all-conversation-by-project',
+    apiUrlGetAllMessagesByConversation: 'get-all-messages-by-conversation',
+    apiUrlCreateEmptyConversation: 'create-empty-conversation',
+    apiUrlUpdateNameConversation: 'update-name',
+    apiUrlAddMessage: 'add-message',
+    apiUrlAddFileMessage: 'add-file',
 }

@@ -3,31 +3,30 @@
     <div class="container-background-project" (drop)="onFileDropped($event)" (dragover)="onDragOver($event)"
         (dragleave)="onDragLeave($event)" [ngClass]="{'is-dragging' : isDragging}">
         @if(project != undefined) {
-            @if(activateAnimationBackground) {
-                <img [src]="project.srcBackground" class="projet-background">
-            }@else {
-                <img [src]="project.srcBackground" class="projet-background">
-            }
+        @if(activateAnimationBackground) {
+        <img [src]="project.srcBackground" class="projet-background">
+        }@else {
+        <img [src]="project.srcBackground" class="projet-background">
+        }
         }
 
         <div class="container-buttons">
             @if(user && (user.role === 'DIRECTOR' || user.role === 'MANAGER')) {
-            <div class="container-button" (click)="onClickDelete()">
+            <div class="container-button" (click)="onClickDelete()" title="supprimer le projet">
                 <img [src]="srcDelete">
             </div>
-            <div class="container-button" (click)="onClickEdit()">
+            <div class="container-button" (click)="onClickEdit()" title="changer l'arrière plan">
                 <img [src]="srcEdit">
             </div>
             }
             <div class="container-button" (click)="displayDetailsProject()"
-                [ngClass]="{'grey-background-color' : partOfProjectToDisplay}">
+                [ngClass]="{'grey-background-color' : partOfProjectToDisplay}" title="détails du projet">
                 <img [src]="srcTask">
             </div>
             <div class="container-button" (click)="displayMessageProject()"
-                [ngClass]="{'grey-background-color' : !partOfProjectToDisplay}">
+                [ngClass]="{'grey-background-color' : !partOfProjectToDisplay}" title="conversations">
                 <img [src]="srcMessage">
             </div>
-
         </div>
 
         <form [formGroup]="formGroupName" class="container-form-name">
@@ -35,7 +34,6 @@
                 (blur)="onInputBlurName()"> </textarea>
         </form>
     </div>
-
 
     @if(partOfProjectToDisplay) {
     <div class="container-project-part-left">

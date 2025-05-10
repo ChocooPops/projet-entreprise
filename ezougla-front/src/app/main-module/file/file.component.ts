@@ -3,6 +3,7 @@ import { FileModel } from '../../model/file.interface';
 import { NgClass } from '@angular/common';
 import { FileService } from '../../services/file/file.service';
 import { take } from 'rxjs';
+import { CreateFileModel } from '../../model/create-file.interface';
 
 @Component({
   selector: 'app-file',
@@ -14,7 +15,13 @@ export class FileComponent {
 
   @Input() file !: FileModel
 
+  @Input() createFile !: CreateFileModel;
+
+  @Input() displayDeleteButton: boolean = true;
+
   @Output() emitRemoveFile = new EventEmitter<FileModel>();
+
+  @Output() emitRemoveCreateFile = new EventEmitter<string>();
 
   srcImage !: string;
   type: string = '';
@@ -27,9 +34,24 @@ export class FileComponent {
   constructor(private fileService: FileService) { }
 
   ngOnInit(): void {
-    console.log(this.file)
     if (this.file) {
       this.type = this.detectFileType(this.file.type);
+      if (this.type === 'document') {
+        this.srcImage = './docs.png';
+      } else if (this.type === 'spreadsheet') {
+        this.srcImage = './xls.png';
+      } else if (this.type === 'image') {
+        this.srcImage = './picture.png';
+      } else if (this.type === 'pdf') {
+        this.srcImage = './pdf.png';
+      } else {
+        this.srcImage = './other.png';
+      }
+    }
+
+    if (this.createFile) {
+      const extension: string = this.createFile.name.split('.')[1];
+      this.type = this.detectFileType(extension);
       if (this.type === 'document') {
         this.srcImage = './docs.png';
       } else if (this.type === 'spreadsheet') {
@@ -70,6 +92,10 @@ export class FileComponent {
     this.fileService.fetchDeleteFile(this.file.id).pipe(take(1)).subscribe((data) => {
       this.emitRemoveFile.emit(data)
     });
+  }
+
+  onClickRemoveCreateFile(): void {
+    this.emitRemoveCreateFile.emit(this.createFile.idProjects);
   }
 
   onClickApercu(): void {
