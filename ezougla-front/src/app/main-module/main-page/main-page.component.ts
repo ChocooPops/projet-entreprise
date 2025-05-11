@@ -5,6 +5,8 @@ import { EditUserComponent } from '../edit-user/edit-user.component';
 import { UserService } from '../../services/user/user.service';
 import { EditProjectBackComponent } from '../edit-project-back/edit-project-back.component';
 import { ProjectService } from '../../services/project/project.service';
+import { AuthService } from '../../services/auth/auth.service';
+import { take } from 'rxjs';
 
 @Component({
   selector: 'app-main-page',
@@ -19,10 +21,13 @@ export class MainPageComponent {
   displayEditProject: boolean = true;
 
   constructor(private userService: UserService,
-    private projectService: ProjectService
+    private projectService: ProjectService,
+    private authService: AuthService
   ) { }
 
   ngOnInit(): void {
+    this.authService.fetchTestAuth().pipe((take(1))).subscribe(() => { })
+
     this.userService.setUser();
     this.userService.fillProfilPhotoBold();
     this.userService.fetchAllUsers().subscribe(() => { });

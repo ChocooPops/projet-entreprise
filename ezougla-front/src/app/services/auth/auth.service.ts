@@ -2,18 +2,22 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environnments/environments';
 import { AuthModel } from '../../model/auth.interface';
-import { catchError, map } from 'rxjs';
+import { catchError, map, Observable, throwError } from 'rxjs';
 import { TokenModel } from '../../model/token.interface';
 import { JwtHelperService } from '@auth0/angular-jwt';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient,
+    private router: Router
+  ) { }
 
-  private readonly apiUrlLogin = `${environment.apiUrl}/${environment.apiUrlAuth}/${environment.apiUrlLogin}`;
+  private readonly apiUrl: string = `${environment.apiUrl}`;
+  private readonly apiUrlLogin: string = `${environment.apiUrl}/${environment.apiUrlAuth}/${environment.apiUrlLogin}`;
   private nameStorageToken: string = `${environment.access_token}`
 
   public fetchLogin(auth: AuthModel) {
@@ -25,6 +29,18 @@ export class AuthService {
         throw error;
       })
     )
+  }
+
+  public fetchTestAuth(): Observable<any> {
+    return this.http.get<any>(this.apiUrl).pipe(
+      catchError(error => {
+        if (error.status === 403 || error.status === 401) {
+          this.logout();
+          this.router.navigate(['/login']);
+        }
+        return throwError(() => error);
+      })
+    );
   }
 
   private jwtHelper = new JwtHelperService();

@@ -33,6 +33,7 @@ model User {
   password           String
   lastName           String
   firstName          String
+  connectionCount    Int            @default(0)
   role               Role
   profilePhoto       String         @default("uploads/user/user-1.png")
   assignedProjects   Project[]      @relation("AssignedUsers")

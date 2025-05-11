@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import { ConsoleLogger, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -17,9 +17,16 @@ export class AuthService {
                 email: email
             }
         });
-
         if (user && await bcrypt.compare(password, user.password)) {
             if (user.role !== 'NOT_ACTIVATE') {
+                await this.prisma.user.update({
+                    where: { id: user.id },
+                    data: {
+                        connectionCount: {
+                            increment: 1,
+                        },
+                    },
+                });
                 return {
                     access_token: await this.generateJwt(user)
                 };
