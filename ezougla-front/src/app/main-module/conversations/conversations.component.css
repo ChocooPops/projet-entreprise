@@ -72,7 +72,6 @@
 form {
     height: 100%;
     position: relative;
-    overflow: hidden;
 }
 
 textarea {
@@ -136,6 +135,43 @@ textarea:focus {
     }
 }
 
+.change-mode-api {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    top: -35px;
+    animation: 0.3s enter-mode;
+    height: 40px;
+    width: 30px;
+    cursor: pointer;
+}
+
+@keyframes enter-mode {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 100%;
+    }
+}
+
+
+.yellow-back {
+    animation: 0.3s enter-mode;
+
+    &:hover {
+        background-color: #FAB14380;
+        border: #DD9A22E8 1px solid;
+    }
+}
+
+.yellow-clicked {
+    background-color: #FAB14380;
+    border: #DD9A22E8 1px solid;
+}
+
+
 .button-normal {
     &:hover {
         background-color: #DE555373;
@@ -149,6 +185,8 @@ textarea:focus {
 }
 
 .button-api {
+    animation: 0.3s enter-mode;
+
     &:hover {
         background-color: #337EA980;
         border: #337EA9E8 1px solid;
@@ -162,12 +200,10 @@ textarea:focus {
 
 .button-file {
     &:hover {
-        background-color: #FAB14380;
-        border: #DD9A22E8 1px solid;
+        background-color: #2D996480;
+        border: #2CA76AE8 1px solid;
     }
 }
-
-
 
 .conversation {
     height: auto;

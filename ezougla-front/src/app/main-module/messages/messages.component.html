@@ -4,11 +4,13 @@
     @for(message of messages; track message.id) {
 
     @if(currentUser && message.author && currentUser.id == message.author.id && message.type !==
-    'TEXT_AI_SUCCESS' && message.type !== 'TEXT_AI_ERROR')
+    'TEXT_AI_ANALYSIS_CONV' && message.type !== 'TEXT_AI_ERROR' && message.type !== 'TEXT_AI_SIMPLE_ANSWER')
     {
     <div class="placement-message" [ngClass]="{'right-placement' : true}">
-        @if(message.type === 'TEXT_USER') {
-        <div class="message" [ngClass]="{'background-message-user' : true}">
+        @if(message.type === 'TEXT_USER_TO_USER' || message.type === 'TEXT_USER_TO_AI' || message.type ===
+        'ASK_ANALYSE_CONV') {
+        <div class="message"
+            [ngClass]="{'background-message-user' : true, 'blue-border' : message.type === 'TEXT_USER_TO_AI', 'yellow-border' : message.type === 'ASK_ANALYSE_CONV'}">
             <p> {{ message.content }}</p>
         </div>
         }@else if (message.file){
@@ -22,14 +24,15 @@
     </div>
     }@else {
     <div class="placement-message" [ngClass]="{'left-placement' : true}">
-        @if(message.type === 'TEXT_AI_SUCCESS' || message.type === 'TEXT_AI_ERROR') {
+        @if(message.type === 'TEXT_AI_SIMPLE_ANSWER' || message.type === 'TEXT_AI_ERROR' || message.type ===
+        'TEXT_AI_ANALYSIS_CONV') {
         <div class="container-pp">
             <div class="pp-mistral">
                 <img [src]="srcPpMistral">
             </div>
         </div>
         <div class="message"
-            [ngClass]="{'back-api-blue' : message.type === 'TEXT_AI_SUCCESS', 'back-api-red' : message.type === 'TEXT_AI_ERROR', 'back-api-loading' : loading}">
+            [ngClass]="{'back-api-blue' : message.type === 'TEXT_AI_SIMPLE_ANSWER', 'back-api-yellow' : message.type === 'TEXT_AI_ANALYSIS_CONV', 'back-api-red' : message.type === 'TEXT_AI_ERROR', 'back-api-loading-blue' : loading && message.type === 'TEXT_AI_SIMPLE_ANSWER', 'back-api-loading-yellow' : loading && message.type === 'TEXT_AI_ANALYSIS_CONV'}">
             <p> {{ message.content }}</p>
         </div>
         }@else {
@@ -38,8 +41,10 @@
                 <img [src]="message.author.profilePhoto">
             </div>
         </div>
-        @if(message.type === 'TEXT_USER') {
-        <div class="message" [ngClass]="{'background-massage-other-users' : true}">
+        @if(message.type === 'TEXT_USER_TO_USER' || message.type === 'TEXT_USER_TO_AI' || message.type ===
+        'ASK_ANALYSE_CONV') {
+        <div class="message"
+            [ngClass]="{'background-massage-other-users' : true, 'blue-border' : message.type === 'TEXT_USER_TO_AI', 'yellow-border' : message.type === 'ASK_ANALYSE_CONV'}">
             <p> {{ message.content }}</p>
         </div>
         }@else if (message.file){

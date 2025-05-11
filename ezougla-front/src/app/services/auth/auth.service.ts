@@ -36,7 +36,9 @@ export class AuthService {
       catchError(error => {
         if (error.status === 403 || error.status === 401) {
           this.logout();
-          this.router.navigate(['/login']);
+          setTimeout(() => {
+            this.router.navigate(['/login']);
+          }, 100)
         }
         return throwError(() => error);
       })

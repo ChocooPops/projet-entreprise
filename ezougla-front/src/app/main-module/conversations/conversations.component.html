@@ -44,10 +44,32 @@
                     <div class="container-button-sender">
                         <img class="button-file" [src]="srcInputFile" (click)="triggerFileInput()"
                             title="joindre un fichier">
+
+                        @if(modeApiMistralActivate) {
                         <img class="button-api" [src]="srcIaMessage" (click)="onClickModeApiMistral()"
-                            [ngClass]="{'back-api-blue' : !modeActivate}" title="communiquer avec mistral">
+                            [ngClass]="{'back-api-blue' : !modeActivate && modeApiMistralActivate}"
+                            title="communiquer avec mistral" (mouseenter)="onMouseEnter()"
+                            (mouseleave)="onMouseLeave()">
+                        }@else {
+                        <img class="yellow-back " [src]="srcConversationsMistral"
+                            [ngClass]="{'yellow-clicked' : !modeActivate && !modeApiMistralActivate}"
+                            (click)="onClickedApiMistralConv()" (mouseenter)="onMouseEnter()"
+                            (mouseleave)="onMouseLeave()" title="envoyer toute la conversation à mistral">
+                        }
                         <img class="button-normal" [src]="srcTextMessage" (click)="onClickModeNormalUser()"
                             [ngClass]="{'back-normal-red' : modeActivate}" title="discussion normale">
+
+                        @if(displayOtherModeApi) {
+                        <div class="change-mode-api" (mouseenter)="onMouseEnter()" (mouseleave)="onMouseLeave()">
+                            @if(modeApiMistralActivate) {
+                            <img class="yellow-clicked" [src]="srcConversationsMistral"
+                                (click)="onClickedApiMistralConv()" title="envoyer toute la conversation à mistral">
+                            }@else {
+                            <img class="back-api-blue" [src]="srcIaMessage" (click)="onClickModeApiMistral()"
+                                title="communiquer avec mistral">
+                            }
+                        </div>
+                        }
                     </div>
                     <input type="file" #fileInput (change)="onFileSelected($event)" style="display: none;" />
                 </form>

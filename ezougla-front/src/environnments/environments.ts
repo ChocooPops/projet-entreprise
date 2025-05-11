@@ -45,5 +45,6 @@ export const environment = {
     apiUrlUpdateNameConversation: 'update-name',
     apiUrlAddMessage: 'add-message',
     apiUrlAddFileMessage: 'add-file',
-    apiUrlSendMessageToMistralAI: 'send-message-to-mistral'
+    apiUrlSendMessageToMistralAI: 'send-message-to-mistral',
+    apiUrlAnalyseConversationByMistral: 'analyse-conversation-by-mistral'
 }

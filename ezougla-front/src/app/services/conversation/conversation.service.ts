@@ -21,6 +21,7 @@ export class ConversationService {
   private apiUrlSendMessage: string = `${environment.apiUrl}/${environment.apiUrlMessage}/${environment.apiUrlAddMessage}`;
   private apiUrlSendFileMessage: string = `${environment.apiUrl}/${environment.apiUrlMessage}/${environment.apiUrlAddFileMessage}`;
   private apiUrlSendMessageToMistral: string = `${environment.apiUrl}/${environment.apiUrlMessage}/${environment.apiUrlSendMessageToMistralAI}`;
+  private apiUrlAnalyseConversationByMistral: string = `${environment.apiUrl}/${environment.apiUrlMessage}/${environment.apiUrlAnalyseConversationByMistral}`;
 
   private conversationsSubject: BehaviorSubject<ConversationModel[]> = new BehaviorSubject<ConversationModel[]>([]);
   private conversations$: Observable<ConversationModel[]> = this.conversationsSubject.asObservable();
@@ -125,6 +126,24 @@ export class ConversationService {
 
   fetchSendNewFileMessage(conversationId: string, files: CreateFileModel[]): Observable<any> {
     return this.http.post<any>(`${this.apiUrlSendFileMessage}/${conversationId}`, { files }).pipe(
+      map((data: MessageModel[]) => {
+        const conversations: ConversationModel[] = this.conversationsSubject.value;
+        const index: number = conversations.findIndex((item) => item.id === conversationId);
+        if (index >= 0) {
+          data.forEach((message) => {
+            conversations[index].messages.push(message);
+          })
+        }
+        this.conversationsSubject.next(conversations);
+      }),
+      catchError((error) => {
+        return of();
+      })
+    )
+  }
+
+  fetchAnalyseConvByMistral(conversationId: string, content: string, files: CreateFileModel[]): Observable<any> {
+    return this.http.post<any>(`${this.apiUrlAnalyseConversationByMistral}/${conversationId}`, { content, files }).pipe(
       map((data: MessageModel[]) => {
         const conversations: ConversationModel[] = this.conversationsSubject.value;
         const index: number = conversations.findIndex((item) => item.id === conversationId);

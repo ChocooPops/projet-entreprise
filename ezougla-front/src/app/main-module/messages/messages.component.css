@@ -97,9 +97,21 @@ p {
     border: #337EA9E8 1px solid;
 }
 
-.back-api-loading {
+.back-api-loading-blue {
     background: linear-gradient(90deg, #337EA980, #337EA9);
     border: #337EA9E8 1px solid;
+    animation: gradientAnimation 10s linear infinite;
+    background-size: 200% 100%;
+}
+
+.back-api-yellow {
+    background-color: #FAB14380;
+    border: #DD9A22E8 1px solid;
+}
+
+.back-api-loading-yellow {
+    background: linear-gradient(90deg, #FAB14380, #DD9A22E8);
+    border: #DD9A22E8 1px solid;
     animation: gradientAnimation 10s linear infinite;
     background-size: 200% 100%;
 }
@@ -135,4 +147,12 @@ p {
 .div-tmp {
     min-height: 0px;
     width: 100%;
+}
+
+.blue-border {
+    border: 1px solid #337EA9E8;
+}
+
+.yellow-border {
+    border: 1px solid #DD9A22E8;
 }

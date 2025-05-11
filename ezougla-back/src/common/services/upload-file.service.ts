@@ -108,7 +108,7 @@ export class UploadFileService {
         }
     }
 
-    async extractAllTextFromBase64(fileName: string, base64: string): Promise<string> {
+    async extractAllTextFromBase64(fileName: string, base64: string, throwError: boolean): Promise<string> {
         const extension: string = this.getExtensionFromFilename(fileName);
         if (extension === 'pdf') {
             return await this.extractPdfFromBase64(base64);
@@ -118,8 +118,10 @@ export class UploadFileService {
             return await this.extractTextFromOdtBase64(base64);
         } else if (extension === 'txt') {
             return await this.extractTextFromBase64(base64);
-        } else {
+        } else if (throwError) {
             throw new UnprocessableEntityException("Les informations sont impossibles à extraire, le problème vient surement de l'extension de votre fichier : " + extension);
+        } else {
+            return ''
         }
     }
 

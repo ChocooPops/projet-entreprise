@@ -1,4 +1,4 @@
-import { Injectable, UnprocessableEntityException } from '@nestjs/common';
+import { Injectable, NotFoundException, UnprocessableEntityException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { Message } from '@prisma/client';
 import { Conversation } from '@prisma/client';
@@ -6,6 +6,8 @@ import { MessageType } from '@prisma/client';
 import { CreateFileModel } from 'src/file/dto/create-file.interface';
 import { UploadFileService } from 'src/common/services/upload-file.service';
 import { MistralApiService } from 'src/common/services/msitral-api.service';
+import * as fs from 'fs';
+import * as path from 'path';
 
 @Injectable()
 export class MessageService {
@@ -14,6 +16,7 @@ export class MessageService {
     private uploadFileService: UploadFileService,
     private mistralApiService: MistralApiService
   ) { }
+
 
   async createEmptyConversation(projectId: string, authorId: string): Promise<Conversation> {
     return await this.prismaService.conversation.create({
@@ -40,11 +43,11 @@ export class MessageService {
     });
   }
 
-  async addMessageToConversationByUser(conversationId: string, content: string, authorId: string): Promise<Message> {
+  async addMessageToConversationByUser(conversationId: string, content: string, authorId: string, typeMessage: MessageType): Promise<Message> {
     return await this.prismaService.message.create({
       data: {
         content,
-        type: MessageType.TEXT_USER,
+        type: typeMessage,
         conversationId,
         authorId,
       },
@@ -61,7 +64,7 @@ export class MessageService {
     if ((content && content !== '') || (files && files.length > 0)) {
 
       if (content && content !== '') {
-        const userMessage: Message = await this.addMessageToConversationByUser(conversationId, content, authorId);
+        const userMessage: Message = await this.addMessageToConversationByUser(conversationId, content, authorId, MessageType.TEXT_USER_TO_AI);
         messages.push(userMessage);
       }
       const filesMessages: Message[] = await this.addFileMessageIntoConversation(conversationId, files, authorId);
@@ -77,7 +80,7 @@ export class MessageService {
           extractTextFromFiles = 'Analyse mes fichiers : ';
         }
         for (const file of files) {
-          const textFromFile: string = await this.uploadFileService.extractAllTextFromBase64(file.name, file.file);
+          const textFromFile: string = await this.uploadFileService.extractAllTextFromBase64(file.name, file.file, true);
           extractTextFromFiles += `Mon fichier ${file.name} : ${textFromFile} \n `;
         }
 
@@ -91,7 +94,7 @@ export class MessageService {
         const messageMistral: Message = await this.prismaService.message.create({
           data: {
             content: contentMistralMessage,
-            type: MessageType.TEXT_AI_SUCCESS,
+            type: MessageType.TEXT_AI_SIMPLE_ANSWER,
             conversationId,
             authorId,
           },
@@ -125,11 +128,7 @@ export class MessageService {
     return messages;
   }
 
-  async addFileMessageIntoConversation(
-    conversationId: string,
-    files: CreateFileModel[],
-    authorId: string
-  ): Promise<Message[]> {
+  async addFileMessageIntoConversation(conversationId: string, files: CreateFileModel[], authorId: string): Promise<Message[]> {
     const messages: Message[] = [];
     const conversation = await this.prismaService.conversation.findUnique({
       where: { id: conversationId },
@@ -182,6 +181,114 @@ export class MessageService {
       }
     }
     return messages;
+  }
+
+  async analyseAllConversationByIdFromMistral(conversationId: string, content: string, authorId: string, files: CreateFileModel[]): Promise<Message[]> {
+    const messageReturned: Message[] = [];
+    const conversation: Conversation = await this.prismaService.conversation.findUnique({
+      where: {
+        id: conversationId
+      }
+    })
+    const messages: any[] = await this.getMessagesByConversation(conversationId);
+
+    if ((content && content !== '') || (files && files.length > 0)) {
+      if (conversation) {
+        if (content && content !== '') {
+          const userMessage: Message = await this.addMessageToConversationByUser(conversationId, content, authorId, MessageType.ASK_ANALYSE_CONV);
+          messageReturned.push(userMessage);
+        }
+        const filesMessages: Message[] = await this.addFileMessageIntoConversation(conversationId, files, authorId);
+        filesMessages.forEach((fileMessage: Message) => {
+          messageReturned.push(fileMessage);
+        })
+
+        try {
+          if (messages && messages.length > 0) {
+            let allMessages: string = '';
+            if (content && content !== '') {
+              allMessages = `${content} : \n `;
+            } else {
+              allMessages = 'Analyse ma conversation : \n ';
+            }
+
+            for (const message of messages) {
+              let extractContentMessage: string = '';
+              if (message.type === 'TEXT_AI_SIMPLE_ANSWER' || message.type === 'TEXT_AI_ANALYSIS_CONV') {
+                extractContentMessage = 'MISTRAL : ';
+              } else if (message.author) {
+                extractContentMessage = message.author.firstName + ' ' + message.author.lastName + ' : ';
+              } else {
+                extractContentMessage = 'UTILISATEUR : ';
+              }
+
+              if (message.content && message.content != '') {
+                extractContentMessage += message.content;
+              }
+              if (message.file) {
+                const fileName = path.basename(message.file.url);
+                if (fileName) {
+                  const filePath = path.join(__dirname, '..', '..', '..', 'uploads', 'file', fileName);
+                  if (fs.existsSync(filePath)) {
+                    const fileBuffer = fs.readFileSync(filePath);
+                    const base64 = fileBuffer.toString('base64');
+                    const textFromFile: string = await this.uploadFileService.extractAllTextFromBase64(fileName, base64, false);
+                    extractContentMessage += `Fichier ${fileName} => ${textFromFile} `
+                  }
+                }
+              }
+              allMessages += extractContentMessage + ' \n ';
+            }
+            if (files.length > 0) {
+              allMessages += "Voici d'autre fichier pour compléter la conversation";
+            }
+            for (const file of files) {
+              const textFromFile: string = await this.uploadFileService.extractAllTextFromBase64(file.name, file.file, false);
+              if (textFromFile !== '') {
+                allMessages += `Mon fichier ${file.name} : ${textFromFile} \n `;
+              }
+            }
+            const resMistral: any = await this.mistralApiService.fetchSendQuestion(allMessages);
+            const contentMistralMessage: string = resMistral.choices[0].message.content;
+            const messageMistral: Message = await this.prismaService.message.create({
+              data: {
+                content: contentMistralMessage,
+                type: MessageType.TEXT_AI_ANALYSIS_CONV,
+                conversationId,
+                authorId,
+              },
+              include: {
+                conversation: true,
+                author: true,
+                file: true,
+              },
+            });
+            messageReturned.push(messageMistral);
+          } else {
+            throw new UnprocessableEntityException('La conversation est vide');
+          }
+
+        } catch (error) {
+          const errorMessage: Message = await this.prismaService.message.create({
+            data: {
+              content: 'Erreur Mistral API : ' + error,
+              type: MessageType.TEXT_AI_ERROR,
+              conversationId,
+              authorId,
+            },
+            include: {
+              conversation: true,
+              author: true,
+              file: true,
+            },
+          });
+          messageReturned.push(errorMessage);
+        }
+      } else {
+        throw new NotFoundException();
+      }
+    }
+    return messageReturned;
   }
 
   async getConversationsByProjectId(projectId: string): Promise<Conversation[]> {

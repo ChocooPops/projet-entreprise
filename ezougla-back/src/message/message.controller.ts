@@ -2,6 +2,7 @@ import { Controller, Get, Post, Body, Put, Param, Delete } from '@nestjs/common'
 import { MessageService } from './message.service';
 import { CurrentUser } from 'src/auth/current-user.guard';
 import { CreateFileModel } from 'src/file/dto/create-file.interface';
+import { MessageType } from '@prisma/client';
 
 @Controller('message')
 export class MessageController {
@@ -29,12 +30,17 @@ export class MessageController {
 
   @Post('add-message/:conversationId')
   async addMessageIntoConversation(@CurrentUser('sub') userId: string, @Param('conversationId') conversationId, @Body('content') content) {
-    return await this.messageService.addMessageToConversationByUser(conversationId, content, userId);
+    return await this.messageService.addMessageToConversationByUser(conversationId, content, userId, MessageType.TEXT_USER_TO_USER);
   }
 
   @Post('send-message-to-mistral/:conversationId')
   async saveResponseMistralApi(@CurrentUser('sub') userId: string, @Param('conversationId') conversationId, @Body('content') content, @Body('files') files: CreateFileModel[]) {
     return await this.messageService.sendMessageToMistralApi(conversationId, content, userId, files);
+  }
+
+  @Post('analyse-conversation-by-mistral/:conversationId')
+  async analyseAllConversationByIdFromMistral(@CurrentUser('sub') userId: string, @Param('conversationId') conversationId, @Body('content') content, @Body('files') files: CreateFileModel[]) {
+    return await this.messageService.analyseAllConversationByIdFromMistral(conversationId, content, userId, files);
   }
 
   @Post('add-file/:conversationId')
