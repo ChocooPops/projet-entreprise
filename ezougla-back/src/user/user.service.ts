@@ -3,7 +3,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { RegisterUser } from './dto/create-user.interface';
 import { MessageModel } from 'src/common/model/message.interface';
 import { User } from '@prisma/client';
-import * as bcrypt from 'bcrypt';
+import * as bcrypt from 'bcryptjs';
 import { CreateFileModel } from 'src/file/dto/create-file.interface';
 import { UploadFileService } from 'src/common/services/upload-file.service';
 import { Role } from '@prisma/client';
